@@ -1,0 +1,17 @@
+.view-query {
+  display: flex;
+  align-content: center;
+  justify-items: center;
+  button {
+    margin-left: 15px;
+  }
+}
+.base-layout-modal {
+  .ant-modal-content {
+    margin-top: -50px;
+  }
+  .ant-modal-body {
+    overflow: auto;
+    height: 650px;
+  }
+}
