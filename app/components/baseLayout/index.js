@@ -29,14 +29,13 @@ class BaseLayout extends React.PureComponent {
           <Head
             collapsClick={this.onCollapsClick}
             collapsed={this.state.collapsed}
+            iconClick={()=>this.setState({
+              collapsed: !this.state.collapsed,
+            })}
           ></Head>
         </Layout>
         <Layout className="home">
-          <Sider
-            trigger={null}
-            collapsible
-            collapsed={this.state.collapsed}
-          >
+          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
             <NewMenus></NewMenus>
           </Sider>
@@ -44,12 +43,12 @@ class BaseLayout extends React.PureComponent {
             <Content
               className="site-layout-background"
               style={{
-                // margin: "24px 16px",
-                padding: 10,
+                margin: "20px",
+                padding: 20,
                 minHeight: 280,
               }}
             >
-              <ContentRouter path={'/home'}></ContentRouter>
+              <ContentRouter path={"/home"}></ContentRouter>
             </Content>
           </Layout>
         </Layout>

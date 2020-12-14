@@ -60,12 +60,60 @@
   background: #fff;
 }
 .container {
-  width: 100%;
+  background-color: #2b4b6b;
+  background-image: url(../resource/login.jpg);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   height: 100%;
-  // background: url(../../resource/login/loginbank.png) no-repeat center center;
-  background-size: cover;
-  background-attachment: fixed;
+  width: 100%;
 }
+.base-login-box {
+  padding-top: 18%;
+  padding-left: 12.57%;
+  padding-right: 12.7%;
+  height: 100%;
+  width: 100%;
+}
+.base-login-title {
+  // width: 120px;
+  // height: 30px;
+  font-size: 30px;
+  // font-family: Microsoft YaHei;
+  font-weight: bold;
+  padding-bottom: 10px;
+  // color: #313131;
+  // line-height: 112px;
+}
+.base-login-input {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.base-login-input-line {
+  width: 100%;
+  height: 1px;
+  background: #e5e5e5;
+}
+.base-login-edit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28px;
+}
+.base-login-button {
+  margin-top: 70px;
+  width: 100%;
+  height: 60px;
+  background: #0076fe;
+  border-radius: 30px;
+}
+.base-login-singup{
+  // font-size: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+
 .swlogo {
   position: absolute;
   left: 55%;
@@ -76,13 +124,7 @@
   left: 60%;
   top: 15%;
 }
-.title {
-  text-align: left;
-  color: rgb(0, 140, 255);
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 25px;
-}
+
 .remenberpass {
   font-size: 20px;
   color: blue($color: #000000);
@@ -110,17 +152,27 @@
   border-radius: 5px;
 }
 .content {
-  width: 500px;
-  height: 615px;
+  width: 38.54%;
+  height: 78.52%;
+  background: #ffffff;
+  border-radius: 20px;
   position: absolute;
-  left: 76%;
-  top: 54%;
-  transform: translate(-50%, -50%);
-  background: rgb(255, 255, 255);
-  padding: 40px;
-  padding-bottom: 0;
-  border-radius: 12px;
-  box-shadow: 0 0 5px rgb(117, 111, 111);
+  left: 48.13%;
+  top: 9.63%;
+  // margin-right: 924px;
+  // margin-top: 104px;
+
+  // width: 500px;
+  // height: 615px;
+  // position: absolute;
+  // left: 76%;
+  // top: 54%;
+  // transform: translate(-50%, -50%);
+  // background: rgb(255, 255, 255);
+  // padding: 40px;
+  // padding-bottom: 0;
+  // border-radius: 12px;
+  // box-shadow: 0 0 5px rgb(117, 111, 111);
 }
 .view-query {
   display: flex;

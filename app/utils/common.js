@@ -1,5 +1,7 @@
 import { createHashHistory } from "history";
-import { message } from "antd";
+import { message, Input } from "antd";
+import React from "react";
+
 const hashHistory = createHashHistory();
 
 const isV2 = 0;
@@ -34,3 +36,15 @@ export function fetchJSONData(method, url, data) {
     }
   });
 }
+export const columnsToForm = (columns) => {
+  const filterColumns = columns.filter((item) => !item.hidden);
+  const formItem = filterColumns.map((item) => {
+    return {
+      label: item.title,
+      name: item.dataIndex,
+      rules: item.rules || [{ required: true }],
+      ele: item.ele || <Input></Input>,
+    };
+  });
+  return formItem;
+};

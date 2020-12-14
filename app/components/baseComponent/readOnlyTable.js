@@ -1,159 +1,38 @@
-/**
- * Expert 2020-06-04
- * zdl
- * 专家库
- */
-import React, { useRef, useEffect } from "react";
-import { Table, Button, Form } from "antd";
-import * as actions from "../../redux/actions";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { Table } from "antd";
 import { bindActionCreators } from "redux";
-import { SearchOutlined, RedoOutlined } from "@ant-design/icons";
-import PropTypes from "prop-types";
+import * as actions from "../../redux/actions/aCurrency";
+import { connect } from "react-redux";
+let storeLabel = "jurisdiction";
 const ReadOnlyTable = (props) => {
-  const formRef = useRef();
-  const { readOnlyTableGetAll, selectTable } = props.actions;
-  const {
-    rowSelect = [],
-    columns = [],
-    rowKey,
-    get,
-    getAll = false,
-    readOnlyData,
-    selected,
-    readOnlyLoading,
-    rowSelection,
-    type, //getall 参数
-    footer,
-    initSelect = { current: 1, size: 10 },
-    handPage,
-    scroll
-  } = props;
+  const { columns, get, storeKey, param, rowSelection, rowKey } = props;
+  storeLabel = storeKey;
   useEffect(() => {
-    readOnlyTableGetAll({
-      request: props.get,
-      param: props.getAll ? { type: type } : { ...initSelect },
-    });
-  }, [type]);
-
-  const changePage = (current) => {
-    readOnlyTableGetAll({
+    props.actions.getBase({
       request: get,
-      param: { current: current, size: 10 },
+      key: storeKey,
+      param: param,
     });
-  };
-  const onShowSizeChange = (current, pageSize) => {
-    readOnlyTableGetAll({
-      request: get,
-      param: { current: current, size: pageSize },
-    });
-  };
-
-  let pagination = {
-    total: readOnlyData?.total,
-    size: "default",
-    current: readOnlyData?.current,
-    showQuickJumper: true,
-    showSizeChanger: true,
-    onChange: (current) => changePage(current),
-    pageSize: readOnlyData?.size,
-    onShowSizeChange: (current, pageSize) => {
-      // 设置每页显示数据条数，current表示当前页码，pageSize表示每页展示数据条数
-      onShowSizeChange(current, pageSize);
-    },
-    showTotal: () =>
-      `共${getAll ? readOnlyData?.length : readOnlyData?.total}条`,
-  };
-
-  const onFinish = (values) => {
-    readOnlyTableGetAll({
-      request: get,
-      param: getAll ? { type: type, ...values } : { ...values, ...initSelect },
-    });
-  };
-  const onReset = () => {
-    formRef.current.resetFields();
-    readOnlyTableGetAll({
-      request: get,
-      param: getAll ? { type: type } : { ...initSelect },
-    });
-  };
+  }, []);
   return (
-    <>
-      <Form ref={formRef} layout="inline" onFinish={onFinish}>
-        {rowSelect.map((item, index) => (
-          <Form.Item label={item.label} name={item.name} key={index}>
-            {item.element}
-          </Form.Item>
-        ))}
-        <Form.Item>
-          <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
-            查询
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <Button htmlType="button" onClick={onReset} icon={<RedoOutlined />}>
-            重置
-          </Button>
-        </Form.Item>
-      </Form>
+    <div>
       <Table
-        scroll={scroll}
-        pagination={handPage ? handPage : pagination}
-        onRow={(record) => {
-          return {
-            onClick: () => {
-              selectTable({ key: rowKey, value: [record[rowKey]] });
-            },
-          };
-        }}
-        rowSelection={
-          rowSelection
-            ? rowSelection
-            : {
-                fixed: true,
-                type: "radio",
-                selectedRowKeys: selected?.[rowKey],
-                onChange: (e) => {
-                  selectTable({ key: rowKey, value: e });
-                },
-              }
-        }
+        rowSelection={rowSelection}
         columns={columns}
-        dataSource={getAll ? readOnlyData || [] : readOnlyData?.records || []}
-        rowKey={(row) => row[rowKey]}
-        loading={readOnlyLoading}
-        footer={footer}
-      />
-    </>
+        dataSource={props[storeLabel]?.records}
+        rowKey={rowKey}
+      ></Table>
+    </div>
   );
-  // }
-};
-
-ReadOnlyTable.propTypes = {
-  rowSelect: PropTypes.array,
-  get: PropTypes.func,
-  columns: PropTypes.array,
-  rowKey: PropTypes.string,
-  readOnlyLoading: PropTypes.bool,
-  getAll: PropTypes.bool,
-  rowSelection: PropTypes.object,
-  actions: PropTypes.any,
-  readOnlyData: PropTypes.any,
-  selected: PropTypes.any,
-  type: PropTypes.any,
-  footer: PropTypes.any,
-  initSelect: PropTypes.object,
-  handPage: PropTypes.object,
 };
 const mapStateToProps = (state) => {
   return {
-    readOnlyData: state.management.readOnlyData,
-    readOnlyLoading: state.management.readOnlyLoading,
-    selected: state.management.selected,
+    [storeLabel]: state.currency[storeLabel],
   };
 };
+
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(ReadOnlyTable);

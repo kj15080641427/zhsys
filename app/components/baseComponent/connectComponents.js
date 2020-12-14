@@ -1,13 +1,14 @@
 import React from "react";
-import { Button, Modal, Form } from "antd";
+import { Button, Modal, Form, Input, Breadcrumb, Drawer } from "antd";
 import DYTable from "@app/components/home/table";
 import DYForm from "@app/components/home/form";
 import { bindActionCreators } from "redux";
-import * as actions from "../../redux/actions";
+import * as actions from "../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
+import { SearchOutlined } from "@ant-design/icons";
 
 let storeLabel = "base";
 class BaseLayout extends React.Component {
@@ -17,13 +18,15 @@ class BaseLayout extends React.Component {
     this.rwoFormRef = React.createRef();
     this.state = {
       filterName: {},
+      disabled: false, //表单防重复点击
+      drawerTitileType: "", //添加 | 修改
     };
   }
 
   componentDidMount() {
-    if (!this.props.dict[1]) {
-      this.props.actions.getDict();
-    }
+    // if (!this.props.dict[1]) {
+    //   this.props.actions.getDict();
+    // }
     this.props.actions.getBase({
       request: this.props.get,
       key: this.props.storeKey,
@@ -47,6 +50,9 @@ class BaseLayout extends React.Component {
       handleQuery,
       formatList = [],
       stringList = [],
+      breadcrumb = [],
+      formWidth = 450,
+      formTitle = "",
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -92,7 +98,7 @@ class BaseLayout extends React.Component {
         key: storeKey,
         query: get,
         param: {
-          id: row[keyId],
+          id: { [keyId]: row[keyId] },
           current: this.props[storeKey]?.current,
           size: this.props[storeKey]?.size,
           recordLength: this.props[storeKey].records?.length,
@@ -101,12 +107,20 @@ class BaseLayout extends React.Component {
     };
     // 修改
     const update = (row) => {
+      this.setState({
+        drawerTitileType: "修改",
+      });
+      formatList.map((item) => {
+        row = { ...row, [item]: moment(row[item]) };
+      });
       this.formRef.current.setFieldsValue(row);
       showModal();
     };
     // 提交
-    function onFinish(values) {
-      console.log(values, "====");
+    const onFinish = (values) => {
+      // this.setState({
+      //   disabled: true,
+      // });
       formatList.forEach((item) => {
         values = {
           ...values,
@@ -119,7 +133,6 @@ class BaseLayout extends React.Component {
           [item]: String(values[item]),
         };
       });
-      // values = {}
       values[keyId]
         ? addOrUpdateBase({
             request: upd,
@@ -133,9 +146,10 @@ class BaseLayout extends React.Component {
             query: get,
             param: values,
           });
-    }
+    };
     // 查询
     const rowFinish = (values) => {
+      // console.log(values, "values");
       this.setState({
         filterName: values,
       });
@@ -146,44 +160,72 @@ class BaseLayout extends React.Component {
     return (
       <>
         <div className="view-query">
-          <Form onFinish={rowFinish} layout="inline" ref={this.rwoFormRef}>
-            {rowSelect.map((item) => (
-              <Form.Item label={item.label} name={item.name} key={item.name}>
-                {item.element}
-              </Form.Item>
-            ))}
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                查询
-              </Button>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="ghost"
-                onClick={() => {
-                  this.setState({
-                    filterName: {},
-                  });
-                  this.rwoFormRef.current.resetFields();
-                  getBaseHoc();
-                }}
-              >
-                重置
-              </Button>
-            </Form.Item>
-          </Form>
-          {showEdit ? (
+          <div className="view-query-left">
+            <Breadcrumb separator=">" className="view-query-breacrumd">
+              {breadcrumb.map((item) => (
+                <Breadcrumb.Item key={item.name}>{item.name}</Breadcrumb.Item>
+              ))}
+            </Breadcrumb>
             <Button
+              className="base-add-button"
               onClick={() => {
-                this.formRef.current.resetFields;
-                showModal();
+                // this.formRef.current.resetFields;
+                // showModal();
               }}
             >
-              添加
+              导出
             </Button>
-          ) : null}
+          </div>
+          <div style={{ width: "500px" }}>
+            <Form onFinish={rowFinish} layout="inline" ref={this.rwoFormRef}>
+              {rowSelect.map((item) => (
+                <Form.Item label={item.label} name={item.name} key={item.name}>
+                  <div className="base-rowSelect-flex">
+                    <Input
+                      onChange={(e) =>
+                        this.setState({
+                          rowSelectData: e.target.value,
+                        })
+                      }
+                      className="base-rowSelect"
+                      // addonAfter={<SearchOutlined />}
+                    ></Input>
+                    <div className="base-rowSelect-icon">
+                      <SearchOutlined
+                        onClick={() =>
+                          rowFinish({ name: this.state.rowSelectData })
+                        }
+                      />
+                    </div>
+                  </div>
+                </Form.Item>
+              ))}
+            </Form>
+            <Button
+              className="base-add-button"
+              onClick={() => {
+                // this.formRef.current.resetFields;
+                // showModal();
+              }}
+            >
+              高级
+            </Button>
+            {showEdit ? (
+              <Button
+                className="base-add-button"
+                onClick={() => {
+                  this.setState({
+                    drawerTitileType: "添加",
+                  });
+                  this.formRef.current.resetFields;
+                  showModal();
+                }}
+              >
+                添加
+              </Button>
+            ) : null}
+          </div>
         </div>
-        {console.log(this.props[storeKey]?.records, "storeKey", storeKey)}
         <DYTable
           showEdit={showEdit}
           rowSelection={rowSelection}
@@ -202,7 +244,34 @@ class BaseLayout extends React.Component {
           confirm={confirm}
           update={update}
         ></DYTable>
-        <Modal
+        <Drawer
+          title={`${this.state.drawerTitileType}${formTitle}`}
+          visible={visible}
+          onClose={() => {
+            hideModal();
+            this.formRef.current.resetFields();
+          }}
+          // destroyOnClose
+          forceRender
+          width={formWidth}
+        >
+          <DYForm
+            disabled={this.state.disabled}
+            showCancel
+            cancelClick={() => {
+              hideModal();
+              this.setState({
+                disabled: false,
+              });
+            }}
+            id={keyId}
+            formRef={this.formRef}
+            name={storeKey}
+            formItem={formItem}
+            onFinish={onFinish}
+          ></DYForm>
+        </Drawer>
+        {/* <Modal
           title=" "
           visible={visible}
           forceRender={true}
@@ -213,15 +282,21 @@ class BaseLayout extends React.Component {
           className="base-layout-modal"
         >
           <DYForm
+            disabled={this.state.disabled}
             showCancel
-            cancelClick={() => hideModal()}
+            cancelClick={() => {
+              hideModal();
+              this.setState({
+                disabled: false,
+              });
+            }}
             id={keyId}
             formRef={this.formRef}
             name={storeKey}
             formItem={formItem}
             onFinish={onFinish}
           ></DYForm>
-        </Modal>
+        </Modal> */}
         {this.props.children}
       </>
     );
@@ -251,9 +326,9 @@ BaseLayout.propTypes = {
 const mapStateToProps = (state) => {
   return {
     [storeLabel]: state.currency[storeLabel],
-    loading: state.management.loading,
+    loading: state.currency.loading,
     visible: state.currency.visible,
-    dict: state.currency.dict,
+    // dict: state.currency.dict,
   };
 };
 

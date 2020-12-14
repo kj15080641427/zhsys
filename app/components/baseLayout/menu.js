@@ -27,8 +27,8 @@ class Menus extends React.PureComponent {
             inlineCollapsed={true}
             onClick={this.onMenuClick}
             // defaultSelectedKeys={['sub1', 'sub2', 'sub3', 'sub4','sub5']}
-            defaultOpenKeys={["1"]}
-            defaultSelectedKeys={["/"]}
+            // defaultOpenKeys={["1"]}
+            // defaultSelectedKeys={["/"]}
           >
             <SubMenu
               key="1"
@@ -50,7 +50,7 @@ class Menus extends React.PureComponent {
               <Menu.Item key="/DataMonitoring">采购单</Menu.Item>
             </SubMenu>
             <SubMenu key="3" icon={<MailOutlined />} title="使用管理">
-              <Menu.Item key="/floodManagement">借出申请</Menu.Item>
+              <Menu.Item key="/Uselendapply">借出申请</Menu.Item>
               <Menu.Item key="/floodManagement">归还申请</Menu.Item>
             </SubMenu>
             <SubMenu key="4" icon={<SettingOutlined />} title="设备维护">
@@ -75,17 +75,17 @@ class Menus extends React.PureComponent {
             </SubMenu>
             <SubMenu key="8" icon={<MailOutlined />} title="统计分析"></SubMenu>
             <SubMenu key="9" icon={<MailOutlined />} title="基础管理">
-              <Menu.Item key="/message">设备类型</Menu.Item>
-              <Menu.Item key="/taskList">设备基础数据</Menu.Item>
-              <Menu.Item key="/chartGroup">供应商管理</Menu.Item>
-              <Menu.Item key="/chartGroup">数据字典</Menu.Item>
+              <Menu.Item key="/DeviceType">设备类型</Menu.Item>
+              <Menu.Item key="/BaseDevice">设备基础数据</Menu.Item>
+              <Menu.Item key="/Supplier">供应商管理</Menu.Item>
+              <Menu.Item key="/BaseDict">数据字典</Menu.Item>
             </SubMenu>
             <SubMenu key="10" icon={<MailOutlined />} title="用户管理">
-              <Menu.Item key="/message">单位管理</Menu.Item>
-              <Menu.Item key="/taskList">部门管理</Menu.Item>
-              <Menu.Item key="/chartGroup">用户管理</Menu.Item>
-              <Menu.Item key="/chartGroup">角色管理</Menu.Item>
-              <Menu.Item key="/chartGroup">角色权限</Menu.Item>
+              <Menu.Item key="/company">单位管理</Menu.Item>
+              <Menu.Item key="/department">部门管理</Menu.Item>
+              <Menu.Item key="/user">用户管理</Menu.Item>
+              <Menu.Item key="/role">角色管理</Menu.Item>
+              <Menu.Item key="/jurisdiction">权限管理</Menu.Item>
             </SubMenu>
             <SubMenu
               key="11"

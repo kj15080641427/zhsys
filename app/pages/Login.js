@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Button } from "antd";
+import { Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -10,120 +10,149 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectSystem: "东营市智慧水务系统",
+      selectSystem: "智慧实验室",
+      userName: "",
+      password: "",
+      remember: false, //记住账号
+      automatic: true, //自动登录
     };
   }
 
   render() {
-    const onFinish = (values) => {
+    const onFinish = () => {
       this.props.actions.loginIn({
-        userName: values.username,
-        password: values.password,
+        userName: this.state.userName,
+        password: this.state.password,
       });
-      // loginIn({
-      //   channel: "common",
-      // username: values.username,
-      // password: values.password,
-      // }).then((result) => {
-      //   if (result.code == 200) {
-      //     this.props.actions.setToken(result.data.userToken);
-      //     localStorage.setItem("token", result.data.userToken);
-      //     localStorage.setItem("username", values.username);
-      //     message.success("登录成功！");
-      //     this.props.history.push("/home/");
-      //   } else {
-      //     message.error("账号或密码错误");
-      //   }
-      // });
     };
     return (
       <div className="container">
-        {/* <img className="swlogo" src={swlogo}></img> */}
-        {/* <img className="dyszhswxt" src={dyszhswxt}></img> */}
         <div className="content">
-          <div className="title">登录</div>
-          <br />
-          <br />
-          <Form
-            name="normal_login"
-            className="login-form"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "请输入用户名!",
-                },
-              ]}
-            >
+          <div className="base-login-box">
+            <div className="base-login-title">欢迎登录</div>
+            <div className="base-login-input">
+              <UserOutlined />
               <Input
-                className="inputs"
-                placeholder="请输入用户名"
-                size="large"
-                prefix={<UserOutlined className="site-form-item-icon" />}
-              />
-            </Form.Item>
-            <br />
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "请输入密码!",
-                },
-              ]}
-            >
+                placeholder="请输入账号"
+                bordered={false}
+                value={this.state.userName}
+                onChange={(e) =>
+                  this.setState({
+                    userName: e.target.value,
+                  })
+                }
+              ></Input>
+            </div>
+            <div className="base-login-input-line"></div>
+            <div style={{ height: "35px" }}></div>
+            <div className="base-login-input">
+              <LockOutlined />
               <Input
-                className="inputs"
                 placeholder="请输入密码"
-                size="large"
-                prefix={<LockOutlined className="site-form-item-icon" />}
+                bordered={false}
+                value={this.state.password}
+                onChange={(e) =>
+                  this.setState({
+                    password: e.target.value,
+                  })
+                }
                 type="password"
-              />
-            </Form.Item>
-            {/* <Form.Item name="remember" valuePropName="checked">
-              <div style={{ display: "flex" }}>
-                <Select
-                  defaultValue="东营市智慧水务系统"
+              ></Input>
+            </div>
+            <div className="base-login-input-line"></div>
+            <div className="base-login-edit">
+              <div>
+                <Checkbox
+                  checked={this.state.remember}
                   onChange={(e) => {
                     this.setState({
-                      selectSystem: e,
+                      remember: e.target.checked,
                     });
                   }}
-                  style={{ flex: 1, marginRight: 16 }}
                 >
-                  <Select.Option value="东营市智慧水务系统">
-                    东营市智慧水务系统
-                  </Select.Option>
-                  <Select.Option value="水质监测系统">
-                    水质监测系统
-                  </Select.Option>
-                </Select>
-                <Checkbox>
-                  <span className="remenberpass">记住密码</span>
+                  记住账号
+                </Checkbox>
+                <Checkbox
+                  checked={this.state.automatic}
+                  onChange={(e) => {
+                    this.setState({
+                      automatic: e.target.checked,
+                    });
+                  }}
+                >
+                  自动登录
                 </Checkbox>
               </div>
-            </Form.Item> */}
-            <br />
-            <br />
-            <br />
-            <br />
-            <Form.Item>
-              <Button
-                size="large"
-                type="primary"
-                htmlType="submit"
-                className="sbmbotton"
+              <a>忘记密码?</a>
+            </div>
+            <Button
+              className="base-login-button"
+              type="primary"
+              onClick={() => onFinish()}
+            >
+              登录
+            </Button>
+            <div className="base-login-singup">
+              没有账号?<a>立即注册</a>
+            </div>
+            {/* <Form
+              name="normal_login"
+              className="login-form"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+            >
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "请输入用户名!",
+                  },
+                ]}
               >
-                登录
-              </Button>
-            </Form.Item>
-          </Form>
+                <Input
+                  className="inputs"
+                  placeholder="请输入用户名"
+                  size="large"
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                />
+              </Form.Item>
+              <br />
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: "请输入密码!",
+                  },
+                ]}
+              >
+                <Input
+                  className="inputs"
+                  placeholder="请输入密码"
+                  size="large"
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                />
+              </Form.Item>
+              <br />
+              <br />
+              <br />
+              <br />
+              <Form.Item>
+                <Button
+                  size="large"
+                  type="primary"
+                  htmlType="submit"
+                  className="sbmbotton"
+                >
+                  登录
+                </Button>
+              </Form.Item>
+            </Form> */}
+          </div>
         </div>
       </div>
     );

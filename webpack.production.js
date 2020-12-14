@@ -74,7 +74,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(woff|woff2|svg|eot|ttf|png)$/,
+        test: /\.(woff|woff2|svg|eot|ttf|png|jpg)$/,
         loader: "file-loader",
         options: {
           name: "../static/[name].[hash:5].[ext]",
@@ -182,9 +182,9 @@ module.exports = {
   },
   devServer: {
     contentBase: path.resolve(__dirname, "./dist"),
-    host: "172.19.112.74",
+    host: "47.115.10.75",
     compress: true,
-    port: 9109,
+    port: 9001,
   },
   stats: "errors-only",
 };

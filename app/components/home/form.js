@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Popconfirm, message } from "antd";
+import { Button, Form, Popconfirm } from "antd";
 
 const DYForm = (props) => {
   const {
@@ -12,6 +12,7 @@ const DYForm = (props) => {
     cancelClick,
     showDelete = false,
     deleteClick,
+    disabled = false,
   } = props;
 
   return (
@@ -35,10 +36,17 @@ const DYForm = (props) => {
       <Form.Item>
         <div
           style={
-            showCancel ? { display: "flex", justifyContent: "center" } : {}
+            showCancel
+              ? {
+                  display: "flex",
+                  justifyContent: "center",
+                  position: "fixed",
+                  bottom: "10px",
+                }
+              : {}
           }
         >
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={disabled}>
             提交
           </Button>
           {showDelete ? (

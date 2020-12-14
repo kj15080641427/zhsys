@@ -81,7 +81,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(woff|woff2|svg|eot|ttf|png|svg)$/,
+        test: /\.(woff|woff2|svg|eot|ttf|png|jpg|svg)$/,
         loader: "file-loader",
         options: {
           name: "static/[name].[hash:5].[ext]",
@@ -159,7 +159,7 @@ module.exports = {
     proxy: {
       "/api/*": {
         target: "http://47.115.10.75:9001",
-        // pathRewrite: {'^/api' : ''},
+        // pathRewrite: { "^/api": "" },
         secure: true,
         changeOrigin: true,
       },

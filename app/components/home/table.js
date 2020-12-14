@@ -1,6 +1,7 @@
 import React from "react";
-import { Table, Input, Button, Form, Modal, Radio, Popconfirm } from "antd";
-import { CloseCircleOutlined, FormOutlined } from "@ant-design/icons";
+import { Table, Popover, Popconfirm } from "antd";
+import editImg from "./../../resource/edit.svg";
+import deleteImg from "./../../resource/delete.svg";
 
 export default (props) => {
   const {
@@ -17,29 +18,41 @@ export default (props) => {
     rowSelection, //查询配置
     columns = [], //表格配置
     showEdit = true, //是否可以编辑
-
   } = props;
   const columnsBase = [
     {
       title: "操作",
       dataIndex: "isShow",
       className: "column-money",
-      width: 200,
+      width: 80,
       fixed: "right",
       render: (isShow, row) => (
-        <Radio.Group value="large">
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Popover content={"修改"}>
+            <img
+              style={{ cursor: "pointer" }}
+              width="18px"
+              height="18px"
+              src={editImg}
+              onClick={() => update(row)}
+            ></img>
+          </Popover>
           <Popconfirm
             title="确定永久删除该数据吗?"
             onConfirm={() => confirm(row)}
             okText="确定"
             cancelText="取消"
           >
-            <Button icon={<CloseCircleOutlined />}>删除</Button>
+            <Popover content={"删除"}>
+              <img
+                src={deleteImg}
+                width="20px"
+                height="20px"
+                style={{ marginLeft: "10px", cursor: "pointer" }}
+              ></img>
+            </Popover>
           </Popconfirm>
-          <Button onClick={() => update(row)} icon={<FormOutlined />}>
-            修改
-          </Button>
-        </Radio.Group>
+        </div>
       ),
     },
   ];
@@ -59,7 +72,22 @@ export default (props) => {
   };
   return (
     <Table
-      columns={showEdit ? [...columns, ...columnsBase] : columns}
+      size="small"
+      columns={
+        showEdit
+          ? [
+              {
+                title: "序号",
+                dataIndex: "",
+                key: "",
+                width: "50px",
+                render: (_, __, index) => index + 1,
+              },
+              ...columns,
+              ...columnsBase,
+            ]
+          : columns
+      }
       loading={loading}
       dataSource={dataSource}
       scroll={{ y: 700 }}
