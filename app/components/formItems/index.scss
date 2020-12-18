@@ -1,0 +1,26 @@
+.device-form-box {
+  display: flex;
+  .device-form-image {
+    width: 30%;
+    height: 200px;
+    background: red;
+    margin-left: 20px;
+  }
+  .device-form-item {
+    width: 70%;
+  }
+}
+.form-info {
+  margin-top: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 30px;
+  margin-bottom: 10px;
+  .line {
+    width: 2px;
+    height: 13px;
+    background: #268be6;
+    margin-right: 10px;
+  }
+}

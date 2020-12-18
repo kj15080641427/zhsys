@@ -53,6 +53,8 @@ class BaseLayout extends React.Component {
       breadcrumb = [],
       formWidth = 450,
       formTitle = "",
+      showChild, //是否加载子表
+      buttonText, //提交按钮文字
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -118,6 +120,7 @@ class BaseLayout extends React.Component {
     };
     // 提交
     const onFinish = (values) => {
+      console.log(values);
       // this.setState({
       //   disabled: true,
       // });
@@ -161,7 +164,11 @@ class BaseLayout extends React.Component {
       <>
         <div className="view-query">
           <div className="view-query-left">
-            <Breadcrumb separator=">" className="view-query-breacrumd">
+            <Breadcrumb
+              separator=">"
+              className="view-query-breacrumd"
+              style={{ width: "230px" }}
+            >
               {breadcrumb.map((item) => (
                 <Breadcrumb.Item key={item.name}>{item.name}</Breadcrumb.Item>
               ))}
@@ -176,7 +183,7 @@ class BaseLayout extends React.Component {
               导出
             </Button>
           </div>
-          <div style={{ width: "500px" }}>
+          <div className="view-query-right">
             <Form onFinish={rowFinish} layout="inline" ref={this.rwoFormRef}>
               {rowSelect.map((item) => (
                 <Form.Item label={item.label} name={item.name} key={item.name}>
@@ -256,6 +263,8 @@ class BaseLayout extends React.Component {
           width={formWidth}
         >
           <DYForm
+            buttonText={buttonText}
+            showChild={showChild}
             disabled={this.state.disabled}
             showCancel
             cancelClick={() => {

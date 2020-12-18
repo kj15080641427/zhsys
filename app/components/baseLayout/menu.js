@@ -46,8 +46,8 @@ class Menus extends React.PureComponent {
               title="购置管理"
               inlineCollapsed={false}
             >
-              <Menu.Item key="/DataMonitoring">购置申请</Menu.Item>
-              <Menu.Item key="/DataMonitoring">采购单</Menu.Item>
+              <Menu.Item key="/Lanapply">购置申请</Menu.Item>
+              <Menu.Item key="/LendapplyList">购置单</Menu.Item>
             </SubMenu>
             <SubMenu key="3" icon={<MailOutlined />} title="使用管理">
               <Menu.Item key="/Uselendapply">借出申请</Menu.Item>

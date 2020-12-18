@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Input, Radio, Button, Modal } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -140,7 +140,7 @@ const Role = (props) => {
         onOk={() => {
           setRolePermission({
             roleId: records.id,
-            permissionsId: permissionList,
+            permissionsIdList: permissionList,
           });
         }}
         onCancel={() => {

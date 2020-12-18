@@ -19,3 +19,11 @@ export const SET_SELECT_LIST = "SET_SELECT_LIST";
 export const SHOW_R_P_MODAL = "SHOW_R_P_MODAL";
 
 export const SET_ROLE_PERMISSION = "SET_ROLE_PERMISSION";
+
+export const GET_BASE_DICT = "SET_BASE_DICT";
+
+export const SET_SHOW_FORM = "SET_SHOW_FORM";
+
+export const APPROVAL_FLOW = "APPROVAL_FLOW";
+
+export const GET_PUR_LIST_INFO = "GET_PUR_LIST_INFO"; //购置单查询购置清单详情

@@ -29,9 +29,11 @@ class BaseLayout extends React.PureComponent {
           <Head
             collapsClick={this.onCollapsClick}
             collapsed={this.state.collapsed}
-            iconClick={()=>this.setState({
-              collapsed: !this.state.collapsed,
-            })}
+            iconClick={() =>
+              this.setState({
+                collapsed: !this.state.collapsed,
+              })
+            }
           ></Head>
         </Layout>
         <Layout className="home">
@@ -44,7 +46,7 @@ class BaseLayout extends React.PureComponent {
               className="site-layout-background"
               style={{
                 margin: "20px",
-                padding: 20,
+                padding: "0px 20px",
                 minHeight: 280,
               }}
             >

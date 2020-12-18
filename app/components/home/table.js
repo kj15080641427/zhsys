@@ -2,7 +2,6 @@ import React from "react";
 import { Table, Popover, Popconfirm } from "antd";
 import editImg from "./../../resource/edit.svg";
 import deleteImg from "./../../resource/delete.svg";
-
 export default (props) => {
   const {
     confirm, //删除

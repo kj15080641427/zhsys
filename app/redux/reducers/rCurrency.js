@@ -3,6 +3,7 @@ const initState = {
   visible: false,
   permissionList: [],
   modalVisible: false,
+  showForm: false,
 };
 export default function currency(state = initState, action) {
   let newState = Object.assign({}, state);
@@ -40,6 +41,9 @@ export default function currency(state = initState, action) {
       break;
     case types.SHOW_R_P_MODAL:
       newState.modalVisible = true;
+      break;
+    case types.SET_SHOW_FORM:
+      newState.showForm = action.data;
       break;
     default:
       return state;

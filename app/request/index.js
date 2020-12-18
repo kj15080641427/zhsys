@@ -161,7 +161,6 @@ export function delLimsSupplier(data) {
   return fetchJSONData("POST", "/api/base/LimsSupplier/del", data);
 }
 
-
 //查询数据字典
 export function getLimsBasicDict(data) {
   return fetchJSONData("POST", "/api/base/LimsBasicdict/page", data);
@@ -194,4 +193,61 @@ export function updLimsUselendapply(data) {
 //删除使用借出
 export function delLimsUselendapply(data) {
   return fetchJSONData("POST", "/api/base/LimsUselendapply/del", data);
+}
+
+//查询购置申请
+export function getLimsUselanapply(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapply/page", data);
+}
+//添加购置申请
+export function addLimsUselanapply(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapply/save", data);
+}
+//更新购置申请
+export function updLimsUselanapply(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapply/update", data);
+}
+//删除购置申请
+export function delLimsUselanapply(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapply/del", data);
+}
+//根据ID查询购置申请清单
+export function getLimsUselanapplyById(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapply/queryById", data);
+}
+//审批购置流程
+export function approvalLimsUselanapply(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapply/approval", data);
+}
+
+
+//查询购置申请清单
+export function getLimsUselanapplyList(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapplyitem/page", data);
+}
+//添加购置申请清单
+export function addLimsUselanapplyList(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapplyitem/save", data);
+}
+//更新购置申请清单
+export function updLimsUselanapplyList(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapplyitem/update", data);
+}
+//删除购置申请清单
+export function delLimsUselanapplyList(data) {
+  return fetchJSONData("POST", "/api/base/LimsPurplanapplyitem/del", data);
+}
+
+//查询购置申请清单管理
+export function getLimsUselanapplyListPur(data) {
+  return fetchJSONData("POST", "/api/base/LimsPur/page", data);
+}
+//修改购置申请清单管理
+export function updLimsUselanapplyListPur(data) {
+  return fetchJSONData("POST", "/api/base/LimsPur/update", data);
+}
+
+//查询购置申请清单 购置清单列表
+export function getLimsUselanapplyListPurItem(data) {
+  return fetchJSONData("POST", "/api/base/LimsPuritem/query", data);
 }

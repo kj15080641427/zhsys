@@ -14,7 +14,8 @@ import BaseDevice from "../../pages/device/baseDevice";
 import Supplier from "../../pages/device/supplier";
 import BaseDict from "../../pages/device/baseDict";
 import Lendapply from "./../../pages/use/lendapply";
-
+import Lanapply from "../../pages/purp/lanapply";
+import LendapplyList from "../../pages/purp/lanapplyList/lanapplyList";
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
@@ -38,9 +39,8 @@ class ContentRouter extends React.PureComponent {
         <Route path={path + "/Supplier"} component={Supplier} />
         <Route path={path + "/BaseDict"} component={BaseDict} />
         <Route path={path + "/Uselendapply"} component={Lendapply} />
-        {/* <Route path={path + "/Company"} component={Company} /> */}
-        {/* <Route path={path + "/Department"} component={Department} /> */}
-        {/* <Route path={path + "/User"} component={User} /> */}
+        <Route path={path + "/Lanapply"} component={Lanapply} />
+        <Route path={path + "/LendapplyList"} component={LendapplyList} />
         {/* <Route path={path + "/Role"} component={Role} /> */}
         {/* <Route path={path + "/Jurisdiction"} component={Jurisdiction} /> */}
         {/* <Route path={path + "/DeviceType"} component={DeviceType} /> */}

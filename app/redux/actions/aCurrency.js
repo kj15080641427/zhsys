@@ -67,3 +67,26 @@ export const setRolePermission = (data) => {
     data,
   };
 };
+
+export const setShowForm = (data) => {
+  return {
+    type: types.SET_SHOW_FORM,
+    data,
+  };
+};
+
+//审批流程
+export const approvalFlow = (data) => {
+  return {
+    type: types.APPROVAL_FLOW,
+    data,
+  };
+};
+
+
+export const getPurListInfo = (data) => {
+  return {
+    type: types.GET_PUR_LIST_INFO,
+    data,
+  };
+};

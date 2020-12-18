@@ -90,8 +90,9 @@ const BaseDevice = () => {
       ele: (
         <Upload
           name="logo"
-          action="/upload.do" //上传地址
+          action="http://47.115.10.75:9011/swagger-ui.html" //上传地址
           listType="picture-card"
+          method='get'
         >
           <Button icon={<UploadOutlined />}>上传</Button>
         </Upload>

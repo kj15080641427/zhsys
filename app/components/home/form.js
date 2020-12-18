@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Popconfirm } from "antd";
-
+import ChildTable from "./childTable";
 const DYForm = (props) => {
   const {
     onFinish,
@@ -13,6 +13,8 @@ const DYForm = (props) => {
     showDelete = false,
     deleteClick,
     disabled = false,
+    showChild = false,
+    buttonText = "提交",
   } = props;
 
   return (
@@ -33,21 +35,16 @@ const DYForm = (props) => {
       ))}
 
       <Form.Item name={id}></Form.Item>
+      {/* {showChild && <ChildTable></ChildTable>} */}
       <Form.Item>
         <div
-          style={
-            showCancel
-              ? {
-                  display: "flex",
-                  justifyContent: "center",
-                  position: "fixed",
-                  bottom: "10px",
-                }
-              : {}
-          }
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
         >
           <Button type="primary" htmlType="submit" disabled={disabled}>
-            提交
+            {buttonText}
           </Button>
           {showDelete ? (
             <Popconfirm

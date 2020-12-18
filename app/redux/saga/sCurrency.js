@@ -31,7 +31,6 @@ function* login({ data }) {
 }
 /**获取数据 */
 function* getbaseData({ data }) {
-  console.log("saga");
   const { request, key, param = initSelect } = data;
   yield put({
     type: types.STATR_LOADING,
@@ -92,6 +91,10 @@ function* addOrUpdateBaseData({ data }) {
         type: types.HIDE_MODAL,
       });
       yield put({
+        type: types.SET_SHOW_FORM,
+        data: false,
+      });
+      yield put({
         type: types.GET_BASE,
         data: { request: query, key: key, param: { current: 1, size: 10 } },
       });
@@ -118,7 +121,7 @@ function* rolePermission({ data }) {
     if (result.code == code) {
       // result.data.map((item) => console.log(item, "??"));
       res = result.data?.records
-        ? result.data.records.map((item) => item?.permissionId)
+        ? result.data.records.map((item) => item?.id)
         : [];
       yield put({
         type: types.SET_R_P_SELECT_LIST,
@@ -135,7 +138,27 @@ function* setRolePermission({ data }) {
   try {
     let result = yield call(req.setPermission, data);
     if (result.code == code) {
-      console.log(result);
+      yield put({
+        type: types.HIDE_R_P_MODAL,
+        data: false,
+      });
+      message.info("授权成功");
+    } else {
+      message.error(result.message);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+//
+function* getPurListInfo({ data }) {
+  try {
+    let result = yield call(req.getLimsUselanapplyListPurItem, data);
+    if (result.code == code) {
+      console.log(result.data);
+    } else {
+      message.error(result.message);
     }
   } catch (e) {
     console.error(e);
@@ -151,6 +174,7 @@ export default function* currency() {
     takeEvery(types.GET_PERMISSION_DATA_BY_ID, rolePermission),
 
     takeEvery(types.SET_ROLE_PERMISSION, setRolePermission),
+    takeEvery(types.GET_PUR_LIST_INFO, getPurListInfo),
   ]);
   // yield all([takeEvery(types.GET_BASE, getbaseData)]);
 }

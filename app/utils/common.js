@@ -1,6 +1,6 @@
-import { createHashHistory } from "history";
-import { message, Input } from "antd";
 import React from "react";
+import { message, Input } from "antd";
+import { createHashHistory } from "history";
 
 const hashHistory = createHashHistory();
 
@@ -41,9 +41,28 @@ export const columnsToForm = (columns) => {
   const formItem = filterColumns.map((item) => {
     return {
       label: item.title,
-      name: item.dataIndex,
+      name: item.formDataIndex || item.dataIndex,
       rules: item.rules || [{ required: true }],
       ele: item.ele || <Input></Input>,
+      width: item.formWidth,
+      col: item.col,
+      labelCol: item.labelCol,
+    };
+  });
+  return formItem;
+};
+
+export const columnsToFormFlow = (columns) => {
+  const filterColumns = columns.filter((item) => !item.hidden);
+  const formItem = filterColumns.map((item) => {
+    return {
+      label: item.title,
+      name: item.formDataIndex || item.dataIndex,
+      require: item.require,
+      ele: item.ele || <Input></Input>,
+      width: item.formWidth,
+      col: item.col,
+      labelCol: item.labelCol,
     };
   });
   return formItem;
