@@ -8,7 +8,7 @@ import DevicePart from "./devicePart";
 import "./index.scss";
 
 export default (props) => {
-  const { onFinish, formRef, id = "id" } = props;
+  const { onFinish, formRef, id = "id", deviceInfo, devicePart } = props;
   const columns = [
     {
       title: "设备编号",
@@ -50,13 +50,14 @@ export default (props) => {
       // rules: [{ require: false }],
     },
 
-    {
-      title: "出厂编号",
-      dataIndex: "unit",
-    },
+    // {
+    //   title: "出厂编号",
+    //   dataIndex: "unit",
+    // },
     {
       title: "价值",
-      dataIndex: "unit",
+      dataIndex: "price",
+      ele: <Input suffix="元"></Input>,
     },
     {
       title: "生产日期",
@@ -65,43 +66,23 @@ export default (props) => {
     },
     {
       title: "保养周期",
-      dataIndex: "unit",
+      dataIndex: "maintainCycle",
+      ele: <Input suffix="月"></Input>,
     },
     {
       title: "使用寿命",
-      dataIndex: "unit",
+      dataIndex: "useLife",
+      ele: <Input suffix="年"></Input>,
     },
     {
       title: "折旧率",
-      dataIndex: "unit",
+      dataIndex: "depreceRate",
+      ele: <Input suffix="%"></Input>,
     },
     {
       title: "备注",
       dataIndex: "remark",
       col: 24,
-    },
-  ];
-  const devicePart = [
-    {
-      title: "部件编号",
-      dataIndex: "code",
-      require: true,
-    },
-    {
-      title: "部件名称",
-      dataIndex: "name",
-    },
-    {
-      title: "型号",
-      dataIndex: "model",
-    },
-    {
-      title: "使用寿命",
-      dataIndex: "useLife",
-    },
-    {
-      title: "保养周期",
-      dataIndex: "maintainCycle",
     },
   ];
   return (
@@ -142,7 +123,10 @@ export default (props) => {
             部件明细
           </div>
         </div>
-        <DevicePart devicePart={devicePart}></DevicePart>
+        <DevicePart
+          deviceInfo={deviceInfo}
+          devicePart={devicePart}
+        ></DevicePart>
 
         <Form.Item name={id}></Form.Item>
 

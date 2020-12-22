@@ -51,7 +51,7 @@ class Menus extends React.PureComponent {
             </SubMenu>
             <SubMenu key="3" icon={<MailOutlined />} title="使用管理">
               <Menu.Item key="/Uselendapply">借出申请</Menu.Item>
-              <Menu.Item key="/floodManagement">归还申请</Menu.Item>
+              <Menu.Item key="/SendBack">归还申请</Menu.Item>
             </SubMenu>
             <SubMenu key="4" icon={<SettingOutlined />} title="设备维护">
               <Menu.Item key="/System">维修申请</Menu.Item>

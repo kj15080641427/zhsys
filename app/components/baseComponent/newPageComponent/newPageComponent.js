@@ -25,7 +25,9 @@ class BaseNewPageLayout extends React.Component {
       taskInfo: {}, //事件详情
     };
   }
-
+  componentWillUnmount() {
+    this.props.actions.setShowForm(false);
+  }
   componentDidMount() {
     this.props.actions.getBase({
       request: this.props.get,

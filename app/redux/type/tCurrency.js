@@ -27,3 +27,5 @@ export const SET_SHOW_FORM = "SET_SHOW_FORM";
 export const APPROVAL_FLOW = "APPROVAL_FLOW";
 
 export const GET_PUR_LIST_INFO = "GET_PUR_LIST_INFO"; //购置单查询购置清单详情
+
+export const SET_TOTAL_PRICE = "SET_TOTAL_PRICE"; //购置单总金额

@@ -59,7 +59,7 @@ export const columnsToFormFlow = (columns) => {
       label: item.title,
       name: item.formDataIndex || item.dataIndex,
       require: item.require,
-      ele: item.ele || <Input></Input>,
+      ele: item.ele || <Input style={{ width: "100%" }}></Input>,
       width: item.formWidth,
       col: item.col,
       labelCol: item.labelCol,

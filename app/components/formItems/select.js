@@ -21,11 +21,13 @@ const FormSelect = (props) => {
 
   useEffect(() => {
     key = storeKey;
+    // if (!props[storeKey]) {
     getBase({
       request: request,
       key: storeKey,
       param: param,
     });
+    // }
   }, []);
   return (
     <Select
@@ -50,6 +52,7 @@ const mapStateToProps = (state) => {
     user: state.currency.user,
     userCompany: state.currency.userCompany,
     deviceType: state.currency.deviceType,
+    supplier: state.currency.supplier,
   };
 };
 

@@ -7,13 +7,20 @@ import {
   getLimsBasiccategory,
   updLimsBasicDevice,
   getLimsUselanapplyListPurItem,
+  getLimsBasicDevicePart, //查询设备部件列表
 } from "../../../request/index";
 import DeviceForm from "../../../components/formItems/deviceForm";
+import { bindActionCreators } from "redux";
+import * as actions from "../../../redux/actions/aCurrency";
+import { connect } from "react-redux";
 
-export default (props) => {
+const ChildTable = (props) => {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);
+  const [deviceInfo, setDeviceInfo] = useState({});
+  const [devicePart, setDevicePart] = useState([]);
   const { records } = props;
+  const { setTotalPrice } = props.actions;
   const formRef = useRef();
   useEffect(() => {
     props.value && setDataSource(props.value);
@@ -21,6 +28,15 @@ export default (props) => {
 
   // 查询设备信息
   const getDeviceInfo = (row) => {
+    setDeviceInfo(row);
+    //查询设备部件
+    getLimsBasicDevicePart({
+      current: 1,
+      deviceId: row.id,
+      size: -1,
+    }).then((res) => {
+      setDevicePart(res.data.records);
+    });
     row = { ...row, produceDate: moment(row.produceDate) };
     formRef.current.setFieldsValue(row);
     setVisible(true);
@@ -40,10 +56,13 @@ export default (props) => {
         mainId: records.id,
         size: -1,
       }).then((result) => {
+        let price = 0;
         let list = result.data.map((item) => {
+          price = price + item.limsBasicdevice.price;
           return { ...item, ...item.limsBasicdevice };
         });
         setDataSource(list); //设置购置清单列表
+        setTotalPrice(price);
       });
       setVisible(false); //关闭modal
     });
@@ -129,6 +148,8 @@ export default (props) => {
         height="800px"
       >
         <DeviceForm
+          devicePart={devicePart}
+          deviceInfo={deviceInfo}
           onFinish={onFinish}
           formRef={formRef}
           formItem={columnsToForm(columns)}
@@ -137,3 +158,12 @@ export default (props) => {
     </div>
   );
 };
+const mapStateToProps = () => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChildTable);

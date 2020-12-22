@@ -144,6 +144,19 @@ export function delLimsBasicDevice(data) {
   return fetchJSONData("POST", "/api/base/LimsBasicdevice/del", data);
 }
 
+//查询设备基部件
+export function getLimsBasicDevicePart(data) {
+  return fetchJSONData("POST", "/api/base/LimsBasicdeviceparts/page", data);
+}
+//新增设备部件
+export function addLimsBasicDevicePart(data) {
+  return fetchJSONData("POST", "/api/base/LimsBasicdeviceparts/save", data);
+}
+//删除设备部件
+export function delLimsBasicDevicePart(data) {
+  return fetchJSONData("POST", "/api/base/LimsBasicdeviceparts/del", data);
+}
+
 //查询供应商
 export function getLimsSupplier(data) {
   return fetchJSONData("POST", "/api/base/LimsSupplier/page", data);
@@ -220,7 +233,6 @@ export function approvalLimsUselanapply(data) {
   return fetchJSONData("POST", "/api/base/LimsPurplanapply/approval", data);
 }
 
-
 //查询购置申请清单
 export function getLimsUselanapplyList(data) {
   return fetchJSONData("POST", "/api/base/LimsPurplanapplyitem/page", data);
@@ -239,6 +251,11 @@ export function delLimsUselanapplyList(data) {
 }
 
 //查询购置申请清单管理
+export function getLanapplyPurByList(data) {
+  return fetchJSONData("POST", "/api/base/LimsPur/query", data);
+}
+
+//查询购置申请清单管理
 export function getLimsUselanapplyListPur(data) {
   return fetchJSONData("POST", "/api/base/LimsPur/page", data);
 }
@@ -250,4 +267,40 @@ export function updLimsUselanapplyListPur(data) {
 //查询购置申请清单 购置清单列表
 export function getLimsUselanapplyListPurItem(data) {
   return fetchJSONData("POST", "/api/base/LimsPuritem/query", data);
+}
+
+
+//查询单据附件
+export function getAttachment(data) {
+  return fetchJSONData("POST", "/api/base/LimsAttachment/page", data);
+}
+//新增单据附件
+export function addAttachment(data) {
+  return fetchJSONData("POST", "/api/base/LimsAttachment/saveAll", data);
+}
+//修改单据附件
+export function updAttachment(data) {
+  return fetchJSONData("POST", "/api/base/LimsAttachment/update", data);
+}
+//删除单据附件
+export function delAttachment(data) {
+  return fetchJSONData("POST", "/api/base/LimsAttachment/del", data);
+}
+
+
+//查询归还申请
+export function getLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/page", data);
+}
+//添加归还申请
+export function addLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/save", data);
+}
+//更新归还申请
+export function updLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/update", data);
+}
+//删除归还申请
+export function delLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/del", data);
 }

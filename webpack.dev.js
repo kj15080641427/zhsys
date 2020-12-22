@@ -153,7 +153,7 @@ module.exports = {
     historyApiFallback: true,
     host: "0.0.0.0",
     compress: true,
-    port: 8888,
+    port: 9999,
     hot: true,
     disableHostCheck: true,
     proxy: {

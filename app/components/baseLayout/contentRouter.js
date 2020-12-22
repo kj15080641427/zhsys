@@ -13,7 +13,8 @@ import DeviceType from "../../pages/device/deviceType";
 import BaseDevice from "../../pages/device/baseDevice";
 import Supplier from "../../pages/device/supplier";
 import BaseDict from "../../pages/device/baseDict";
-import Lendapply from "./../../pages/use/lendapply";
+import Lendapply from "./../../pages/use/lend/index";
+import SendBack from "../../pages/use/sendBack";
 import Lanapply from "../../pages/purp/lanapply";
 import LendapplyList from "../../pages/purp/lanapplyList/lanapplyList";
 class ContentRouter extends React.PureComponent {
@@ -41,7 +42,7 @@ class ContentRouter extends React.PureComponent {
         <Route path={path + "/Uselendapply"} component={Lendapply} />
         <Route path={path + "/Lanapply"} component={Lanapply} />
         <Route path={path + "/LendapplyList"} component={LendapplyList} />
-        {/* <Route path={path + "/Role"} component={Role} /> */}
+        <Route path={path + "/SendBack"} component={SendBack} />
         {/* <Route path={path + "/Jurisdiction"} component={Jurisdiction} /> */}
         {/* <Route path={path + "/DeviceType"} component={DeviceType} /> */}
         {/* <Route path={path + "/BaseDevice"} component={BaseDevice} /> */}

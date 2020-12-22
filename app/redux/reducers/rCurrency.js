@@ -4,6 +4,7 @@ const initState = {
   permissionList: [],
   modalVisible: false,
   showForm: false,
+  totalPrice: 0,
 };
 export default function currency(state = initState, action) {
   let newState = Object.assign({}, state);
@@ -44,6 +45,9 @@ export default function currency(state = initState, action) {
       break;
     case types.SET_SHOW_FORM:
       newState.showForm = action.data;
+      break;
+    case types.SET_TOTAL_PRICE:
+      newState.totalPrice = action.data;
       break;
     default:
       return state;

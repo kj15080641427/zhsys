@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Breadcrumb, message } from "antd";
+import { Button, Form, Input, Breadcrumb } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -10,8 +10,9 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  approvalLimsUselanapply,
   getLimsUselanapplyListPurItem,
+  getLanapplyPurByList,
+  getAttachment,
 } from "../../../request/index";
 
 let storeLabel = "base";
@@ -24,10 +25,14 @@ class BaseNewPageLayout extends React.Component {
       filterName: {},
       disabled: false, //表单防重复点击
       records: {},
-      taskInfo: {}, //事件详情
+
+      approvalRecords: {}, //购置申请信息
+      defaultFileList: [], //已上传文件列表
     };
   }
-
+  componentWillUnmount() {
+    this.props.actions.setShowForm(false);
+  }
   componentDidMount() {
     this.props.actions.getBase({
       request: this.props.get,
@@ -38,7 +43,6 @@ class BaseNewPageLayout extends React.Component {
   render() {
     const {
       get,
-      add,
       upd,
       del,
       keyId,
@@ -56,6 +60,7 @@ class BaseNewPageLayout extends React.Component {
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
+      totalPrice,
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -111,6 +116,21 @@ class BaseNewPageLayout extends React.Component {
     };
     // 修改
     const update = (row) => {
+      getAttachment({
+        businessId: row.id,
+        businessType: "1",
+        current: 1,
+        size: -1,
+      }).then((res) => {
+        this.setState({
+          defaultFileList: res.data.records,
+        });
+      });
+      getLanapplyPurByList({ id: row.id }).then((res) => {
+        this.setState({
+          approvalRecords: res.data.limsPurplanapply,
+        });
+      });
       getLimsUselanapplyListPurItem({
         current: 1,
         mainId: row.id,
@@ -122,7 +142,9 @@ class BaseNewPageLayout extends React.Component {
         row = { ...row, limsBasicdevice: list };
 
         formatList.map((item) => {
-          row = { ...row, [item]: moment(row[item]) };
+          if (row[item]) {
+            row = { ...row, [item]: moment(row[item]) };
+          }
         });
         this.setState({
           records: row,
@@ -131,40 +153,32 @@ class BaseNewPageLayout extends React.Component {
         setShowForm(true);
       });
     };
-    //提交工作流
+    //到货验收
     const submitFlow = () => {
-      let formData = this.formRef.current.getFieldValue();
+      let values = this.formRef.current.getFieldValue();
       formatList.forEach((item) => {
-        formData = {
-          ...formData,
-          [item]: moment(formData[item]).format("YYYY-MM-DD HH:mm:ss"),
+        values = {
+          ...values,
+          [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
         };
       });
       stringList.forEach((item) => {
-        formData = {
-          ...formData,
-          [item]: String(formData[item]),
+        values = {
+          ...values,
+          [item]: String(values[item]),
         };
       });
-      formData = {
-        ...formData,
-        submitType: 1,
-        limsBasicdeviceUpdateDTOList: formData.limsBasicdeviceDTOList,
+      let updvalue = {
+        ...values,
+        submitType: 0,
       };
-      delete formData.limsBasicdeviceDTOList;
-      formData[keyId]
-        ? addOrUpdateBase({
-            request: upd,
-            key: storeKey,
-            query: get,
-            param: formData,
-          })
-        : addOrUpdateBase({
-            request: add,
-            key: storeKey,
-            query: get,
-            param: formData,
-          });
+
+      addOrUpdateBase({
+        request: upd,
+        key: storeKey,
+        query: get,
+        param: updvalue,
+      });
     };
     // 提交
     const onFinish = (values) => {
@@ -182,53 +196,18 @@ class BaseNewPageLayout extends React.Component {
       });
       let updvalue = {
         ...values,
-        submitType: 0,
-        limsBasicdeviceUpdateDTOList: values.limsBasicdeviceDTOList,
-      };
-      delete updvalue.limsBasicdeviceDTOList;
-      let addvalue = {
-        ...values,
+        totalPrice: totalPrice,
         submitType: 0,
       };
-      delete values.limsBasicdeviceDTOList;
-      values[keyId]
-        ? addOrUpdateBase({
-            request: upd,
-            key: storeKey,
-            query: get,
-            param: updvalue,
-          })
-        : addOrUpdateBase({
-            request: add,
-            key: storeKey,
-            query: get,
-            param: addvalue,
-          });
+
+      addOrUpdateBase({
+        request: upd,
+        key: storeKey,
+        query: get,
+        param: updvalue,
+      });
     };
-    //审批
-    const approvalClick = (e) => {
-      let formData = this.formRef?.current?.getFieldValue();
-      if (formData.msg) {
-        approvalLimsUselanapply({
-          limsPurplanapplyId: formData?.id,
-          msg: formData?.msg,
-          type: e,
-        }).then((res) => {
-          getBase({
-            request: get,
-            key: storeKey,
-            param: { current: 1, size: 10 },
-          });
-          setShowForm(false);
-          console.log(res);
-        });
-      } else {
-        message.error("请输入审批意见");
-      }
-    };
-    const approvalClick0 = () => approvalClick(0);
-    const approvalClick1 = () => approvalClick(1);
-    const approvalClick2 = () => approvalClick(2);
+
     // 查询
     const rowFinish = (values) => {
       this.setState({
@@ -300,7 +279,7 @@ class BaseNewPageLayout extends React.Component {
                   ))}
                 </Form>
                 <Button className="base-add-button">高级</Button>
-                <Button
+                {/* <Button
                   className="base-add-button"
                   onClick={() => {
                     this.setState({
@@ -311,7 +290,7 @@ class BaseNewPageLayout extends React.Component {
                   }}
                 >
                   添加
-                </Button>
+                </Button> */}
               </div>
             </div>
             <DYTable
@@ -339,11 +318,9 @@ class BaseNewPageLayout extends React.Component {
             <div className="view-query-left">{renderBreadcrumb()}</div>
             <div className="head-line"></div>
             <FlowForm
-              taskInfo={this.state.taskInfo}
-              approvalClick0={approvalClick0}
-              approvalClick1={approvalClick1}
-              approvalClick2={approvalClick2}
+              approvalRecords={this.state.approvalRecords}
               records={this.state.records}
+              defaultFileList={this.state.defaultFileList}
               submitFlow={submitFlow}
               buttonText={buttonText}
               showChild={showChild}
@@ -392,6 +369,7 @@ const mapStateToProps = (state) => {
     loading: state.currency.loading,
     visible: state.currency.visible,
     showForm: state.currency.showForm,
+    totalPrice: state.currency.totalPrice,
     // dict: state.currency.dict,
   };
 };

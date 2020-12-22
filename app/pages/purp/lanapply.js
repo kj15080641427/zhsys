@@ -1,6 +1,6 @@
 //购置申请
 import React, { useEffect } from "react";
-import { Input, DatePicker } from "antd";
+import { Input, DatePicker, Select } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../redux/actions/aCurrency";
@@ -97,7 +97,7 @@ export const columns = [
   },
   {
     title: "申请单号",
-    dataIndex: "name",
+    dataIndex: "code",
     hidden: true,
   },
   {
@@ -107,6 +107,11 @@ export const columns = [
   {
     title: "申购类型",
     dataIndex: "purType",
+    ele: (
+      <Select>
+        <Select.Option value={1}>购置</Select.Option>
+      </Select>
+    ),
   },
   {
     title: "期望供货时间",

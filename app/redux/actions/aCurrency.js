@@ -90,3 +90,11 @@ export const getPurListInfo = (data) => {
     data,
   };
 };
+
+//购置单总金额
+export const setTotalPrice = (data) => {
+  return {
+    type: types.SET_TOTAL_PRICE,
+    data,
+  };
+};

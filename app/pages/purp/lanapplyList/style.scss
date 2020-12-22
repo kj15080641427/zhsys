@@ -140,10 +140,20 @@
     margin-right: 10px;
   }
 }
-.purplist-flex{
+.purplist-flex {
   display: flex;
   align-items: center;
 }
-.purplist-upload-left{
+.purplist-upload-left {
   width: 50%;
+}
+.approval-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  .approval-label {
+    width: 90px;
+    text-align: right;
+    margin-right: 30px;
+  }
 }
