@@ -127,7 +127,7 @@ const LendapplyList = (props) => {
       name: "购置管理",
     },
     {
-      name: "购置申请管理",
+      name: "购置单",
     },
   ];
   return (

@@ -9,8 +9,8 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  getLimsUselendById,
-  approvalLimsUseLendapply,
+  getRepairById,
+  approvaRepair,
   getAttachment,
 } from "../../../request/index";
 
@@ -122,18 +122,18 @@ class LendLayout extends React.Component {
           defaultFileList: res.data.records,
         });
       });
-      getLimsUselendById({ id: row.id }).then((res) => {
+      getRepairById({ id: row.id }).then((res) => {
         this.setState({
           taskInfo: res.data,
           records: row,
         });
-        let lsit = res.data.limsUselendapplyitemList?.map((item) => ({
+        let lsit = res.data.limsRepairapplyitemSaveDTOS?.map((item) => ({
           ...item,
-          ...item.limsBasicdevice,
+          ...item.limsRepairapply,
         }));
         row = {
           ...res.data.limsUselendapply,
-          deviceIdList: lsit,
+          limsRepairapplyitemSaveDTOS: lsit,
         };
         formatList.map((item) => {
           row = { ...row, [item]: moment(row[item]) };
@@ -161,36 +161,39 @@ class LendLayout extends React.Component {
       let updvalue = {
         ...formData,
         submitType: 1,
-        deviceIdList: formData.deviceIdList.map((item) => {
-          totalFee = totalFee + item.totalPrice;
-          return {
-            deviceId: item.id, //设备ID
-            complexFundId: "791606316736065536", //经费ID
-            foundId: "791606316736065536", //经费ID
-            foundFee: 11000, //经费余额
-            totalPrice: item.totalPrice, //x小计金额
-            usePeriod: item.usePeriod, //使用天数
-            usePrice: item.usePrice, //单价
-          };
-        }),
+        limsRepairapplyitemSaveDTOS: formData.limsRepairapplyitemSaveDTOS.map(
+          (item) => {
+            totalFee = totalFee + item.totalPrice;
+            return {
+              deviceId: item.id, //
+              complexFundId: "791606316736065536", //
+              foundId: "791606316736065536", //
+              foundFee: 11000, //
+              usePeriod: item.usePeriod, //
+              usePrice: item.usePrice, //
+            };
+          }
+        ),
         totalFee: totalFee,
       };
       // delete updvalue.limsBasicdeviceDTOList;
       let addvalue = {
         ...formData,
         submitType: 1,
-        deviceIdList: formData.deviceIdList.map((item) => {
-          totalFee = totalFee + item.totalPrice;
-          return {
-            deviceId: item.id, //设备ID
-            complexFundId: "791606316736065536", //经费ID
-            foundId: "791606316736065536", //经费ID
-            foundFee: 11000, //经费余额
-            totalPrice: item.totalPrice, //x小计金额
-            usePeriod: item.usePeriod, //使用天数
-            usePrice: item.usePrice, //单价
-          };
-        }),
+        limsRepairapplyitemSaveDTOS: formData.limsRepairapplyitemSaveDTOS.map(
+          (item) => {
+            totalFee = totalFee + item.totalPrice;
+            return {
+              deviceId: item.id, //设备ID
+              complexFundId: "791606316736065536", //经费ID
+              foundId: "791606316736065536", //经费ID
+              foundFee: 11000, //经费余额
+              totalPrice: item.totalPrice, //x小计金额
+              usePeriod: item.usePeriod, //使用天数
+              usePrice: item.usePrice, //单价
+            };
+          }
+        ),
         totalFee: totalFee,
       };
 
@@ -226,18 +229,20 @@ class LendLayout extends React.Component {
       let updvalue = {
         ...values,
         submitType: 0,
-        deviceIdList: values.deviceIdList.map((item) => {
-          totalFee = totalFee + item.totalPrice;
-          return {
-            deviceId: item.id, //设备ID
-            complexFundId: "791606316736065536", //经费ID
-            foundId: "791606316736065536", //经费ID
-            foundFee: 11000, //经费余额
-            totalPrice: item.totalPrice, //x小计金额
-            usePeriod: item.usePeriod, //使用天数
-            usePrice: item.usePrice, //单价
-          };
-        }),
+        limsRepairapplyitemSaveDTOS: values.limsRepairapplyitemSaveDTOS.map(
+          (item) => {
+            totalFee = totalFee + item.totalPrice;
+            return {
+              deviceId: item.id, //设备ID
+              complexFundId: "791606316736065536", //经费ID
+              foundId: "791606316736065536", //经费ID
+              foundFee: 11000, //经费余额
+              totalPrice: item.totalPrice, //x小计金额
+              usePeriod: item.usePeriod, //使用天数
+              usePrice: item.usePrice, //单价
+            };
+          }
+        ),
         totalFee: totalFee,
       };
       // delete updvalue.limsBasicdeviceDTOList;
@@ -245,18 +250,21 @@ class LendLayout extends React.Component {
       let addvalue = {
         ...values,
         submitType: 0,
-        deviceIdList: values.deviceIdList.map((item) => {
-          totalFee = totalFee + item.totalPrice;
-          return {
-            deviceId: item.id, //设备ID
-            complexFundId: "791606316736065536", //经费ID
-            foundId: "791606316736065536", //经费ID
-            foundFee: 11000, //经费余额
-            totalPrice: item.totalPrice, //x小计金额
-            usePeriod: item.usePeriod, //使用天数
-            usePrice: item.usePrice, //单价
-          };
-        }),
+        limsRepairapplyitemSaveDTOS: values.limsRepairapplyitemSaveDTOS.map(
+          (item) => {
+            totalFee = totalFee + item.totalPrice;
+            return {
+              deviceId: item.id, //设备ID
+              planTime: item.planTime,
+              planFee: item.planFee,
+              remark: item.remark,
+              // foundFee: 11000, //经费余额
+              // totalPrice: item.totalPrice, //x小计金额
+              // usePeriod: item.usePeriod, //使用天数
+              // usePrice: item.usePrice, //单价
+            };
+          }
+        ),
         totalFee: totalFee,
       };
       // delete values.limsBasicdeviceDTOList;
@@ -278,7 +286,7 @@ class LendLayout extends React.Component {
     const approvalClick = (e) => {
       let formData = this.formRef?.current?.getFieldValue();
       if (formData.msg) {
-        approvalLimsUseLendapply({
+        approvaRepair({
           id: formData?.id,
           msg: formData?.msg,
           type: e,

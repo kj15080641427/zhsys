@@ -191,6 +191,8 @@ export function delLimsBasicDict(data) {
   return fetchJSONData("POST", "/api/base/LimsBasicdict/del", data);
 }
 
+/**借出管理 */
+
 //查询使用借出
 export function getLimsUselendapply(data) {
   return fetchJSONData("POST", "/api/base/LimsUselendapply/page", data);
@@ -207,7 +209,48 @@ export function updLimsUselendapply(data) {
 export function delLimsUselendapply(data) {
   return fetchJSONData("POST", "/api/base/LimsUselendapply/del", data);
 }
+//根据ID查询借出清单
+export function getLimsUselendById(data) {
+  return fetchJSONData("POST", "/api/base/LimsUselendapply/queryById", data);
+}
+//审批借出流程
+export function approvalLimsUseLendapply(data) {
+  return fetchJSONData("POST", "/api/base/LimsUselendapply/approval", data);
+}
 
+/**归还管理 */
+//查询归还
+//查询归还申请
+export function getLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/page", data);
+}
+//添加归还申请
+export function addLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/save", data);
+}
+//更新归还申请
+export function updLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/update", data);
+}
+//删除归还申请
+export function delLimsUseReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/del", data);
+}
+//根据ID查询归还清单
+export function getReturnById(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/queryById", data);
+}
+//审批归还流程
+export function approvaReturn(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/approval", data);
+}
+
+//查询归还清单
+export function getLimsUseReturnList(data) {
+  return fetchJSONData("POST", "/api/base/LimsUsereturnapplyitem/page", data);
+}
+
+/** 购置申请*/
 //查询购置申请
 export function getLimsUselanapply(data) {
   return fetchJSONData("POST", "/api/base/LimsPurplanapply/page", data);
@@ -269,7 +312,6 @@ export function getLimsUselanapplyListPurItem(data) {
   return fetchJSONData("POST", "/api/base/LimsPuritem/query", data);
 }
 
-
 //查询单据附件
 export function getAttachment(data) {
   return fetchJSONData("POST", "/api/base/LimsAttachment/page", data);
@@ -287,20 +329,46 @@ export function delAttachment(data) {
   return fetchJSONData("POST", "/api/base/LimsAttachment/del", data);
 }
 
+/**维修管理 */
+//查询维修申请
+export function getRepair(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairapply/page", data);
+}
+//添加维修申请
+export function addRepair(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairapply/save", data);
+}
+//更新维修申请
+export function updRepair(data) {
+  return fetchJSONData("POST", "api/base/LimsRepairapply/update", data);
+}
+//删除维修申请
+export function delRepair(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairapply/del", data);
+}
+//根据ID查询维修清单
+export function getRepairById(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairapply/queryById", data);
+}
+//审批维修流程
+export function approvaRepair(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairapply/approval", data);
+}
 
-//查询归还申请
-export function getLimsUseReturn(data) {
-  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/page", data);
+/**年度经费 */
+//查询年度经费
+export function getComplexfound(data) {
+  return fetchJSONData("POST", "/api/base/LimsComplexfund/page", data);
 }
-//添加归还申请
-export function addLimsUseReturn(data) {
-  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/save", data);
+//添加年度经费
+export function addComplexfound(data) {
+  return fetchJSONData("POST", "/api/base/LimsComplexfund/save", data);
 }
-//更新归还申请
-export function updLimsUseReturn(data) {
-  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/update", data);
+//更新年度经费
+export function updComplexfound(data) {
+  return fetchJSONData("POST", "api/base/LimsComplexfund/update", data);
 }
-//删除归还申请
-export function delLimsUseReturn(data) {
-  return fetchJSONData("POST", "/api/base/LimsUsereturnapply/del", data);
+//删除年度经费
+export function delComplexfound(data) {
+  return fetchJSONData("POST", "/api/base/LimsComplexfund/del", data);
 }

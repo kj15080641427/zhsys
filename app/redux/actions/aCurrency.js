@@ -98,3 +98,11 @@ export const setTotalPrice = (data) => {
     data,
   };
 };
+
+//获取年度经费
+export const getComplexfund = (data) => {
+  return {
+    type: types.GET_COMPLEXFUND,
+    data,
+  };
+};

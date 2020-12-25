@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Popconfirm } from "antd";
-import ChildTable from "./childTable";
+
 const DYForm = (props) => {
   const {
     onFinish,
@@ -13,7 +13,6 @@ const DYForm = (props) => {
     showDelete = false,
     deleteClick,
     disabled = false,
-    showChild = false,
     buttonText = "提交",
   } = props;
 

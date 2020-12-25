@@ -4,8 +4,8 @@ import { columnsToForm } from "../../../utils/common";
 import moment from "moment";
 import FormSelect from "../../../components/formItems/select";
 import {
-  getLimsBasiccategory,
-  updLimsBasicDevice,
+  getLimsBasiccategory, //查询设备类别
+  updLimsBasicDevice, //修改设备
   getLimsUselanapplyListPurItem,
   getLimsBasicDevicePart, //查询设备部件列表
 } from "../../../request/index";

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Input, DatePicker, Select } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as actions from "../../redux/actions/aCurrency";
+import * as actions from "../../../redux/actions/aCurrency";
 import {
   getLimsUselanapply,
   addLimsUselanapply,
@@ -11,11 +11,11 @@ import {
   delLimsUselanapply,
   getUserCompany, //查询单位
   getUser, //查询用户
-} from "../../request/index";
-import BaseNewPageLayout from "../../components/baseComponent/newPageComponent/newPageComponent";
-import { columnsToForm } from "./../../utils/common";
-import ChildTable from "../../components/home/childTable";
-import FormSelect from "./../../components/formItems/select";
+} from "../../../request/index";
+import BaseNewPageLayout from "./newPageComponent";
+import { columnsToForm } from "../../../utils/common";
+import ChildTable from "./childTable";
+import FormSelect from "../../../components/formItems/select";
 
 const statusElement = {
   0: (
@@ -109,7 +109,7 @@ export const columns = [
     dataIndex: "purType",
     ele: (
       <Select>
-        <Select.Option value={1}>购置</Select.Option>
+        <Select.Option value={'1'}>购置</Select.Option>
       </Select>
     ),
   },
@@ -185,7 +185,7 @@ const Lendapply = (props) => {
       name: "购置管理",
     },
     {
-      name: "购置申请管理",
+      name: "购置申请",
     },
   ];
   return (

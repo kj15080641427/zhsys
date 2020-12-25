@@ -49,6 +49,9 @@ export default function currency(state = initState, action) {
     case types.SET_TOTAL_PRICE:
       newState.totalPrice = action.data;
       break;
+    case types.SET_COMPLEXFUND:
+      newState.complexfund = action.data;
+      break;
     default:
       return state;
   }

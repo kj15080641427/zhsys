@@ -40,6 +40,8 @@ function* getbaseData({ data }) {
     const result = yield call(request, param);
     if (result.code === code) {
       res = result.data;
+    } else {
+      message.error(result.msg);
     }
   } catch (e) {
     console.log(e);
@@ -98,6 +100,8 @@ function* addOrUpdateBaseData({ data }) {
         type: types.GET_BASE,
         data: { request: query, key: key, param: { current: 1, size: 10 } },
       });
+    } else {
+      message.error(result.msg);
     }
   } catch (error) {
     console.error(error);
@@ -165,6 +169,23 @@ function* getPurListInfo({ data }) {
   }
 }
 
+//年度经费
+function* getComplexfund({ data }) {
+  try {
+    let result = yield call(req.getComplexfound, data);
+    if (result.code == code) {
+      yield put({
+        type: types.SET_COMPLEXFUND,
+        data: result.data,
+      });
+    } else {
+      message.error(result.message);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export default function* currency() {
   yield all([
     takeEvery(types.LOGIN_IN, login),
@@ -175,6 +196,8 @@ export default function* currency() {
 
     takeEvery(types.SET_ROLE_PERMISSION, setRolePermission),
     takeEvery(types.GET_PUR_LIST_INFO, getPurListInfo),
+
+    takeEvery(types.GET_COMPLEXFUND, getComplexfund),
   ]);
   // yield all([takeEvery(types.GET_BASE, getbaseData)]);
 }

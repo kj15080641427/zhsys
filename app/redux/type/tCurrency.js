@@ -29,3 +29,6 @@ export const APPROVAL_FLOW = "APPROVAL_FLOW";
 export const GET_PUR_LIST_INFO = "GET_PUR_LIST_INFO"; //购置单查询购置清单详情
 
 export const SET_TOTAL_PRICE = "SET_TOTAL_PRICE"; //购置单总金额
+
+export const GET_COMPLEXFUND = "GET_COMPLEXFUND"; //查询年度经费
+export const SET_COMPLEXFUND = "SET_COMPLEXFUND"; //设置年度经费

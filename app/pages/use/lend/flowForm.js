@@ -1,13 +1,21 @@
-import React from "react";
-import { Button, Form, Row, Col, Input, Timeline } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Row, Col, Upload, message, Timeline, Input } from "antd";
 import ChildTable from "./childTable";
+// import FormSelect from "../../../components/formItems/select";
+import { addAttachment } from "../../../request/index";
 import "./style.scss";
+import { bindActionCreators } from "redux";
+import * as actions from "../../../redux/actions/aCurrency";
+import { connect } from "react-redux";
+import { filterFileList } from "../../../utils/common";
+
 //工作流表单
 const FlowForm = (props) => {
+  const [imageList, setImageList] = useState([]);
+  const [fileList, setFileList] = useState([]);
   const {
     onFinish, //提交按钮回调
     baseFormItem = [], //基础信息
-    listFormItem = [], //列表清单
     name, //表单dataindex
     formRef, //ref
     id, //数据唯一id
@@ -15,24 +23,64 @@ const FlowForm = (props) => {
     buttonText = "保存", //submit按钮文字
     submitFlow, //提交审批回调
     records, //表单数据
+    defaultFileList, //已上传文件列表
+    totalPrice, //总金额
     approvalClick0, //审批
     approvalClick1, //审批
     approvalClick2, //审批
     taskInfo, //审批流程信息
   } = props;
+  const { setTotalPrice } = props.actions;
 
+  const uploadFile = () => {
+    let allList = [...fileList, ...imageList];
+    let list = allList.map((item) => ({
+      businessId: records.id,
+      businessType: "1",
+      fileName: item.name,
+      filePath: item?.response?.data || item.url,
+      fileType: item.type,
+      smallFilePath: item?.response?.data || item.url,
+      title: item.name.split(".")[0],
+    }));
+    addAttachment(list).then((res) => {
+      if (res.code != 200) {
+        message.warning("附件上传失败");
+      } else {
+        message.success("附件上传成功");
+      }
+    });
+  };
+
+  useEffect(() => {
+    let price = 0;
+    formRef?.current?.getFieldValue().limsUselendapplyitemList?.map((item) => {
+      price = price + item.price;
+    });
+    setTotalPrice(price);
+  }, [formRef?.current?.getFieldValue().limsUselendapplyitemList]);
+  useEffect(() => {
+    let { file, image } = filterFileList(defaultFileList);
+    setFileList(file);
+    setImageList(image);
+    return () => {
+      setFileList([]);
+      setImageList([]);
+    };
+  }, [defaultFileList]);
+  // const setDevice = (e) => {
+  //   setTotalPrice(e);
+  // };
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
         <div className="line"></div>
-        购置信息:
+        借出信息:
       </div>
+
+      {/* 渲染基础表单 */}
       <Row>
-        {/* 渲染基础表单 */}
         {baseFormItem.map((item, index) => {
-          const newElement = React.cloneElement(item.ele, {
-            disabled: records?.status == "0" || !records?.status ? false : true,
-          });
           return (
             <Col key={index} className="form-item-box" span={item.col || 8}>
               <Form.Item
@@ -43,9 +91,9 @@ const FlowForm = (props) => {
                 rules={[{ required: item.require }]}
                 width={"200px"}
                 style={item.style}
-                labelCol={{ span: item.labelCol || 8 }}
+                labelCol={{ span: item.labelCol || 4 }}
               >
-                {newElement}
+                {item.ele}
               </Form.Item>
             </Col>
           );
@@ -53,27 +101,84 @@ const FlowForm = (props) => {
       </Row>
       <div className="card-line"></div>
       <div className="form-info">
-        <div className="line"></div>购置清单:
+        <div className="line"></div>借出清单:
+      </div>
+      <Row>
+        {/* 列表 */}
+        <Col span={24}>
+          <Form.Item labelAlign="right" label={""} name={"deviceIdList"}>
+            <ChildTable records={records}></ChildTable>
+          </Form.Item>
+        </Col>
+      </Row>
+      <div className="form-info">
+        <div className="line"></div>
+        附件相关:
       </div>
       <Row>
         <Col span={24}>
           <Form.Item
             labelAlign="right"
             label={""}
-            name={"deviceIdList"}
-            rules={[{ required: true }]}
+            name={"file"}
+            rules={[{ require: false }]}
           >
-            <ChildTable></ChildTable>
+            <div className="purplist-upload-box">
+              <div className="purplist-upload-left">
+                <Upload
+                  accept=".word,.xlsx,.docx,.pdf"
+                  action="http://47.115.10.75:9011/api/file/all/upload"
+                  multiple
+                  fileList={fileList}
+                  onRemove={(file) => {
+                    setFileList(fileList.filter((v) => v.url !== file.url));
+                  }}
+                  onChange={(fileInfo) => {
+                    setFileList(fileInfo.fileList);
+                  }}
+                >
+                  <div className="purplist-flex">
+                    <Button className="pruplist-upload-excel">
+                      上传购置资料
+                    </Button>
+                    <div>.word .xlsx .docx .pdf</div>
+                  </div>
+                </Upload>
+              </div>
+              <div className="purplist-upload-right">
+                <Upload
+                  accept=".jpg,.png"
+                  action="http://47.115.10.75:9011/api/file/all/upload"
+                  multiple
+                  listType="picture"
+                  fileList={imageList}
+                  onRemove={(file) => {
+                    setImageList(imageList.filter((v) => v.url !== file.url));
+                  }}
+                  onChange={(fileInfo) => {
+                    setImageList(fileInfo.fileList);
+                  }}
+                >
+                  <div className="purplist-flex">
+                    <Button className="purplist-upload-image">
+                      上传购置凭证
+                    </Button>
+                    <div> .jpg .png</div>
+                  </div>
+                </Upload>
+              </div>
+            </div>
           </Form.Item>
+          {/* <Button
+            onClick={() => console.log(formRef.current.getFieldValue(), "VVV")}
+          >
+            上传测试
+          </Button> */}
         </Col>
       </Row>
-      <div className="form-info">
-        <div className="line"></div>
-        借出提供资料:
-      </div>
       {/* 编辑时提交id */}
       <Form.Item name={id}></Form.Item>
-      {/* 审批流程 */}
+
       {records?.status && (
         <Timeline>
           {taskInfo?.activitiDOList?.map((item) => {
@@ -110,8 +215,13 @@ const FlowForm = (props) => {
       ) : (
         ""
       )}
+
       <Form.Item>
         <div className="flow-form-bottom">
+          <div>
+            合计金额:
+            <span style={{ color: "red" }}>{totalPrice}</span>元
+          </div>
           {records?.status !== "1" &&
           records?.status !== "0" &&
           records?.status ? (
@@ -120,10 +230,21 @@ const FlowForm = (props) => {
             </Button>
           ) : records?.status == "0" || !records?.status ? (
             <>
-              <Button htmlType="submit" className="flow-form-submit">
-                {buttonText}
+              <Button
+                htmlType="submit"
+                className="flow-form-submit"
+                onClick={uploadFile}
+              >
+                保存
               </Button>
-              <Button className="flow-form-flow" onClick={submitFlow}>
+              <Button
+                className="flow-form-flow"
+                onClick={() => {
+                  submitFlow();
+                  uploadFile();
+                }}
+                // onClick={uploadFile}
+              >
                 提交审批
               </Button>
               {/* </Popconfirm> */}
@@ -167,4 +288,14 @@ const FlowForm = (props) => {
     </Form>
   );
 };
-export default FlowForm;
+const mapStateToProps = (state) => {
+  return {
+    totalPrice: state.currency.totalPrice,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FlowForm);

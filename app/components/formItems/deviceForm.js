@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Row, Col, DatePicker, Button, Card } from "antd";
+import { Form, Input, Row, Col, DatePicker, Button } from "antd";
 // import DYForm from "./../home/form";
 import FormSelect from "./select";
 import { getLimsBasiccategory } from "../../request/index";

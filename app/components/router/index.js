@@ -14,8 +14,8 @@ export class Router extends React.Component {
     return (
       <HashRouter>
         <Switch>
-          <Route exact path={`/`} component={AsyncLogin} />
-          <Route path={`/home/`} component={BaseLayout} />
+          <Route exact path={`/login`} component={AsyncLogin} />
+          <Route component={BaseLayout} />
           <Route component={NoMatch} />
         </Switch>
       </HashRouter>

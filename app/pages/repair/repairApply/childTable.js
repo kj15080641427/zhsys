@@ -28,7 +28,7 @@ const ChildTable = (props) => {
     //计算所有设备的总金额
     let total = 0;
     dataSource?.map((item) => {
-      total = total + item.totalPrice;
+      total = Number(total) + Number(item.planFee);
     });
     setTotalPrice(total);
   }, [dataSource, day, momeny]);
@@ -109,88 +109,51 @@ const ChildTable = (props) => {
       rules: [{ require: false }],
     },
     {
-      title: "使用天数",
-      dataIndex: "usePeriod",
+      title: "预估天时",
+      dataIndex: "planTime",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[0]?.usePeriod || e}
-          // value={props.value[0]?.usePeriod || e}
-          // value={e || day}
+          // defaultValue={1}
+          // value={props.value[0]?.planTime || e}
           onChange={(W) => {
             setDay(W.target.value);
             let list = dataSource;
-            list[index].usePeriod = W.target.value;
+            list[index].planTime = W.target.value;
             setDataSource(list);
           }}
         ></Input>
       ),
     },
     {
-      title: "使用单价(元)",
-      dataIndex: "usePrice",
+      title: "预估费用(元)",
+      dataIndex: "planFee",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[0]?.usePrice}
+          // defaultValue={1}
           // value={props.value[0]?.usePrice}
           onChange={(W) => {
             setMoneny(W.target.value);
             let list = dataSource;
-            list[index].usePrice = W.target.value;
+            list[index].planFee = W.target.value;
             setDataSource(list);
           }}
         ></Input>
       ),
     },
-    {
-      title: "小计",
-      dataIndex: "totalPrice",
-      width: "120px",
-      render: (_, row, index) => {
-        let list = dataSource;
-        list[index].totalPrice = row.usePeriod * row.usePrice;
-        return row.usePeriod * row.usePrice || "";
-      },
-    },
+    // {
+    //   title: "小计",
+    //   dataIndex: "totalPrice",
+    //   width: "120px",
+    //   render: (_, row, index) => {
+    //     let list = dataSource;
+    //     list[index].totalPrice = row.usePeriod * row.usePrice;
+    //     return row.usePeriod * row.usePrice || "";
+    //   },
+    // },
     {
       title: "应用项目",
       dataIndex: "",
     },
-    // {
-    //   title: "单位",
-    //   dataIndex: "unit",
-    //   ele: (
-    //     <FormSelect
-    //       request={getUserCompany}
-    //       storeKey="userCompany"
-    //       labelString="name"
-    //       valueString="id"
-    //     ></FormSelect>
-    //   ),
-    // },
-
-    // {
-    //   title: "品牌",
-    //   dataIndex: "brand",
-    //   rules: [{ require: false }],
-    // },
-    // {
-    //   title: "备注",
-    //   dataIndex: "remark",
-    //   rules: [{ require: false }],
-    // },
-    // {
-    //   title: "设备类别",
-    //   dataIndex: "categoryId",
-    //   ele: (
-    //     <FormSelect
-    //       request={getLimsBasiccategory}
-    //       storeKey="deviceType"
-    //       labelString="name"
-    //       valueString="id"
-    //     ></FormSelect>
-    //   ),
-    //   rules: [{ require: false }],
-    // },
 
     {
       title: "操作",

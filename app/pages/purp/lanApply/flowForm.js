@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Row, Col, Input, Timeline } from "antd";
-import "./index.scss";
+import "./style.scss";
 //工作流表单
 const FlowForm = (props) => {
   const {

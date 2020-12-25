@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Breadcrumb } from "antd";
+import { Button, Form, Input, Breadcrumb, message } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -10,8 +10,8 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  getLimsUselanapplyListPurItem,
-  getLanapplyPurByList,
+  getReturnById,
+  getLimsUseReturnList,
   getAttachment,
 } from "../../../request/index";
 
@@ -126,31 +126,37 @@ class BaseNewPageLayout extends React.Component {
           defaultFileList: res.data.records,
         });
       });
-      getLanapplyPurByList({ id: row.id }).then((res) => {
-        this.setState({
-          approvalRecords: res.data.limsPurplanapply,
-        });
-      });
-      getLimsUselanapplyListPurItem({
+      getLimsUseReturnList({ size: -1, current: 1, mainId: row.id }).then(
+        (res) => {
+          this.setState({
+            approvalRecords: res.data.limsPurplanapply,
+          });
+        }
+      );
+      getReturnById({
         current: 1,
         mainId: row.id,
         size: -1,
       }).then((res) => {
-        let list = res.data.map((item) => {
-          return { ...item, ...item.limsBasicdevice };
-        });
-        row = { ...row, limsBasicdevice: list };
+        if (res.code == 200) {
+          let list = res?.data?.map((item) => {
+            return { ...item, ...item.limsBasicdevice };
+          });
+          row = { ...row, limsBasicdevice: list };
 
-        formatList.map((item) => {
-          if (row[item]) {
-            row = { ...row, [item]: moment(row[item]) };
-          }
-        });
-        this.setState({
-          records: row,
-        });
-        this.formRef.current.setFieldsValue(row);
-        setShowForm(true);
+          formatList.map((item) => {
+            if (row[item]) {
+              row = { ...row, [item]: moment(row[item]) };
+            }
+          });
+          this.setState({
+            records: row,
+          });
+          this.formRef.current.setFieldsValue(row);
+          setShowForm(true);
+        } else {
+          message.error(res.msg);
+        }
       });
     };
     //到货验收
@@ -299,7 +305,8 @@ class BaseNewPageLayout extends React.Component {
               columns={columns}
               loading={loading}
               total={this.props[storeKey]?.total}
-              dataSource={this.props[storeKey]?.records || []}
+              // dataSource={this.props[storeKey]?.records || []}
+              dataSource={[{}]}
               current={this.props[storeKey]?.current}
               size={this.props[storeKey]?.size}
               rowkey={(row) => row[keyId]}

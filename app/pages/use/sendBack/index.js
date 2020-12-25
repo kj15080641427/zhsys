@@ -13,16 +13,21 @@ import {
   getLimsUseReturn,
   updLimsUseReturn,
   getUser, //查询用户
-  getLimsSupplier, //查询供应商
 } from "../../../request/index";
 import FormSelect from "../../../components/formItems/select";
 import BaseNewPageLayout from "./lanapplyListComponent";
 import { columnsToForm } from "../../../utils/common";
+import { statusElement } from "../lend/index";
 
 export const columns = [
   {
-    title: "购置单号",
+    title: "归还单号",
     dataIndex: "code",
+    hidden: true,
+  },
+  {
+    title: "借出单号",
+    dataIndex: "",
     hidden: true,
   },
   // {
@@ -34,32 +39,44 @@ export const columns = [
   //     </Select>
   //   ),
   // },
+  // {
+  //   title: "供应商",
+  //   dataIndex: "supplierName",
+  //   hidden: true,
+  // },
   {
-    title: "供应商",
-    dataIndex: "supplierName",
-    hidden: true,
-  },
-  {
-    title: "购置日期",
-    dataIndex: "purDate",
+    title: "借出时间",
+    dataIndex: "",
     ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
     formWidth: "120px",
   },
   {
-    title: "购置人",
-    dataIndex: "realName",
+    title: "归还时间",
+    dataIndex: "returnDate",
+    ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
+    formWidth: "120px",
+  },
+  {
+    title: "归还人",
+    dataIndex: "returnUser",
     hidden: true,
   },
   {
-    title: "申请单号",
-    dataIndex: "applyId",
+    title: "归还单位",
+    dataIndex: "returnCompany",
     hidden: true,
   },
 
   {
-    title: "购置金额",
+    title: "联系电话",
     dataIndex: "totalPrice",
     hidden: true,
+  },
+  {
+    title: "审批状态",
+    dataIndex: "totalPrice",
+    hidden: true,
+    render: (e) => statusElement[e],
   },
 ];
 const LendapplyList = (props) => {
@@ -68,22 +85,8 @@ const LendapplyList = (props) => {
   }, []);
 
   const baseFormItems = columnsToForm([
-    ...columns,
     {
-      title: "供应商",
-      dataIndex: "supplierId",
-      formWidth: "120px",
-      ele: (
-        <FormSelect
-          request={getLimsSupplier}
-          storeKey="supplier"
-          labelString="name"
-          valueString="id"
-        ></FormSelect>
-      ),
-    },
-    {
-      title: "购置人",
+      title: "归还人",
       dataIndex: "purUser",
       ele: (
         <FormSelect
@@ -95,11 +98,14 @@ const LendapplyList = (props) => {
       ),
     },
     {
-      title: "备注说明",
+      title: "联系电话",
       dataIndex: "remark",
       ele: <Input style={{ width: "100%" }} />,
-      col: 16,
-      labelCol: 2,
+    },
+    {
+      title: "归还时间",
+      dataIndex: "remark",
+      ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
     },
   ]);
 

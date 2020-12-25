@@ -13,6 +13,16 @@ import BaseLayout from "../../components/baseComponent/connectComponents";
 import { columnsToForm } from "../../utils/common";
 import { UploadOutlined } from "@ant-design/icons";
 
+const state = {
+  0: "默认",
+  1: "入库代采购",
+  2: "闲置",
+  3: "借出申请中",
+  4: "已借出",
+  5: "维修申请中",
+  6: "维修中",
+};
+
 const BaseDevice = () => {
   const columns = [
     {
@@ -55,16 +65,17 @@ const BaseDevice = () => {
       rules: [{ required: false }],
     },
     {
-      title: "状态",
+      title: "设备状态",
       dataIndex: "status",
       key: "status",
-      render: (e) => (e == 0 ? "启用" : "停用"),
-      ele: (
-        <Radio.Group>
-          <Radio.Button value={"0"}>启用</Radio.Button>
-          <Radio.Button value={"1"}>停用</Radio.Button>
-        </Radio.Group>
-      ),
+      hidden: true,
+      render: (e) => state[e],
+      // ele: (
+      //   <Radio.Group>
+      //     <Radio.Button value={"0"}>启用</Radio.Button>
+      //     <Radio.Button value={"1"}>停用</Radio.Button>
+      //   </Radio.Group>
+      // ),
       rules: [{ required: false }],
     },
     {
@@ -92,7 +103,7 @@ const BaseDevice = () => {
           name="logo"
           action="http://47.115.10.75:9011/swagger-ui.html" //上传地址
           listType="picture-card"
-          method='get'
+          method="get"
         >
           <Button icon={<UploadOutlined />}>上传</Button>
         </Upload>

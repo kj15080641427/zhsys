@@ -3,6 +3,8 @@ import { Select } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../redux/actions/aCurrency";
+import { getUserCompany, getLimsBasiccategory } from "../../request/index";
+
 const { Option } = Select;
 
 let key = "";
@@ -17,17 +19,17 @@ const FormSelect = (props) => {
     value,
     onChange,
   } = props;
-  const { getBase } = props.actions;
+  const { getBase } = props?.actions;
 
   useEffect(() => {
-    key = storeKey;
-    // if (!props[storeKey]) {
-    getBase({
-      request: request,
-      key: storeKey,
-      param: param,
-    });
-    // }
+    key = `dict${storeKey}`;
+    if (!props[`dict${storeKey}`]) {
+      getBase({
+        request: request,
+        key: `dict${storeKey}`,
+        param: param,
+      });
+    }
   }, []);
   return (
     <Select
@@ -36,7 +38,7 @@ const FormSelect = (props) => {
       onChange={(e) => onChange(e)}
       value={value}
     >
-      {props[storeKey]?.records?.map((item) => {
+      {props[`dict${storeKey}`]?.records?.map((item) => {
         return (
           <Option key={item[valueString]} value={item[valueString]}>
             {item[labelString]}
@@ -46,13 +48,14 @@ const FormSelect = (props) => {
     </Select>
   );
 };
+
 const mapStateToProps = (state) => {
   return {
     [key]: state.currency[key],
-    user: state.currency.user,
-    userCompany: state.currency.userCompany,
-    deviceType: state.currency.deviceType,
-    supplier: state.currency.supplier,
+    dictuser: state.currency.dictuser,
+    dictuserCompany: state.currency.dictuserCompany,
+    dictdeviceType: state.currency.dictdeviceType,
+    dictsupplier: state.currency.dictsupplier,
   };
 };
 
@@ -61,3 +64,19 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormSelect);
+// export const Company = () => (
+//   <FormSelect
+//     request={getUserCompany}
+//     storeKey="userCompany"
+//     labelString="name"
+//     valueString="id"
+//   ></FormSelect>
+// );
+// export const Category = () => (
+//   <FormSelect
+//     request={getLimsBasiccategory}
+//     storeKey="deviceType"
+//     labelString="name"
+//     valueString="id"
+//   ></FormSelect>
+// );

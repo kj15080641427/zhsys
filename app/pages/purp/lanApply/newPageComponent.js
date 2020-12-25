@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Form, Input, Breadcrumb, message } from "antd";
 import DYTable from "@app/components/home/table";
-import FlowForm from "@app/components/home/flowForm";
+import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
-import "../style.scss";
+import "./style.scss";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -111,21 +111,25 @@ class BaseNewPageLayout extends React.Component {
     // 修改
     const update = (row) => {
       getLimsUselanapplyById({ id: row.id }).then((res) => {
-        this.setState({
-          taskInfo: res.data,
-        });
-        row = {
-          ...row,
-          limsBasicdeviceDTOList: res.data.limsPurplanapplyitemDOList,
-        };
-        formatList.map((item) => {
-          row = { ...row, [item]: moment(row[item]) };
-        });
-        this.setState({
-          records: row,
-        });
-        this.formRef.current.setFieldsValue(row);
-        setShowForm(true);
+        if (res.code == 200) {
+          this.setState({
+            taskInfo: res.data,
+          });
+          row = {
+            ...row,
+            limsBasicdeviceDTOList: res.data.limsPurplanapplyitemDOList,
+          };
+          formatList.map((item) => {
+            row = { ...row, [item]: moment(row[item]) };
+          });
+          this.setState({
+            records: row,
+          });
+          this.formRef.current.setFieldsValue(row);
+          setShowForm(true);
+        } else {
+          message.error(res.msg);
+        }
       });
     };
     //提交工作流

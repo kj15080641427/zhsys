@@ -2,6 +2,8 @@ import React from "react";
 import { Table, Popover, Popconfirm } from "antd";
 import editImg from "./../../resource/edit.svg";
 import deleteImg from "./../../resource/delete.svg";
+import { EyeOutlined } from "@ant-design/icons";
+
 export default (props) => {
   const {
     confirm, //删除
@@ -25,17 +27,26 @@ export default (props) => {
       className: "column-money",
       width: 80,
       fixed: "right",
-      render: (isShow, row) => (
+      render: (_, row) => (
         <div style={{ display: "flex", alignItems: "center" }}>
-          <Popover content={"修改"}>
-            <img
-              style={{ cursor: "pointer" }}
-              width="18px"
-              height="18px"
-              src={editImg}
-              onClick={() => update(row)}
-            ></img>
-          </Popover>
+          {row?.status == "0" ? (
+            <Popover content={"修改"}>
+              <img
+                style={{ cursor: "pointer" }}
+                width="18px"
+                height="18px"
+                src={editImg}
+                onClick={() => update(row)}
+              ></img>
+            </Popover>
+          ) : (
+            <Popover content={"查看"}>
+              <EyeOutlined
+                style={{ fontSize: "18px" }}
+                onClick={() => update(row)}
+              />
+            </Popover>
+          )}
           <Popconfirm
             title="确定永久删除该数据吗?"
             onConfirm={() => confirm(row)}

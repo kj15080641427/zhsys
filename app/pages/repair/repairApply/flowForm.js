@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Col, Upload, message, Select } from "antd";
+import { Button, Form, Row, Col, Upload, message } from "antd";
 import ChildTable from "./childTable";
-// import FormSelect from "../../../components/formItems/select";
-import { addAttachment } from "../../../request/index";
+// import FormSelect from "../../components/formItems/select";
+import { getUser, getUserCompany, addAttachment } from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
+import { filterFileList } from "../../../utils/common";
 //工作流表单
 const FlowForm = (props) => {
   const [imageList, setImageList] = useState([]);
@@ -21,9 +22,10 @@ const FlowForm = (props) => {
     buttonText = "保存", //submit按钮文字
     submitFlow, //提交审批回调
     records, //表单数据
-    approvalRecords, //购置申请信息
+    // approvalRecords, //购置申请信息
     defaultFileList, //已上传文件列表
     totalPrice, //总金额
+    recordInfoList, //数据详情
     // approvalClick0, //审批
     // approvalClick1, //审批
     // approvalClick2, //审批
@@ -38,65 +40,16 @@ const FlowForm = (props) => {
     setTotalPrice(price);
   }, [formRef?.current?.getFieldValue().limsBasicdevice]);
   useEffect(() => {
-    let file = [];
-    let image = [];
-    defaultFileList?.map((item, index) => {
-      let type = item.fileName.split(".");
-      if (type[1] == "jpg" || type[1] == "png") {
-        item.filePath &&
-          image.push({
-            uid: index,
-            name: item.fileName,
-            status: "done",
-            url: item.filePath,
-          });
-      } else {
-        item.filePath &&
-          file.push({
-            uid: index,
-            name: item.fileName,
-            status: "done",
-            url: item.filePath,
-          });
-      }
-      setFileList(file);
-      setImageList(image);
-    });
+    const { file, image } = filterFileList(defaultFileList);
+    setFileList(file);
+    setImageList(image);
+
     return () => {
       setFileList([]);
       setImageList([]);
     };
   }, [defaultFileList]);
-  const info = [
-    {
-      label: "借出单号",
-      element: <div>{approvalRecords?.id}</div>,
-    },
-    {
-      label: "借出类型",
-      element: (
-        <div>
-          <Select defaultValue={"1"} disabled>
-            <Select.Option value={"1"}>内部借出</Select.Option>
-          </Select>
-        </div>
-      ),
-    },
-    {
-      label: "借出时间",
-      element: <div> {approvalRecords?.title}</div>,
-    },
-    {
-      label: "借出人信息",
-      element: <div> 姓名:a,证件号:a,单位:d</div>,
-      col: 24,
-      labelCol: 2,
-    },
-    // {
-    //   label: "购货时间",
-    //   element: <div> {approvalRecords.expectedDate}</div>,
-    // },
-  ];
+
   const setDevice = (e) => {
     setTotalPrice(e);
   };
@@ -104,12 +57,13 @@ const FlowForm = (props) => {
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
         <div className="line"></div>
-        购置信息:
+        维修信息:
       </div>
 
+      {/* 渲染基础表单 */}
       <Row>
-        {info.map((item) => (
-          <Col span={item.col || 8} className="form-item-box" key={item.label}>
+        {recordInfoList?.map((item) => (
+          <Col span={8} className="form-item-box" key={item.label}>
             <Form.Item
               disabled={true}
               labelAlign="right"
@@ -117,13 +71,13 @@ const FlowForm = (props) => {
               name={item.label}
               // rules={[{ required: true }]}
               width={"200px"}
-              labelCol={{ span: item.labelCol || 6 }}
+              labelCol={{ span: 4 }}
             >
               {item.element}
             </Form.Item>
           </Col>
         ))}
-        {/* 渲染基础表单 */}
+
         {baseFormItem.map((item, index) => {
           return (
             <Col key={index} className="form-item-box" span={item.col || 8}>
@@ -135,7 +89,7 @@ const FlowForm = (props) => {
                 rules={item.rules}
                 width={"200px"}
                 style={item.style}
-                labelCol={{ span: item.labelCol || 6 }}
+                labelCol={{ span: item.labelCol || 4 }}
               >
                 {item.ele}
               </Form.Item>
@@ -145,19 +99,23 @@ const FlowForm = (props) => {
       </Row>
       <div className="card-line"></div>
       <div className="form-info">
-        <div className="line"></div>购置清单:
+        <div className="line"></div>申请清单:
       </div>
       <Row>
         {/* 列表 */}
         <Col span={24}>
-          <Form.Item labelAlign="right" label={""} name={"limsBasicdevice"}>
+          <Form.Item
+            labelAlign="right"
+            label={""}
+            name={"limsRepairapplyitemSaveDTOS"}
+          >
             <ChildTable records={records} setDevice={setDevice}></ChildTable>
           </Form.Item>
         </Col>
       </Row>
       <div className="form-info">
         <div className="line"></div>
-        附件相关:
+        申请资料:
       </div>
       <Row>
         <Col span={24}>
@@ -167,7 +125,6 @@ const FlowForm = (props) => {
             name={"file"}
             rules={[{ require: false }]}
           >
-            {console.log(fileList, "???")}
             <div className="purplist-upload-box">
               <div className="purplist-upload-left">
                 <Upload
@@ -184,7 +141,7 @@ const FlowForm = (props) => {
                 >
                   <div className="purplist-flex">
                     <Button className="pruplist-upload-excel">
-                      上传购置资料
+                      上传申请资料
                     </Button>
                     <div>.word .xlsx .docx .pdf</div>
                   </div>
@@ -206,7 +163,7 @@ const FlowForm = (props) => {
                 >
                   <div className="purplist-flex">
                     <Button className="purplist-upload-image">
-                      上传购置凭证
+                      上传申请凭证
                     </Button>
                     <div> .jpg .png</div>
                   </div>
@@ -258,7 +215,7 @@ const FlowForm = (props) => {
               {buttonText}
             </Button>
             <Button className="flow-form-flow" onClick={submitFlow}>
-              到货验收
+              提交审批
             </Button>
             <Button className="flow-form-calcel" onClick={cancelClick}>
               关闭

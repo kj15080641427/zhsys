@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, DatePicker } from "antd";
-import { columnsToForm } from "../../utils/common";
+import { columnsToForm } from "../../../utils/common";
 import DYForm from "@app/components/home/form";
 import moment from "moment";
-import FormSelect from "../formItems/select";
-import { getLimsBasiccategory,getUserCompany } from "../../request/index";
+import FormSelect from "../../../components/formItems/select";
+import { getLimsBasiccategory, getUserCompany } from "../../../request/index";
 export default (props) => {
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);

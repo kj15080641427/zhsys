@@ -24,7 +24,7 @@ export function fetchJSONData(method, url, data) {
       message.error("网络请求失败,500");
     }
     if (res.status == 400) {
-      hashHistory.push("/");
+      hashHistory.push("/login");
     }
     if (res.status == "404") {
       message.error("网络请求失败,404");
@@ -66,4 +66,29 @@ export const columnsToFormFlow = (columns) => {
     };
   });
   return formItem;
+};
+export const filterFileList = (data) => {
+  let file = [];
+  let image = [];
+  data?.map((item, index) => {
+    let type = item.fileName.split(".");
+    if (type[1] == "jpg" || type[1] == "png") {
+      item.filePath &&
+        image.push({
+          uid: index,
+          name: item.fileName,
+          status: "done",
+          url: item.filePath,
+        });
+    } else {
+      item.filePath &&
+        file.push({
+          uid: index,
+          name: item.fileName,
+          status: "done",
+          url: item.filePath,
+        });
+    }
+  });
+  return { file: file, image: image };
 };

@@ -14,6 +14,54 @@ import {
 import LendLayout from "./baseLayout";
 import { columnsToFormFlow } from "../../../utils/common";
 import FormSelect from "../../../components/formItems/select";
+
+export const statusElement = {
+  0: (
+    <div
+      style={{
+        color: "#057272",
+      }}
+    >
+      暂存
+    </div>
+  ),
+  1: (
+    <div
+      style={{
+        color: "#C0C003",
+      }}
+    >
+      待审批
+    </div>
+  ),
+  2: (
+    <div
+      style={{
+        color: "#4D7B05",
+      }}
+    >
+      已驳回
+    </div>
+  ),
+  3: (
+    <div
+      style={{
+        color: "#AE1414",
+      }}
+    >
+      已拒绝
+    </div>
+  ),
+  4: (
+    <div
+      style={{
+        color: "#17AE14",
+      }}
+    >
+      已审批
+    </div>
+  ),
+};
 const Lendapply = () => {
   const columns = [
     {
@@ -59,7 +107,7 @@ const Lendapply = () => {
       require: true,
       ele: (
         <Select>
-          <Select.Option value={1}>内部借出</Select.Option>
+          <Select.Option value={"1"}>内部借出</Select.Option>
         </Select>
       ),
     },
@@ -83,6 +131,7 @@ const Lendapply = () => {
       title: "审批状态",
       dataIndex: "status",
       hidden: true,
+      render: (e) => statusElement[e],
       // render: (e) => (e == 0 ? "启用" : "停用"),
     },
   ];
@@ -98,7 +147,7 @@ const Lendapply = () => {
       dataIndex: "reason",
       ele: <Input style={{ width: "100%" }} />,
       col: 16,
-      labelCol: 4,
+      labelCol: 2,
     },
   ]);
 
@@ -106,7 +155,7 @@ const Lendapply = () => {
     {
       label: "",
       name: "name",
-      element: <Input placeholder="单位名称" className=""></Input>,
+      element: <Input placeholder="" className=""></Input>,
     },
   ];
   const breadcrumb = [
@@ -131,7 +180,7 @@ const Lendapply = () => {
         baseFormItem={formItems} // 表单配置项
         rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
-        storeKey={"userCompany"} // store中的key值. 要与 mapStatetoProps 中的key相同
+        storeKey={"lendApply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["lendDate"]} //需要转换时间格式的表单字段
         breadcrumb={breadcrumb} //面包屑
       ></LendLayout>

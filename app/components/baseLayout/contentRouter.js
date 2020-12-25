@@ -15,8 +15,11 @@ import Supplier from "../../pages/device/supplier";
 import BaseDict from "../../pages/device/baseDict";
 import Lendapply from "./../../pages/use/lend/index";
 import SendBack from "../../pages/use/sendBack";
-import Lanapply from "../../pages/purp/lanapply";
+import Lanapply from "../../pages/purp/lanApply/index";
 import LendapplyList from "../../pages/purp/lanapplyList/lanapplyList";
+import ReparirApply from "../../pages/repair/repairApply";
+import Complexfund from "../../pages/base/complexfund";
+
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
@@ -26,28 +29,27 @@ class ContentRouter extends React.PureComponent {
     let { path } = this.props;
     return (
       <Switch>
-        {console.log(path)}
         <Route exact path={path} component={Home} />
         <Route path={"/#/"} component={Login} />
-        <Route path={path + "/DataMonitoring"} component={DataMonitoring} />
-        <Route path={path + "/Company"} component={Company} />
-        <Route path={path + "/Department"} component={Department} />
-        <Route path={path + "/User"} component={User} />
-        <Route path={path + "/Role"} component={Role} />
-        <Route path={path + "/Jurisdiction"} component={Jurisdiction} />
-        <Route path={path + "/DeviceType"} component={DeviceType} />
-        <Route path={path + "/BaseDevice"} component={BaseDevice} />
-        <Route path={path + "/Supplier"} component={Supplier} />
-        <Route path={path + "/BaseDict"} component={BaseDict} />
-        <Route path={path + "/Uselendapply"} component={Lendapply} />
-        <Route path={path + "/Lanapply"} component={Lanapply} />
-        <Route path={path + "/LendapplyList"} component={LendapplyList} />
-        <Route path={path + "/SendBack"} component={SendBack} />
-        {/* <Route path={path + "/Jurisdiction"} component={Jurisdiction} /> */}
-        {/* <Route path={path + "/DeviceType"} component={DeviceType} /> */}
-        {/* <Route path={path + "/BaseDevice"} component={BaseDevice} /> */}
-        {/* <Route path={path + "/Supplier"} component={Supplier} /> */}
-        {/* <Route path={path + "/BaseDict"} component={BaseDict} /> */}
+        <Route path={ "/DataMonitoring"} component={DataMonitoring} />
+        <Route path={ "/Company"} component={Company} />
+        <Route path={ "/Department"} component={Department} />
+        <Route path={ "/User"} component={User} />
+        <Route path={ "/Role"} component={Role} />
+        <Route path={ "/Jurisdiction"} component={Jurisdiction} />
+        <Route path={ "/DeviceType"} component={DeviceType} />
+        <Route path={ "/BaseDevice"} component={BaseDevice} />
+        <Route path={ "/Supplier"} component={Supplier} />
+        <Route path={ "/BaseDict"} component={BaseDict} />
+        <Route path={ "/Uselendapply"} component={Lendapply} />
+        <Route path={ "/Lanapply"} component={Lanapply} />
+        <Route path={ "/LendapplyList"} component={LendapplyList} />
+        <Route path={ "/SendBack"} component={SendBack} />
+        <Route path={ "/ReparirApply"} component={ReparirApply} />
+        <Route path={ "/Complexfund"} component={Complexfund} />
+        {/* <Route path={ "/BaseDevice"} component={BaseDevice} /> */}
+        {/* <Route path={ "/Supplier"} component={Supplier} /> */}
+        {/* <Route path={ "/BaseDict"} component={BaseDict} /> */}
         <Route component={Nothing} />
       </Switch>
     );
