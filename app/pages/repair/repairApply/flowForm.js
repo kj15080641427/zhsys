@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Row, Col, Upload, message } from "antd";
 import ChildTable from "./childTable";
 // import FormSelect from "../../components/formItems/select";
-import { getUser, getUserCompany, addAttachment } from "../../../request/index";
+import { addAttachment } from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";

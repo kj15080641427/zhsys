@@ -32,3 +32,9 @@ export const SET_TOTAL_PRICE = "SET_TOTAL_PRICE"; //购置单总金额
 
 export const GET_COMPLEXFUND = "GET_COMPLEXFUND"; //查询年度经费
 export const SET_COMPLEXFUND = "SET_COMPLEXFUND"; //设置年度经费
+
+export const SET_USELEND_FILE = "SET_USELEND_FILE"; //借出模块 获取文件
+export const SET_USELEND_IMAGE = "SET_USELEND_IMAGE"; //借出模块 获取图片
+
+export const GET_ATTACHMENT_BY_ID = "GET_ATTACHMENT_BY_ID"; //获取附件
+export const SET_ATTACHMENT_BY_ID = "SET_ATTACHMENT_BY_ID";

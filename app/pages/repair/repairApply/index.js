@@ -136,21 +136,25 @@ const breadcrumb = [
     name: "维修申请",
   },
 ];
-const ReparirApply = () => {
+const ReparirApply = (props) => {
   return (
-    <BaseTable
-      get={getRepair} // 分页查询
-      add={addRepair} // 添加数据
-      upd={updRepair} // 更新数据
-      del={delRepair} // 删除数据
-      columns={columns}
-      keyId={"id"} // 数据的唯一ID
-      storeKey={"repairApply"} // store中的key值. 要与 mapStatetoProps 中的key相同
-      formatList={["lendDate", "applyDate"]} //需要转换时间格式的表单字段
-      breadcrumb={breadcrumb} //面包屑
-      rowSelect={rowSelect} //查询
-      baseFormItem={baseFormItems}
-    ></BaseTable>
+    <>
+      {console.log(props, "INDEX_PROPS")}
+      <BaseTable
+        pathname={props.match.path}
+        get={getRepair} // 分页查询
+        add={addRepair} // 添加数据
+        upd={updRepair} // 更新数据
+        del={delRepair} // 删除数据
+        columns={columns}
+        keyId={"id"} // 数据的唯一ID
+        storeKey={"repairApply"} // store中的key值. 要与 mapStatetoProps 中的key相同
+        formatList={["lendDate", "applyDate"]} //需要转换时间格式的表单字段
+        breadcrumb={breadcrumb} //面包屑
+        rowSelect={rowSelect} //查询
+        baseFormItem={baseFormItems}
+      ></BaseTable>
+    </>
   );
 };
 export default ReparirApply;

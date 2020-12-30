@@ -12,10 +12,11 @@ import {
   delLimsUseReturn,
   getLimsUseReturn,
   updLimsUseReturn,
+  addLimsUseReturn,
   getUser, //查询用户
 } from "../../../request/index";
 import FormSelect from "../../../components/formItems/select";
-import BaseNewPageLayout from "./lanapplyListComponent";
+import BaseNewPageLayout from "./baseLayout";
 import { columnsToForm } from "../../../utils/common";
 import { statusElement } from "../lend/index";
 
@@ -87,7 +88,7 @@ const LendapplyList = (props) => {
   const baseFormItems = columnsToForm([
     {
       title: "归还人",
-      dataIndex: "purUser",
+      dataIndex: "returnUser",
       ele: (
         <FormSelect
           request={getUser}
@@ -104,19 +105,10 @@ const LendapplyList = (props) => {
     },
     {
       title: "归还时间",
-      dataIndex: "remark",
+      dataIndex: "returnDate",
       ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
     },
   ]);
-
-  // const listFormItems = columnsToForm([
-  //   {
-  //     title: "",
-  //     dataIndex: "limsBasicdeviceDTOList",
-  //     ele: <ChildTable />,
-  //     labelCol: 1,
-  //   },
-  // ]);
 
   const rowSelect = [
     {
@@ -139,6 +131,7 @@ const LendapplyList = (props) => {
   return (
     <div>
       <BaseNewPageLayout
+        add={addLimsUseReturn}
         get={getLimsUseReturn} // 分页查询接口
         upd={updLimsUseReturn} // 更新数据接口
         del={delLimsUseReturn} // 删除数据接口
@@ -148,7 +141,7 @@ const LendapplyList = (props) => {
         rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"purpLanapply"} // store中的key值. 要与 mapStatetoProps 中的key相同
-        formatList={["applyDate", "expectedDate", "purDate"]} //需要转换时间格式的表单字段
+        formatList={["applyDate", "returnDate"]} //需要转换时间格式的表单字段
         breadcrumb={breadcrumb} //面包屑
         formWidth={"1000px"} //宽度
       ></BaseNewPageLayout>

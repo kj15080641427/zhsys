@@ -5,6 +5,9 @@ const initState = {
   modalVisible: false,
   showForm: false,
   totalPrice: 0,
+  fileList: [],
+  imageList: [],
+  attachmentList: [],
 };
 export default function currency(state = initState, action) {
   let newState = Object.assign({}, state);
@@ -51,6 +54,15 @@ export default function currency(state = initState, action) {
       break;
     case types.SET_COMPLEXFUND:
       newState.complexfund = action.data;
+      break;
+    case types.SET_USELEND_FILE:
+      newState.fileList = action.data;
+      break;
+    case types.SET_USELEND_IMAGE:
+      newState.imageList = action.data;
+      break;
+    case types.SET_ATTACHMENT_BY_ID:
+      newState.attachmentList = action.data;
       break;
     default:
       return state;

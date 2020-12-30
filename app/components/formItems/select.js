@@ -23,13 +23,13 @@ const FormSelect = (props) => {
 
   useEffect(() => {
     key = `dict${storeKey}`;
-    if (!props[`dict${storeKey}`]) {
-      getBase({
-        request: request,
-        key: `dict${storeKey}`,
-        param: param,
-      });
-    }
+    // if (!props[`dict${storeKey}`]) {
+    getBase({
+      request: request,
+      key: `dict${storeKey}`,
+      param: param,
+    });
+    // }
   }, []);
   return (
     <Select
@@ -56,6 +56,7 @@ const mapStateToProps = (state) => {
     dictuserCompany: state.currency.dictuserCompany,
     dictdeviceType: state.currency.dictdeviceType,
     dictsupplier: state.currency.dictsupplier,
+    dictuseLend: state.currency.dictuseLend,
   };
 };
 

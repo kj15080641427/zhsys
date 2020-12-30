@@ -185,7 +185,22 @@ function* getComplexfund({ data }) {
     console.error(e);
   }
 }
-
+//获取附件
+function* getAttachment({ data }) {
+  try {
+    let result = yield call(req.getAttachment, data);
+    if (result.code == code) {
+      yield put({
+        type: types.SET_ATTACHMENT_BY_ID,
+        data: result.data.records,
+      });
+    } else {
+      message.error(result.message);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
 export default function* currency() {
   yield all([
     takeEvery(types.LOGIN_IN, login),
@@ -198,6 +213,7 @@ export default function* currency() {
     takeEvery(types.GET_PUR_LIST_INFO, getPurListInfo),
 
     takeEvery(types.GET_COMPLEXFUND, getComplexfund),
+    takeEvery(types.GET_ATTACHMENT_BY_ID, getAttachment),
   ]);
   // yield all([takeEvery(types.GET_BASE, getbaseData)]);
 }

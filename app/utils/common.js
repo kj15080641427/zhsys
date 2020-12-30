@@ -29,6 +29,9 @@ export function fetchJSONData(method, url, data) {
     if (res.status == "404") {
       message.error("网络请求失败,404");
     }
+    if (res.status == 504) {
+      message.error("网络请求失败");
+    }
     if (url === "/api/users/login") {
       return res.ok ? res : Promise.reject("接口出错");
     } else {

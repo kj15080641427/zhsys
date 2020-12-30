@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Row, Col, Upload, message, Timeline, Input } from "antd";
 import ChildTable from "./childTable";
-// import FormSelect from "../../../components/formItems/select";
-import { addAttachment } from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 import { filterFileList } from "../../../utils/common";
+import AttachmentList from "../../../components/formItems/attachment";
 
 //工作流表单
 const FlowForm = (props) => {
-  const [imageList, setImageList] = useState([]);
-  const [fileList, setFileList] = useState([]);
+  // const [imageList, setImageList] = useState([]);
+  // const [fileList, setFileList] = useState([]);
   const {
     onFinish, //提交按钮回调
     baseFormItem = [], //基础信息
@@ -32,26 +31,6 @@ const FlowForm = (props) => {
   } = props;
   const { setTotalPrice } = props.actions;
 
-  const uploadFile = () => {
-    let allList = [...fileList, ...imageList];
-    let list = allList.map((item) => ({
-      businessId: records.id,
-      businessType: "1",
-      fileName: item.name,
-      filePath: item?.response?.data || item.url,
-      fileType: item.type,
-      smallFilePath: item?.response?.data || item.url,
-      title: item.name.split(".")[0],
-    }));
-    addAttachment(list).then((res) => {
-      if (res.code != 200) {
-        message.warning("附件上传失败");
-      } else {
-        message.success("附件上传成功");
-      }
-    });
-  };
-
   useEffect(() => {
     let price = 0;
     formRef?.current?.getFieldValue().limsUselendapplyitemList?.map((item) => {
@@ -59,15 +38,15 @@ const FlowForm = (props) => {
     });
     setTotalPrice(price);
   }, [formRef?.current?.getFieldValue().limsUselendapplyitemList]);
-  useEffect(() => {
-    let { file, image } = filterFileList(defaultFileList);
-    setFileList(file);
-    setImageList(image);
-    return () => {
-      setFileList([]);
-      setImageList([]);
-    };
-  }, [defaultFileList]);
+  // useEffect(() => {
+  //   let { file, image } = filterFileList(defaultFileList);
+  //   setFileList(file);
+  //   setImageList(image);
+  //   return () => {
+  //     setFileList([]);
+  //     setImageList([]);
+  //   };
+  // }, [defaultFileList]);
   // const setDevice = (e) => {
   //   setTotalPrice(e);
   // };
@@ -120,10 +99,20 @@ const FlowForm = (props) => {
           <Form.Item
             labelAlign="right"
             label={""}
-            name={"file"}
+            name={"limsAttachmentSaveDTOS"}
             rules={[{ require: false }]}
           >
-            <div className="purplist-upload-box">
+            <AttachmentList records={records}></AttachmentList>
+            {/* <div
+              className="purplist-upload-box"
+              value={props.value}
+              onChange={()=>props.onChange}
+              // onChange={() => {
+              //   let { file, image } = filterFileList(props.value);
+              //   setFileList(file);
+              //   setImageList(image);
+              // }}
+            >
               <div className="purplist-upload-left">
                 <Upload
                   accept=".word,.xlsx,.docx,.pdf"
@@ -167,13 +156,8 @@ const FlowForm = (props) => {
                   </div>
                 </Upload>
               </div>
-            </div>
+            </div> */}
           </Form.Item>
-          {/* <Button
-            onClick={() => console.log(formRef.current.getFieldValue(), "VVV")}
-          >
-            上传测试
-          </Button> */}
         </Col>
       </Row>
       {/* 编辑时提交id */}
@@ -233,7 +217,7 @@ const FlowForm = (props) => {
               <Button
                 htmlType="submit"
                 className="flow-form-submit"
-                onClick={uploadFile}
+                // onClick={uploadFile}
               >
                 保存
               </Button>
@@ -241,7 +225,7 @@ const FlowForm = (props) => {
                 className="flow-form-flow"
                 onClick={() => {
                   submitFlow();
-                  uploadFile();
+                  // uploadFile();
                 }}
                 // onClick={uploadFile}
               >

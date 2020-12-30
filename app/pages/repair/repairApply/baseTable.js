@@ -13,6 +13,9 @@ import {
   approvaRepair,
   getAttachment,
 } from "../../../request/index";
+import { Route, Switch } from "react-router-dom";
+import { createHashHistory } from "history";
+const hashHistory = createHashHistory();
 
 let storeLabel = "base";
 class LendLayout extends React.Component {
@@ -127,13 +130,14 @@ class LendLayout extends React.Component {
           taskInfo: res.data,
           records: row,
         });
-        let lsit = res.data.limsRepairapplyitemSaveDTOS?.map((item) => ({
+        let list = res.data.limsRepairapplyitemDOList?.map((item) => ({
           ...item,
           ...item.limsRepairapply,
         }));
         row = {
+          ...row,
           ...res.data.limsUselendapply,
-          limsRepairapplyitemSaveDTOS: lsit,
+          limsRepairapplyitemSaveDTOS: list,
         };
         formatList.map((item) => {
           row = { ...row, [item]: moment(row[item]) };
@@ -246,7 +250,6 @@ class LendLayout extends React.Component {
         totalFee: totalFee,
       };
       // delete updvalue.limsBasicdeviceDTOList;
-      console.log(values, "?VVV");
       let addvalue = {
         ...values,
         submitType: 0,
@@ -314,6 +317,16 @@ class LendLayout extends React.Component {
         ? handleQuery({ ...values, current: 1, size: 10 })
         : getBaseHoc({ current: 1, size: 10, ...values });
     };
+    //添加
+    const addData = () => {
+      console.log(`${this.props.pathname}/edit`, "----------");
+      this.setState({
+        records: {},
+      });
+      hashHistory.push(`${this.props.pathname}/edit`);
+      // setShowForm(true);
+      this.formRef.current.resetFields();
+    };
     //面包屑
     const renderBreadcrumb = () => {
       return (
@@ -326,119 +339,118 @@ class LendLayout extends React.Component {
         </div>
       );
     };
+    const TableLayout = () => {
+      return (
+        <div>
+          <div className="view-query">
+            <div className="view-query-left">
+              {renderBreadcrumb()}
+              <Button
+                className="base-add-button"
+                onClick={() => {
+                  // this.formRef.current.resetFields;
+                  // showModal();
+                }}
+              >
+                导出
+              </Button>
+            </div>
+            <div className={"view-query-right"}>
+              <Form onFinish={rowFinish} layout="inline" ref={this.rwoFormRef}>
+                {rowSelect.map((item) => (
+                  <Form.Item
+                    label={item.label}
+                    name={item.name}
+                    key={item.name}
+                  >
+                    <div className="base-rowSelect-flex">
+                      <Input
+                        onChange={(e) =>
+                          this.setState({
+                            rowSelectData: e.target.value,
+                          })
+                        }
+                        className="base-rowSelect"
+                      ></Input>
+                      <div className="base-rowSelect-icon">
+                        <SearchOutlined
+                          onClick={() =>
+                            rowFinish({ name: this.state.rowSelectData })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </Form.Item>
+                ))}
+              </Form>
+              <Button className="base-add-button">高级</Button>
+              <Button className="base-add-button" onClick={addData}>
+                添加
+              </Button>
+            </div>
+          </div>
+          <DYTable
+            // records={this.state.records}
+            rowSelection={rowSelection}
+            columnsProps={columnsProps}
+            columns={columns}
+            loading={loading}
+            total={this.props[storeKey]?.total}
+            dataSource={this.props[storeKey]?.records}
+            current={this.props[storeKey]?.current}
+            size={this.props[storeKey]?.size}
+            rowkey={(row) => row[keyId]}
+            changePage={(cur) => changePage(cur)}
+            onShowSizeChange={(cur, size) => {
+              onShowSizeChange(cur, size);
+            }}
+            confirm={confirm}
+            update={update}
+          ></DYTable>
+          {this.props.children}
+        </div>
+      );
+    };
+    const FormLayout = () => {
+      return (
+        <div>
+          <div className="view-query-left">{renderBreadcrumb()}</div>
+          <div className="head-line"></div>
+          <FlowForm
+            defaultFileList={this.state.defaultFileList}
+            taskInfo={this.state.taskInfo}
+            approvalClick0={approvalClick0}
+            approvalClick1={approvalClick1}
+            approvalClick2={approvalClick2}
+            records={this.state.records}
+            submitFlow={submitFlow}
+            buttonText={buttonText}
+            showChild={showChild}
+            showCancel
+            cancelClick={() => {
+              hideModal();
+              setShowForm(false);
+            }}
+            id={keyId}
+            formRef={this.formRef}
+            name={storeKey}
+            baseFormItem={baseFormItem}
+            listFormItem={listFormItem}
+            onFinish={onFinish}
+          ></FlowForm>
+        </div>
+      );
+    };
     return (
       <>
-        {
-          <div hidden={showForm}>
-            <div className="view-query">
-              <div className="view-query-left">
-                {renderBreadcrumb()}
-                <Button
-                  className="base-add-button"
-                  onClick={() => {
-                    // this.formRef.current.resetFields;
-                    // showModal();
-                  }}
-                >
-                  导出
-                </Button>
-              </div>
-              <div className={"view-query-right"}>
-                <Form
-                  onFinish={rowFinish}
-                  layout="inline"
-                  ref={this.rwoFormRef}
-                >
-                  {rowSelect.map((item) => (
-                    <Form.Item
-                      label={item.label}
-                      name={item.name}
-                      key={item.name}
-                    >
-                      <div className="base-rowSelect-flex">
-                        <Input
-                          onChange={(e) =>
-                            this.setState({
-                              rowSelectData: e.target.value,
-                            })
-                          }
-                          className="base-rowSelect"
-                        ></Input>
-                        <div className="base-rowSelect-icon">
-                          <SearchOutlined
-                            onClick={() =>
-                              rowFinish({ name: this.state.rowSelectData })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                  ))}
-                </Form>
-                <Button className="base-add-button">高级</Button>
-                <Button
-                  className="base-add-button"
-                  onClick={() => {
-                    this.setState({
-                      records: {},
-                    });
-                    setShowForm(true);
-                    this.formRef.current.resetFields();
-                  }}
-                >
-                  添加
-                </Button>
-              </div>
-            </div>
-            <DYTable
-              // records={this.state.records}
-              rowSelection={rowSelection}
-              columnsProps={columnsProps}
-              columns={columns}
-              loading={loading}
-              total={this.props[storeKey]?.total}
-              dataSource={this.props[storeKey]?.records}
-              current={this.props[storeKey]?.current}
-              size={this.props[storeKey]?.size}
-              rowkey={(row) => row[keyId]}
-              changePage={(cur) => changePage(cur)}
-              onShowSizeChange={(cur, size) => {
-                onShowSizeChange(cur, size);
-              }}
-              confirm={confirm}
-              update={update}
-            ></DYTable>
-            {this.props.children}
-          </div>
-        }
-        {
-          <div hidden={!showForm}>
-            <div className="view-query-left">{renderBreadcrumb()}</div>
-            <div className="head-line"></div>
-            <FlowForm
-              defaultFileList={this.state.defaultFileList}
-              taskInfo={this.state.taskInfo}
-              approvalClick0={approvalClick0}
-              approvalClick1={approvalClick1}
-              approvalClick2={approvalClick2}
-              records={this.state.records}
-              submitFlow={submitFlow}
-              buttonText={buttonText}
-              showChild={showChild}
-              showCancel
-              cancelClick={() => {
-                hideModal();
-                setShowForm(false);
-              }}
-              id={keyId}
-              formRef={this.formRef}
-              name={storeKey}
-              baseFormItem={baseFormItem}
-              listFormItem={listFormItem}
-              onFinish={onFinish}
-            ></FlowForm>
-          </div>
-        }
+        {console.log(this.props, "PROPS")}
+        <Switch>
+          <Route path={this.props.pathname} component={TableLayout}></Route>
+          <Route
+            path={`${this.props.pathname}/edit`}
+            component={FormLayout}
+          ></Route>
+        </Switch>
       </>
     );
   }

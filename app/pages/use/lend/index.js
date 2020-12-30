@@ -62,6 +62,9 @@ export const statusElement = {
     </div>
   ),
 };
+const type = {
+  1: "内部借出",
+};
 const Lendapply = () => {
   const columns = [
     {
@@ -71,29 +74,13 @@ const Lendapply = () => {
     },
     {
       title: "借出人",
-      dataIndex: "lendUser",
-      require: true,
-      ele: (
-        <FormSelect
-          request={getUser}
-          storeKey="user"
-          labelString="roleName"
-          valueString="id"
-        ></FormSelect>
-      ),
+      dataIndex: "realName",
+      hidden: true,
     },
     {
       title: "借出单位",
-      dataIndex: "lendCompany",
-      require: true,
-      ele: (
-        <FormSelect
-          request={getUserCompany}
-          storeKey="userCompany"
-          labelString="name"
-          valueString="id"
-        ></FormSelect>
-      ),
+      dataIndex: "lendCompanyName",
+      hidden: true,
     },
     {
       title: "借出时间",
@@ -110,6 +97,7 @@ const Lendapply = () => {
           <Select.Option value={"1"}>内部借出</Select.Option>
         </Select>
       ),
+      render: (e) => type[e],
     },
     {
       title: "联系电话",
@@ -136,6 +124,32 @@ const Lendapply = () => {
     },
   ];
   const formItems = columnsToFormFlow([
+    {
+      title: "借出人",
+      dataIndex: "lendUser",
+      require: true,
+      ele: (
+        <FormSelect
+          request={getUser}
+          storeKey="user"
+          labelString="roleName"
+          valueString="id"
+        ></FormSelect>
+      ),
+    },
+    {
+      title: "借出单位",
+      dataIndex: "lendCompany",
+      require: true,
+      ele: (
+        <FormSelect
+          request={getUserCompany}
+          storeKey="userCompany"
+          labelString="name"
+          valueString="id"
+        ></FormSelect>
+      ),
+    },
     ...columns,
     {
       title: "证件号码",

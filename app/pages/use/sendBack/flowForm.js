@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Row, Col, Upload, message, Select } from "antd";
 import ChildTable from "./childTable";
-// import FormSelect from "../../../components/formItems/select";
-import { addAttachment } from "../../../request/index";
+import FormSelect from "../../../components/formItems/select";
+import { addAttachment, getLimsUselendapply } from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
+import { filterFileList } from "../../../utils/common";
+
 //工作流表单
 const FlowForm = (props) => {
   const [imageList, setImageList] = useState([]);
@@ -18,7 +20,6 @@ const FlowForm = (props) => {
     formRef, //ref
     id, //数据唯一id
     cancelClick, //关闭按钮回调
-    buttonText = "保存", //submit按钮文字
     submitFlow, //提交审批回调
     records, //表单数据
     approvalRecords, //购置申请信息
@@ -28,49 +29,34 @@ const FlowForm = (props) => {
     // approvalClick1, //审批
     // approvalClick2, //审批
     // taskInfo, //审批流程信息
+    dictuselend, //借出信息
   } = props;
-  const { setTotalPrice } = props.actions;
   useEffect(() => {
-    let price = 0;
-    formRef?.current?.getFieldValue().limsBasicdevice?.map((item) => {
-      price = price + item.price;
-    });
-    setTotalPrice(price);
-  }, [formRef?.current?.getFieldValue().limsBasicdevice]);
-  useEffect(() => {
-    let file = [];
-    let image = [];
-    defaultFileList?.map((item, index) => {
-      let type = item.fileName.split(".");
-      if (type[1] == "jpg" || type[1] == "png") {
-        item.filePath &&
-          image.push({
-            uid: index,
-            name: item.fileName,
-            status: "done",
-            url: item.filePath,
-          });
-      } else {
-        item.filePath &&
-          file.push({
-            uid: index,
-            name: item.fileName,
-            status: "done",
-            url: item.filePath,
-          });
-      }
-      setFileList(file);
-      setImageList(image);
-    });
+    let { file, image } = filterFileList(defaultFileList);
+    setFileList(file);
+    setImageList(image);
     return () => {
       setFileList([]);
       setImageList([]);
     };
   }, [defaultFileList]);
+
+  const changeCode = (e) => {
+    console.log(e);
+  };
+
   const info = [
     {
       label: "借出单号",
-      element: <div>{approvalRecords?.id}</div>,
+      element: (
+        <FormSelect
+          onChange={changeCode}
+          request={getLimsUselendapply}
+          storeKey="useLend"
+          labelString="code"
+          valueString="id"
+        ></FormSelect>
+      ),
     },
     {
       label: "借出类型",
@@ -97,16 +83,13 @@ const FlowForm = (props) => {
     //   element: <div> {approvalRecords.expectedDate}</div>,
     // },
   ];
-  const setDevice = (e) => {
-    setTotalPrice(e);
-  };
+
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
         <div className="line"></div>
         购置信息:
       </div>
-
       <Row>
         {info.map((item) => (
           <Col span={item.col || 8} className="form-item-box" key={item.label}>
@@ -115,7 +98,6 @@ const FlowForm = (props) => {
               labelAlign="right"
               label={item.label}
               name={item.label}
-              // rules={[{ required: true }]}
               width={"200px"}
               labelCol={{ span: item.labelCol || 6 }}
             >
@@ -150,8 +132,12 @@ const FlowForm = (props) => {
       <Row>
         {/* 列表 */}
         <Col span={24}>
-          <Form.Item labelAlign="right" label={""} name={"limsBasicdevice"}>
-            <ChildTable records={records} setDevice={setDevice}></ChildTable>
+          <Form.Item
+            labelAlign="right"
+            label={""}
+            name={"limsUsereturnapplyitemDTOList"}
+          >
+            <ChildTable records={records}></ChildTable>
           </Form.Item>
         </Col>
       </Row>
@@ -255,7 +241,7 @@ const FlowForm = (props) => {
                 });
               }}
             >
-              {buttonText}
+              保存
             </Button>
             <Button className="flow-form-flow" onClick={submitFlow}>
               到货验收
@@ -272,6 +258,7 @@ const FlowForm = (props) => {
 const mapStateToProps = (state) => {
   return {
     totalPrice: state.currency.totalPrice,
+    dictuselend: state.currency.dictuselend,
   };
 };
 

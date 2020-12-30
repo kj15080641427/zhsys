@@ -83,7 +83,6 @@ export const approvalFlow = (data) => {
   };
 };
 
-
 export const getPurListInfo = (data) => {
   return {
     type: types.GET_PUR_LIST_INFO,
@@ -103,6 +102,28 @@ export const setTotalPrice = (data) => {
 export const getComplexfund = (data) => {
   return {
     type: types.GET_COMPLEXFUND,
+    data,
+  };
+};
+
+//设置文件
+export const steUselendFile = (data) => {
+  return {
+    type: types.SET_USELEND_FILE,
+    data,
+  };
+};
+//设置图片
+export const steUselendImage = (data) => {
+  return {
+    type: types.SET_USELEND_IMAGE,
+    data,
+  };
+};
+//获取附件
+export const getAttachmentById = (data) => {
+  return {
+    type: types.GET_ATTACHMENT_BY_ID,
     data,
   };
 };

@@ -6,15 +6,17 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  getLimsUselendById,
-  approvalLimsUseLendapply,
+  getReturnById,
+  getLimsUseReturnList,
+  getAttachment,
 } from "../../../request/index";
 
 let storeLabel = "base";
-class LendLayout extends React.Component {
+class BaseNewPageLayout extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.formRef = React.createRef();
@@ -23,7 +25,9 @@ class LendLayout extends React.Component {
       filterName: {},
       disabled: false, //表单防重复点击
       records: {},
-      taskInfo: {}, //事件详情
+
+      approvalRecords: {}, //购置申请信息
+      defaultFileList: [], //已上传文件列表
     };
   }
   componentWillUnmount() {
@@ -39,8 +43,8 @@ class LendLayout extends React.Component {
   render() {
     const {
       get,
-      add,
       upd,
+      add,
       del,
       keyId,
       storeKey,
@@ -52,13 +56,12 @@ class LendLayout extends React.Component {
       rowSelection,
       handleQuery,
       formatList = [],
-      // stringList = [],
+      stringList = [],
       breadcrumb = [],
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
-      fileList,
-      imageList,
+      totalPrice,
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -67,7 +70,7 @@ class LendLayout extends React.Component {
       addOrUpdateBase,
       hideModal,
       setShowForm,
-      getAttachmentById, //根据id获取附件
+      // getPurListInfo, //购置清单详情
     } = this.props.actions;
     const { loading } = this.props;
     const getBaseHoc = (
@@ -112,150 +115,119 @@ class LendLayout extends React.Component {
         },
       });
     };
-    const formatAttachment = (data) => {
-      return data.map((item) => ({
-        businessId: this.state.records.id,
-        businessType: "1",
-        fileName: item.name,
-        filePath: item?.response?.data || item.url,
-        fileType: item.type,
-        smallFilePath: item?.response?.data || item.url,
-        title: item.name.split(".")[0],
-      }));
-    };
     // 修改
     const update = (row) => {
-      getAttachmentById({
-        businessId: row?.id,
+      getAttachment({
+        businessId: row.id,
         businessType: "1",
         current: 1,
         size: -1,
-      });
-      // getAttachment({
-      //   businessId: row.id,
-      //   businessType: "1",
-      //   current: 1,
-      //   size: -1,
-      // }).then((res) => {
-      //   this.setState({
-      //     defaultFileList: res.data.records,
-      //   });
-      // });
-      getLimsUselendById({ id: row.id }).then((res) => {
+      }).then((res) => {
         this.setState({
-          taskInfo: res.data,
-          records: row,
+          defaultFileList: res.data.records,
         });
-        let lsit = res.data.limsUselendapplyitemList?.map((item) => ({
-          ...item,
-          ...item.limsBasicdevice,
-        }));
-        row = {
-          ...res.data.limsUselendapply,
-          deviceIdList: lsit,
-        };
-        formatList.map((item) => {
-          row = { ...row, [item]: moment(row[item]) };
-        });
-        this.formRef.current.setFieldsValue(row);
-        setShowForm(true);
+      });
+      getLimsUseReturnList({ size: -1, current: 1, mainId: row.id }).then(
+        (res) => {
+          this.setState({
+            approvalRecords: res.data.limsPurplanapply,
+          });
+        }
+      );
+      getReturnById({
+        current: 1,
+        mainId: row.id,
+        size: -1,
+      }).then((res) => {
+        if (res.code == 200) {
+          let list = res?.data?.map((item) => {
+            return { ...item, ...item.limsBasicdevice };
+          });
+          row = { ...row, limsBasicdevice: list };
+
+          formatList.map((item) => {
+            if (row[item]) {
+              row = { ...row, [item]: moment(row[item]) };
+            }
+          });
+          this.setState({
+            records: row,
+          });
+          this.formRef.current.setFieldsValue(row);
+          setShowForm(true);
+        } else {
+          message.error(res.msg);
+        }
       });
     };
-    //提交工作流
+    //提交审批
     const submitFlow = () => {
-      let formData = this.formRef.current.getFieldValue();
-      formatList.forEach((item) => {
-        formData = {
-          ...formData,
-          [item]: moment(formData[item]).format("YYYY-MM-DD HH:mm:ss"),
-        };
-      });
-      let totalFee = 0;
-      let deviceList = formData.deviceIdList.map((item) => {
-        totalFee = totalFee + item.totalPrice;
-        return {
-          deviceId: item.id, //设备ID
-          complexFundId: "791606316736065536", //经费ID
-          foundId: "791606316736065536", //经费ID
-          foundFee: 11000, //经费余额
-          totalPrice: item.totalPrice, //x小计金额
-          usePeriod: item.usePeriod, //使用天数
-          usePrice: item.usePrice, //单价
-        };
-      });
-      let submitValue = {
-        ...formData,
-        submitType: 1,
-        deviceIdList: deviceList,
-        totalFee: totalFee,
-        limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
-      };
-      addOrUpdateBase({
-        request: formData[keyId] ? upd : add,
-        key: storeKey,
-        query: get,
-        param: submitValue,
-      });
-    };
-    // 保存
-    const onFinish = (values) => {
-      //格式化时间 YYYY-MM-DD HH:mm:ss
+      let values = this.formRef.current.getFieldValue();
       formatList.forEach((item) => {
         values = {
           ...values,
           [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
         };
       });
-      let totalvalue = 0;
-      let deviceList = values.deviceIdList.map((item) => {
-        totalvalue = totalvalue + item.totalPrice;
-        return {
-          deviceId: item.id, //设备ID
-          complexFundId: "791606316736065536", //经费ID
-          foundId: "791606316736065536", //经费ID
-          foundFee: 11000, //经费余额
-          totalPrice: item.totalPrice, //x小计金额
-          usePeriod: item.usePeriod, //使用天数
-          usePrice: item.usePrice, //单价
+      stringList.forEach((item) => {
+        values = {
+          ...values,
+          [item]: String(values[item]),
         };
       });
-      let submitValue = {
+      let updvalue = {
         ...values,
         submitType: 0,
-        deviceIdList: deviceList,
-        totalFee: totalvalue,
-        limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
+
+
       addOrUpdateBase({
-        request: values[keyId] ? upd : add,
+        request: upd,
         key: storeKey,
         query: get,
-        param: submitValue,
+        param: updvalue,
       });
     };
-    //审批
-    const approvalClick = (e) => {
-      let formData = this.formRef?.current?.getFieldValue();
-      if (formData.msg) {
-        approvalLimsUseLendapply({
-          id: formData?.id,
-          msg: formData?.msg,
-          type: e,
-        }).then(() => {
-          getBase({
-            request: get,
-            key: storeKey,
-            param: { current: 1, size: 10 },
-          });
-          setShowForm(false);
+    // 提交
+    const onFinish = (values) => {
+      formatList.forEach((item) => {
+        values = {
+          ...values,
+          [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
+        };
+      });
+      stringList.forEach((item) => {
+        values = {
+          ...values,
+          [item]: String(values[item]),
+        };
+      });
+      let updvalue = {
+        ...values,
+        totalPrice: totalPrice,
+        submitType: 0,
+      };
+      let addvalue = {
+        ...values,
+        totalPrice: totalPrice,
+        submitType: 0,
+      };
+
+      values[keyId]
+      ? addOrUpdateBase({
+          request: upd,
+          key: storeKey,
+          query: get,
+          param: updvalue,
+        })
+      : addOrUpdateBase({
+          request: add,
+          key: storeKey,
+          query: get,
+          param: addvalue,
         });
-      } else {
-        message.error("请输入审批意见");
-      }
     };
-    const approvalClick0 = () => approvalClick(0);
-    const approvalClick1 = () => approvalClick(1);
-    const approvalClick2 = () => approvalClick(2);
+
     // 查询
     const rowFinish = (values) => {
       this.setState({
@@ -342,13 +314,13 @@ class LendLayout extends React.Component {
               </div>
             </div>
             <DYTable
-              // records={this.state.records}
               rowSelection={rowSelection}
               columnsProps={columnsProps}
               columns={columns}
               loading={loading}
               total={this.props[storeKey]?.total}
-              dataSource={this.props[storeKey]?.records}
+              // dataSource={this.props[storeKey]?.records || []}
+              dataSource={[{}]}
               current={this.props[storeKey]?.current}
               size={this.props[storeKey]?.size}
               rowkey={(row) => row[keyId]}
@@ -367,12 +339,9 @@ class LendLayout extends React.Component {
             <div className="view-query-left">{renderBreadcrumb()}</div>
             <div className="head-line"></div>
             <FlowForm
-              defaultFileList={this.state.defaultFileList}
-              taskInfo={this.state.taskInfo}
-              approvalClick0={approvalClick0}
-              approvalClick1={approvalClick1}
-              approvalClick2={approvalClick2}
+              approvalRecords={this.state.approvalRecords}
               records={this.state.records}
+              defaultFileList={this.state.defaultFileList}
               submitFlow={submitFlow}
               buttonText={buttonText}
               showChild={showChild}
@@ -394,15 +363,34 @@ class LendLayout extends React.Component {
     );
   }
 }
-
+BaseNewPageLayout.propTypes = {
+  children: PropTypes.any,
+  actions: PropTypes.any,
+  get: PropTypes.func,
+  storeKey: PropTypes.string,
+  add: PropTypes.func,
+  upd: PropTypes.func,
+  del: PropTypes.func,
+  keyId: PropTypes.string,
+  formItem: PropTypes.array,
+  columns: PropTypes.array,
+  rowSelect: PropTypes.array,
+  columnsProps: PropTypes.array,
+  rowSelection: PropTypes.object,
+  showEdit: PropTypes.bool,
+  handleQuery: PropTypes.func,
+  loading: PropTypes.bool,
+  visible: PropTypes.bool,
+  formatList: PropTypes.array,
+  stringList: PropTypes.array,
+};
 const mapStateToProps = (state) => {
   return {
     [storeLabel]: state.currency[storeLabel],
     loading: state.currency.loading,
     visible: state.currency.visible,
     showForm: state.currency.showForm,
-    imageList: state.currency.imageList,
-    fileList: state.currency.fileList,
+    totalPrice: state.currency.totalPrice,
     // dict: state.currency.dict,
   };
 };
@@ -411,4 +399,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LendLayout);
+export default connect(mapStateToProps, mapDispatchToProps)(BaseNewPageLayout);
