@@ -17,8 +17,8 @@ import Lendapply from "./../../pages/use/lend/index";
 import SendBack from "../../pages/use/sendBack";
 import Lanapply from "../../pages/purp/lanApply/index";
 import LendapplyList from "../../pages/purp/lanapplyList/lanapplyList";
-import ReparirApply from "../../pages/repair/repairApply";
 import Complexfund from "../../pages/base/complexfund";
+import ReparirApply from '../../pages/repair/apply/index'
 
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {

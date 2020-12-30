@@ -70,12 +70,12 @@ export const columns = [
 
   {
     title: "联系电话",
-    dataIndex: "totalPrice",
+    dataIndex: "contactTel",
     hidden: true,
   },
   {
     title: "审批状态",
-    dataIndex: "totalPrice",
+    dataIndex: "status",
     hidden: true,
     render: (e) => statusElement[e],
   },
@@ -100,7 +100,7 @@ const LendapplyList = (props) => {
     },
     {
       title: "联系电话",
-      dataIndex: "remark",
+      dataIndex: "contactTel",
       ele: <Input style={{ width: "100%" }} />,
     },
     {
@@ -122,10 +122,10 @@ const LendapplyList = (props) => {
       name: "首页",
     },
     {
-      name: "购置管理",
+      name: "使用管理",
     },
     {
-      name: "购置申请管理",
+      name: "归还申请",
     },
   ];
   return (

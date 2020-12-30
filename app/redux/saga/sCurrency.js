@@ -201,6 +201,21 @@ function* getAttachment({ data }) {
     console.error(e);
   }
 }
+
+//审批流程
+function* approvalFlow({ data }) {
+  try {
+    const { req, param, msg = "审批成功" } = data;
+    let result = yield call(req, param);
+    if (result.code == code) {
+      message.success(msg);
+    } else {
+      message.error(result.message);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
 export default function* currency() {
   yield all([
     takeEvery(types.LOGIN_IN, login),
@@ -214,6 +229,8 @@ export default function* currency() {
 
     takeEvery(types.GET_COMPLEXFUND, getComplexfund),
     takeEvery(types.GET_ATTACHMENT_BY_ID, getAttachment),
+
+    takeEvery(types.APPROVAL_FLOW, approvalFlow), //审批流程
   ]);
   // yield all([takeEvery(types.GET_BASE, getbaseData)]);
 }

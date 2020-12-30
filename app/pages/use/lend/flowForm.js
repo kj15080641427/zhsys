@@ -103,60 +103,7 @@ const FlowForm = (props) => {
             rules={[{ require: false }]}
           >
             <AttachmentList records={records}></AttachmentList>
-            {/* <div
-              className="purplist-upload-box"
-              value={props.value}
-              onChange={()=>props.onChange}
-              // onChange={() => {
-              //   let { file, image } = filterFileList(props.value);
-              //   setFileList(file);
-              //   setImageList(image);
-              // }}
-            >
-              <div className="purplist-upload-left">
-                <Upload
-                  accept=".word,.xlsx,.docx,.pdf"
-                  action="http://47.115.10.75:9011/api/file/all/upload"
-                  multiple
-                  fileList={fileList}
-                  onRemove={(file) => {
-                    setFileList(fileList.filter((v) => v.url !== file.url));
-                  }}
-                  onChange={(fileInfo) => {
-                    setFileList(fileInfo.fileList);
-                  }}
-                >
-                  <div className="purplist-flex">
-                    <Button className="pruplist-upload-excel">
-                      上传购置资料
-                    </Button>
-                    <div>.word .xlsx .docx .pdf</div>
-                  </div>
-                </Upload>
-              </div>
-              <div className="purplist-upload-right">
-                <Upload
-                  accept=".jpg,.png"
-                  action="http://47.115.10.75:9011/api/file/all/upload"
-                  multiple
-                  listType="picture"
-                  fileList={imageList}
-                  onRemove={(file) => {
-                    setImageList(imageList.filter((v) => v.url !== file.url));
-                  }}
-                  onChange={(fileInfo) => {
-                    setImageList(fileInfo.fileList);
-                  }}
-                >
-                  <div className="purplist-flex">
-                    <Button className="purplist-upload-image">
-                      上传购置凭证
-                    </Button>
-                    <div> .jpg .png</div>
-                  </div>
-                </Upload>
-              </div>
-            </div> */}
+           
           </Form.Item>
         </Col>
       </Row>

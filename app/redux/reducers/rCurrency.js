@@ -8,6 +8,7 @@ const initState = {
   fileList: [],
   imageList: [],
   attachmentList: [],
+  returnBackList: [],
 };
 export default function currency(state = initState, action) {
   let newState = Object.assign({}, state);
@@ -63,6 +64,9 @@ export default function currency(state = initState, action) {
       break;
     case types.SET_ATTACHMENT_BY_ID:
       newState.attachmentList = action.data;
+      break;
+    case types.SET_RETURN_BACKLIST:
+      newState.returnBackList = action.data;
       break;
     default:
       return state;

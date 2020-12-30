@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Col, Upload, message, Select } from "antd";
+import { Button, Form, Row, Col, Timeline, Input } from "antd";
 import ChildTable from "./childTable";
 import FormSelect from "../../../components/formItems/select";
-import { addAttachment, getLimsUselendapply } from "../../../request/index";
+import {
+  getLimsUselendapply,
+  getLimsUselendById,
+  approvaReturn,
+} from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
-import { filterFileList } from "../../../utils/common";
 
 //工作流表单
 const FlowForm = (props) => {
-  const [imageList, setImageList] = useState([]);
-  const [fileList, setFileList] = useState([]);
+  const [lendInfo, setLendInfo] = useState(null); //借出信息
   const {
     onFinish, //提交按钮回调
     baseFormItem = [], //基础信息
@@ -22,29 +24,34 @@ const FlowForm = (props) => {
     cancelClick, //关闭按钮回调
     submitFlow, //提交审批回调
     records, //表单数据
-    approvalRecords, //购置申请信息
-    defaultFileList, //已上传文件列表
-    totalPrice, //总金额
-    // approvalClick0, //审批
-    // approvalClick1, //审批
-    // approvalClick2, //审批
-    // taskInfo, //审批流程信息
-    dictuselend, //借出信息
+    dictuseLend, //借出信息
+    sendBacklendDetail,
   } = props;
-  useEffect(() => {
-    let { file, image } = filterFileList(defaultFileList);
-    setFileList(file);
-    setImageList(image);
-    return () => {
-      setFileList([]);
-      setImageList([]);
-    };
-  }, [defaultFileList]);
+  const { getBase, approvalFlow } = props.actions;
 
-  const changeCode = (e) => {
-    console.log(e);
+  const changeCode = (id) => {
+    let a = dictuseLend?.records.filter((item) => item.id == id)[0];
+    setLendInfo(a);
   };
 
+  useEffect(() => {
+    changeCode(props?.records?.lendId);
+  }, [props?.records]);
+
+  useEffect(() => {
+    lendInfo &&
+      getBase({
+        request: getLimsUselendById,
+        key: "sendBacklendDetail",
+        param: {
+          id: lendInfo.id,
+        },
+      });
+  }, [lendInfo]);
+
+  const type = {
+    1: "内部借出",
+  };
   const info = [
     {
       label: "借出单号",
@@ -57,47 +64,45 @@ const FlowForm = (props) => {
           valueString="id"
         ></FormSelect>
       ),
+      name: "lendId",
     },
     {
       label: "借出类型",
-      element: (
-        <div>
-          <Select defaultValue={"1"} disabled>
-            <Select.Option value={"1"}>内部借出</Select.Option>
-          </Select>
-        </div>
-      ),
+      element: <div>{type[lendInfo?.lendType]}</div>,
     },
     {
       label: "借出时间",
-      element: <div> {approvalRecords?.title}</div>,
+      element: <div> {lendInfo?.lendDate}</div>,
     },
     {
       label: "借出人信息",
-      element: <div> 姓名:a,证件号:a,单位:d</div>,
+      element: (
+        <div>
+          {lendInfo &&
+            `姓名:${lendInfo.realName}, 证件号:${lendInfo?.cardNo}, 单位:${lendInfo?.lendCompanyName}`}
+        </div>
+      ),
       col: 24,
       labelCol: 2,
     },
-    // {
-    //   label: "购货时间",
-    //   element: <div> {approvalRecords.expectedDate}</div>,
-    // },
   ];
 
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
         <div className="line"></div>
-        购置信息:
+        归还信息:
       </div>
+      {console.log(sendBacklendDetail, "sendBacklendDetail")}
       <Row>
+        {/* 借出信息 */}
         {info.map((item) => (
           <Col span={item.col || 8} className="form-item-box" key={item.label}>
             <Form.Item
               disabled={true}
               labelAlign="right"
               label={item.label}
-              name={item.label}
+              name={item.name}
               width={"200px"}
               labelCol={{ span: item.labelCol || 6 }}
             >
@@ -127,7 +132,7 @@ const FlowForm = (props) => {
       </Row>
       <div className="card-line"></div>
       <div className="form-info">
-        <div className="line"></div>购置清单:
+        <div className="line"></div>归还清单:
       </div>
       <Row>
         {/* 列表 */}
@@ -137,128 +142,166 @@ const FlowForm = (props) => {
             label={""}
             name={"limsUsereturnapplyitemDTOList"}
           >
-            <ChildTable records={records}></ChildTable>
+            <ChildTable
+              records={records}
+              deviceList={sendBacklendDetail?.limsUselendapplyitemList}
+            ></ChildTable>
           </Form.Item>
-        </Col>
-      </Row>
-      <div className="form-info">
-        <div className="line"></div>
-        附件相关:
-      </div>
-      <Row>
-        <Col span={24}>
-          <Form.Item
-            labelAlign="right"
-            label={""}
-            name={"file"}
-            rules={[{ require: false }]}
-          >
-            {console.log(fileList, "???")}
-            <div className="purplist-upload-box">
-              <div className="purplist-upload-left">
-                <Upload
-                  accept=".word,.xlsx,.docx,.pdf"
-                  action="http://47.115.10.75:9011/api/file/all/upload"
-                  multiple
-                  fileList={fileList}
-                  onRemove={(file) => {
-                    setFileList(fileList.filter((v) => v.url !== file.url));
-                  }}
-                  onChange={(fileInfo) => {
-                    setFileList(fileInfo.fileList);
-                  }}
-                >
-                  <div className="purplist-flex">
-                    <Button className="pruplist-upload-excel">
-                      上传购置资料
-                    </Button>
-                    <div>.word .xlsx .docx .pdf</div>
-                  </div>
-                </Upload>
-              </div>
-              <div className="purplist-upload-right">
-                <Upload
-                  accept=".jpg,.png"
-                  action="http://47.115.10.75:9011/api/file/all/upload"
-                  multiple
-                  listType="picture"
-                  fileList={imageList}
-                  onRemove={(file) => {
-                    setImageList(imageList.filter((v) => v.url !== file.url));
-                  }}
-                  onChange={(fileInfo) => {
-                    setImageList(fileInfo.fileList);
-                  }}
-                >
-                  <div className="purplist-flex">
-                    <Button className="purplist-upload-image">
-                      上传购置凭证
-                    </Button>
-                    <div> .jpg .png</div>
-                  </div>
-                </Upload>
-              </div>
-            </div>
-          </Form.Item>
-          {/* <Button
-            onClick={() => console.log(formRef.current.getFieldValue(), "VVV")}
-          >
-            上传测试
-          </Button> */}
         </Col>
       </Row>
       {/* 编辑时提交id */}
       <Form.Item name={id}></Form.Item>
+
+      {records?.status && (
+        <Timeline>
+          {records.taskInfo?.map((item) => {
+            return (
+              <Timeline.Item key={item.activityId} dot={""}>
+                {item.activityName == "StartEvent"
+                  ? "开始"
+                  : item.activityName == "EndEvent"
+                  ? "结束"
+                  : item.activityName}
+                <div className="flow-timeline">
+                  <div>
+                    {item.fullMessage && `审批意见:${item.fullMessage}`}
+                  </div>
+                  <div>审核时间:{item.time}</div>
+                </div>
+              </Timeline.Item>
+            );
+          })}
+        </Timeline>
+      )}
+      {/* 审批意见 */}
+      {records?.status == "1" ? (
+        <Col span={24}>
+          <Form.Item
+            name={"msg"}
+            label="审批意见"
+            labelCol={{ span: 2 }}
+            rules={[{ required: true }]}
+          >
+            <Input></Input>
+          </Form.Item>
+        </Col>
+      ) : (
+        ""
+      )}
       <Form.Item>
         <div className="flow-form-bottom">
-          <>
-            <div>
-              合计金额:
-              <span style={{ color: "red" }}>{totalPrice}</span>元
-            </div>
-            <Button
-              htmlType="submit"
-              className="flow-form-submit"
-              onClick={() => {
-                let allList = [...fileList, ...imageList];
-                console.log(allList, "allList");
-
-                let list = allList.map((item) => ({
-                  businessId: records.id,
-                  businessType: "1",
-                  fileName: item.name,
-                  filePath: item?.response?.data || item.url,
-                  fileType: item.type,
-                  smallFilePath: item?.response?.data || item.url,
-                  title: item.name.split(".")[0],
-                }));
-                addAttachment(list).then((res) => {
-                  if (res.code != 200) {
-                    message.warning("附件上传失败");
-                  } else {
-                    message.success("附件上传成功");
-                  }
-                });
-              }}
-            >
-              保存
-            </Button>
-            <Button className="flow-form-flow" onClick={submitFlow}>
-              到货验收
-            </Button>
+          {records?.status !== "1" &&
+          records?.status !== "0" &&
+          records?.status ? (
             <Button className="flow-form-calcel" onClick={cancelClick}>
               关闭
             </Button>
-          </>
+          ) : records?.status == "0" || !records?.status ? (
+            <>
+              <Button
+                htmlType="submit"
+                className="flow-form-submit"
+                // onClick={uploadFile}
+              >
+                保存
+              </Button>
+              <Button
+                className="flow-form-flow"
+                onClick={() => {
+                  submitFlow();
+                  // uploadFile();
+                }}
+                // onClick={uploadFile}
+              >
+                提交审批
+              </Button>
+              {/* </Popconfirm> */}
+              <Button className="flow-form-calcel" onClick={cancelClick}>
+                关闭
+              </Button>
+            </>
+          ) : (
+            <div>
+              <Button
+                className="flow-form-calcel"
+                onClick={() => {
+                  approvalFlow({
+                    req: approvaReturn,
+                    param: {
+                      id: records.id,
+                      msg: formRef.current.getFieldValue().msg,
+                      type: 0,
+                    },
+                    msg: "审批成功",
+                  });
+                }}
+              >
+                审批
+              </Button>
+              <Button
+                className="flow-form-calcel"
+                onClick={() => {
+                  approvalFlow({
+                    req: approvaReturn,
+                    param: {
+                      id: records.id,
+                      msg: formRef.current.getFieldValue().msg,
+                      type: 1,
+                    },
+                    msg: "审批成功",
+                  });
+                }}
+                // onClick={approvalClick1}
+              >
+                驳回
+              </Button>
+              <Button
+                className="flow-form-calcel"
+                onClick={() => {
+                  approvalFlow({
+                    req: approvaReturn,
+                    param: {
+                      id: records.id,
+                      msg: formRef.current.getFieldValue().msg,
+                      type: 2,
+                    },
+                    msg: "审批成功",
+                  });
+                }}
+                // onClick={approvalClick2}
+              >
+                拒绝
+              </Button>
+              <Button className="flow-form-calcel" onClick={() => {}}>
+                打印
+              </Button>
+              <Button className="flow-form-calcel" onClick={cancelClick}>
+                关闭
+              </Button>
+            </div>
+          )}
         </div>
       </Form.Item>
+
+      {/* <div className="flow-form-bottom">
+          <Button htmlType="submit" className="flow-form-submit">
+            保存
+          </Button>
+          <Button className="flow-form-flow" onClick={submitFlow}>
+            提交审批
+          </Button>
+          <Button className="flow-form-calcel" onClick={cancelClick}>
+            关闭
+          </Button>
+        </div> */}
     </Form>
   );
 };
 const mapStateToProps = (state) => {
   return {
     totalPrice: state.currency.totalPrice,
-    dictuselend: state.currency.dictuselend,
+    dictuseLend: state.currency.dictuseLend,
+    sendBacklendDetail: state.currency.sendBacklendDetail,
   };
 };
 

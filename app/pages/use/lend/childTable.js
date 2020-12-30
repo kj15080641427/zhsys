@@ -113,7 +113,7 @@ const ChildTable = (props) => {
       dataIndex: "usePeriod",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[0]?.usePeriod || e}
+          defaultValue={props.value[index]?.usePeriod || e}
           // value={props.value[0]?.usePeriod || e}
           // value={e || day}
           onChange={(W) => {
@@ -130,7 +130,7 @@ const ChildTable = (props) => {
       dataIndex: "usePrice",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[0]?.usePrice}
+          defaultValue={props.value[index]?.usePrice}
           // value={props.value[0]?.usePrice}
           onChange={(W) => {
             setMoneny(W.target.value);

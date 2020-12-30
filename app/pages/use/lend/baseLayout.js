@@ -112,6 +112,7 @@ class LendLayout extends React.Component {
         },
       });
     };
+    //格式化附件上传格式
     const formatAttachment = (data) => {
       return data.map((item) => ({
         businessId: this.state.records.id,
@@ -131,16 +132,6 @@ class LendLayout extends React.Component {
         current: 1,
         size: -1,
       });
-      // getAttachment({
-      //   businessId: row.id,
-      //   businessType: "1",
-      //   current: 1,
-      //   size: -1,
-      // }).then((res) => {
-      //   this.setState({
-      //     defaultFileList: res.data.records,
-      //   });
-      // });
       getLimsUselendById({ id: row.id }).then((res) => {
         this.setState({
           taskInfo: res.data,
@@ -161,7 +152,7 @@ class LendLayout extends React.Component {
         setShowForm(true);
       });
     };
-    //提交工作流
+    //提交审批
     const submitFlow = () => {
       let formData = this.formRef.current.getFieldValue();
       formatList.forEach((item) => {
@@ -284,13 +275,7 @@ class LendLayout extends React.Component {
             <div className="view-query">
               <div className="view-query-left">
                 {renderBreadcrumb()}
-                <Button
-                  className="base-add-button"
-                  onClick={() => {
-                    // this.formRef.current.resetFields;
-                    // showModal();
-                  }}
-                >
+                <Button className="base-add-button" >
                   导出
                 </Button>
               </div>

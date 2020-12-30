@@ -38,3 +38,6 @@ export const SET_USELEND_IMAGE = "SET_USELEND_IMAGE"; //借出模块 获取图�
 
 export const GET_ATTACHMENT_BY_ID = "GET_ATTACHMENT_BY_ID"; //获取附件
 export const SET_ATTACHMENT_BY_ID = "SET_ATTACHMENT_BY_ID";
+
+export const SET_RETURN_BACKLIST = "SET_RETURN_BACKLIST";//归还清单
+

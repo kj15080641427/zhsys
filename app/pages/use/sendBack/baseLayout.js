@@ -6,14 +6,9 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
-import {
-  getReturnById,
-  getLimsUseReturnList,
-  getAttachment,
-} from "../../../request/index";
+import { getReturnById } from "../../../request/index";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -61,7 +56,7 @@ class BaseNewPageLayout extends React.Component {
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
-      totalPrice,
+      returnBackList,
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -117,33 +112,20 @@ class BaseNewPageLayout extends React.Component {
     };
     // 修改
     const update = (row) => {
-      getAttachment({
-        businessId: row.id,
-        businessType: "1",
-        current: 1,
-        size: -1,
-      }).then((res) => {
-        this.setState({
-          defaultFileList: res.data.records,
-        });
-      });
-      getLimsUseReturnList({ size: -1, current: 1, mainId: row.id }).then(
-        (res) => {
-          this.setState({
-            approvalRecords: res.data.limsPurplanapply,
-          });
-        }
-      );
       getReturnById({
         current: 1,
-        mainId: row.id,
+        id: row.id,
         size: -1,
       }).then((res) => {
         if (res.code == 200) {
-          let list = res?.data?.map((item) => {
-            return { ...item, ...item.limsBasicdevice };
-          });
-          row = { ...row, limsBasicdevice: list };
+          // let list = res?.data?.limsUsereturnapplyitemList.map((item) => {
+          //   return { ...item, ...item.limsBasicdevice };
+          // });
+          row = {
+            ...row,
+            limsBasicdevice: res?.data?.limsUsereturnapplyitemList,
+            taskInfo: res?.data?.activitiDOList,
+          };
 
           formatList.map((item) => {
             if (row[item]) {
@@ -177,9 +159,10 @@ class BaseNewPageLayout extends React.Component {
       });
       let updvalue = {
         ...values,
-        submitType: 0,
+        limsUsereturnapplyitemDTOList: returnBackList,
+        submitType: 1,
+        remark: "归还申请",
       };
-
 
       addOrUpdateBase({
         request: upd,
@@ -188,7 +171,7 @@ class BaseNewPageLayout extends React.Component {
         param: updvalue,
       });
     };
-    // 提交
+    // 保存
     const onFinish = (values) => {
       formatList.forEach((item) => {
         values = {
@@ -196,36 +179,18 @@ class BaseNewPageLayout extends React.Component {
           [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
         };
       });
-      stringList.forEach((item) => {
-        values = {
-          ...values,
-          [item]: String(values[item]),
-        };
-      });
       let updvalue = {
         ...values,
-        totalPrice: totalPrice,
         submitType: 0,
+        limsUsereturnapplyitemDTOList: returnBackList,
+        remark: "归还申请",
       };
-      let addvalue = {
-        ...values,
-        totalPrice: totalPrice,
-        submitType: 0,
-      };
-
-      values[keyId]
-      ? addOrUpdateBase({
-          request: upd,
-          key: storeKey,
-          query: get,
-          param: updvalue,
-        })
-      : addOrUpdateBase({
-          request: add,
-          key: storeKey,
-          query: get,
-          param: addvalue,
-        });
+      addOrUpdateBase({
+        request: values[keyId] ? upd : add,
+        key: storeKey,
+        query: get,
+        param: updvalue,
+      });
     };
 
     // 查询
@@ -319,8 +284,7 @@ class BaseNewPageLayout extends React.Component {
               columns={columns}
               loading={loading}
               total={this.props[storeKey]?.total}
-              // dataSource={this.props[storeKey]?.records || []}
-              dataSource={[{}]}
+              dataSource={this.props[storeKey]?.records}
               current={this.props[storeKey]?.current}
               size={this.props[storeKey]?.size}
               rowkey={(row) => row[keyId]}
@@ -363,34 +327,14 @@ class BaseNewPageLayout extends React.Component {
     );
   }
 }
-BaseNewPageLayout.propTypes = {
-  children: PropTypes.any,
-  actions: PropTypes.any,
-  get: PropTypes.func,
-  storeKey: PropTypes.string,
-  add: PropTypes.func,
-  upd: PropTypes.func,
-  del: PropTypes.func,
-  keyId: PropTypes.string,
-  formItem: PropTypes.array,
-  columns: PropTypes.array,
-  rowSelect: PropTypes.array,
-  columnsProps: PropTypes.array,
-  rowSelection: PropTypes.object,
-  showEdit: PropTypes.bool,
-  handleQuery: PropTypes.func,
-  loading: PropTypes.bool,
-  visible: PropTypes.bool,
-  formatList: PropTypes.array,
-  stringList: PropTypes.array,
-};
+
 const mapStateToProps = (state) => {
   return {
     [storeLabel]: state.currency[storeLabel],
     loading: state.currency.loading,
     visible: state.currency.visible,
     showForm: state.currency.showForm,
-    totalPrice: state.currency.totalPrice,
+    returnBackList: state.currency.returnBackList,
     // dict: state.currency.dict,
   };
 };

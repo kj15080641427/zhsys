@@ -127,3 +127,11 @@ export const getAttachmentById = (data) => {
     data,
   };
 };
+
+//归还清单
+export const setReturnbackList = (data) => {
+  return {
+    type: types.SET_RETURN_BACKLIST,
+    data,
+  };
+};

@@ -111,7 +111,7 @@ const Lendapply = () => {
       hidden: true,
     },
     {
-      title: "借出费用",
+      title: "借出费用(元)",
       dataIndex: "totalFee",
       hidden: true,
     },
