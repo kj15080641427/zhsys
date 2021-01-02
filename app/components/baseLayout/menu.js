@@ -74,7 +74,7 @@ const Menus = (props) => {
           </SubMenu>
           <SubMenu key="4" icon={<SettingOutlined />} title="设备维护">
             <Menu.Item key="/ReparirApply">维修申请</Menu.Item>
-            <Menu.Item key="/System">设备维修</Menu.Item>
+            <Menu.Item key="/Repair">设备维修</Menu.Item>
             <Menu.Item key="/System2">保养申请单</Menu.Item>
           </SubMenu>
           <SubMenu key="5" icon={<MailOutlined />} title="设备处理">

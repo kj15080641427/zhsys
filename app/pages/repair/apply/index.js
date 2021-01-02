@@ -9,59 +9,12 @@ import {
   updRepair,
   delRepair,
   getUser,
-  getUserCompany,
 } from "../../../request/index";
 import LendLayout from "./baseLayout";
 import { columnsToFormFlow } from "../../../utils/common";
 import FormSelect from "../../../components/formItems/select";
+import { statusElement } from "../../../components/formItems/baseDict";
 
-export const statusElement = {
-  0: (
-    <div
-      style={{
-        color: "#057272",
-      }}
-    >
-      暂存
-    </div>
-  ),
-  1: (
-    <div
-      style={{
-        color: "#C0C003",
-      }}
-    >
-      待审批
-    </div>
-  ),
-  2: (
-    <div
-      style={{
-        color: "#4D7B05",
-      }}
-    >
-      已驳回
-    </div>
-  ),
-  3: (
-    <div
-      style={{
-        color: "#AE1414",
-      }}
-    >
-      已拒绝
-    </div>
-  ),
-  4: (
-    <div
-      style={{
-        color: "#17AE14",
-      }}
-    >
-      已审批
-    </div>
-  ),
-};
 const type = {
   1: "内部借出",
 };
@@ -76,6 +29,7 @@ const ReparirApply = () => {
       title: "申请时间",
       dataIndex: "applyDate",
       require: true,
+      hidden: true,
       ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
     },
     {
@@ -86,16 +40,19 @@ const ReparirApply = () => {
     {
       title: "联系电话",
       dataIndex: "applyPhone",
+      hidden: true,
     },
     {
       title: "申请内容",
       dataIndex: "remark",
+      hidden: true,
     },
 
     {
       title: "业务类型",
       dataIndex: "lendType",
       require: true,
+      hidden: true,
       ele: (
         <Select>
           <Select.Option value={"1"}>归还损坏</Select.Option>
@@ -107,6 +64,7 @@ const ReparirApply = () => {
       title: "业务单号",
       dataIndex: "phone",
       require: true,
+      hidden: true,
       ele: <Input type="tel" style={{ width: "100%" }}></Input>,
     },
 
@@ -125,7 +83,7 @@ const ReparirApply = () => {
   ];
   const formItems = columnsToFormFlow([
     {
-      title: "借出人",
+      title: "申请人",
       dataIndex: "applyPhone",
       require: true,
       ele: (
@@ -137,16 +95,38 @@ const ReparirApply = () => {
         ></FormSelect>
       ),
     },
-    ...columns,
     {
-      title: "证件号码",
-      dataIndex: "cardNo",
+      title: "联系电话",
+      dataIndex: "applyPhone",
       require: true,
     },
     {
-      title: "借出理由",
-      dataIndex: "reason",
-      ele: <Input style={{ width: "100%" }} />,
+      title: "申请时间",
+      dataIndex: "applyDate",
+      require: true,
+      ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
+    },
+    {
+      title: "业务类型",
+      dataIndex: "bussineType",
+      require: true,
+      ele: (
+        <Select>
+          <Select.Option value={"1"}>归还损坏</Select.Option>
+        </Select>
+      ),
+      render: (e) => type[e],
+    },
+    {
+      title: "业务单号",
+      dataIndex: "bussineId",
+      require: true,
+      ele: <Input type="tel" style={{ width: "100%" }}></Input>,
+    },
+    {
+      title: "申请内容",
+      dataIndex: "remark",
+      ele: <Input.TextArea style={{ width: "100%" }} />,
       col: 16,
       labelCol: 2,
     },

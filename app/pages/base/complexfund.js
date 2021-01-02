@@ -17,7 +17,7 @@ const DeviceType = () => {
   const columns = [
     {
       title: "应用项目",
-      dataIndex: "",
+      dataIndex: "projectName",
     },
     {
       title: "年度",

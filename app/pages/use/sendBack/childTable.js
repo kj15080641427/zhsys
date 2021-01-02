@@ -9,16 +9,21 @@ const ChildTable = (props) => {
   const { setReturnbackList } = props.actions;
 
   const [dataSource, setDataSource] = useState([]);
-  const [radioValue, setRadioValue] = useState(0);
+  const [radioValue, setRadioValue] = useState("1");
 
   useEffect(() => {
     let obj = deviceList?.map((item) => {
-      return { ...item, ...item.limsBasicdevice };
+      return { ...item.limsBasicdevice, ...item };
     });
     setDataSource(obj);
     setReturnbackList(obj);
   }, [deviceList]);
-
+  useEffect(() => {
+    return setRadioValue("0");
+  }, []);
+  useEffect(() => {
+    return setDataSource([]);
+  }, []);
   const columns = [
     {
       title: "设备编号",
@@ -58,15 +63,16 @@ const ChildTable = (props) => {
     {
       title: "归还结果",
       dataIndex: "status",
-      // render: () => (
-      //   <Radio.Group
-      //     onChange={(e) => setRadioValue(e.target.value)}
-      //     // value={radioValue}
-      //   >
-      //     <Radio value={0}>正常</Radio>
-      //     <Radio value={1}>损坏</Radio>
-      //   </Radio.Group>
-      // ),
+      render: (e) => (
+        <Radio.Group
+          onChange={(e) => setRadioValue(String(e.target.value))}
+          // value={e || radioValue}
+          defaultValue={e || radioValue}
+        >
+          <Radio value={"0"}>正常</Radio>
+          <Radio value={"1"}>损坏</Radio>
+        </Radio.Group>
+      ),
     },
 
     {

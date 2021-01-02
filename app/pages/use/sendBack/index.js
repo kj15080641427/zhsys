@@ -18,8 +18,7 @@ import {
 import FormSelect from "../../../components/formItems/select";
 import BaseNewPageLayout from "./baseLayout";
 import { columnsToForm } from "../../../utils/common";
-import { statusElement } from "../lend/index";
-
+import { statusElement } from "../../../components/formItems/baseDict";
 export const columns = [
   {
     title: "归还单号",

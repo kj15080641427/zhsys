@@ -14,24 +14,27 @@ const ChildTable = (props) => {
   const [dataSource, setDataSource] = useState([]);
   const [selected, setSelected] = useState([]);
 
-  const [day, setDay] = useState(0); //使用天数
-  const [momeny, setMoneny] = useState(0);
+  const [day, setDay] = useState(0); //工时
+  const [momeny, setMoneny] = useState(0); //费用
+  const [remark, setRemark] = useState(0); //说明
   const { getBase, setTotalPrice } = props.actions;
   const { baseDevice } = props;
 
   useEffect(() => {
     props.value && setDataSource(props.value);
     console.log(props.value, "========");
+    return () => setDataSource([]);
   }, [props.value]);
 
   useEffect(() => {
+    // setTotalPrice(0);
     //计算所有设备的总金额
     let total = 0;
     dataSource?.map((item) => {
-      total = total + item.totalPrice;
+      total = Number(total) + Number(item.planFee);
     });
     setTotalPrice(total);
-  }, [dataSource, day, momeny]);
+  }, [momeny]);
 
   useEffect(() => {
     //获取设备信息
@@ -69,15 +72,13 @@ const ChildTable = (props) => {
       dataIndex: "deviceName",
     },
     {
+      title: "单位",
+      dataIndex: "unit",
+    },
+    {
       title: "规格型号",
       dataIndex: "model",
     },
-    // {
-    //   title: "生产日期",
-    //   dataIndex: "produceDate",
-    //   ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
-    //   rules: [{ require: false }],
-    // },
     {
       title: "价值",
       dataIndex: "price",
@@ -99,27 +100,20 @@ const ChildTable = (props) => {
     },
     {
       title: "生产日期",
-      dataIndex: "produceDate",
+      dataIndex: "modifyDate",
       ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
       rules: [{ require: false }],
     },
     {
-      title: "价值",
-      dataIndex: "price",
-      rules: [{ require: false }],
-    },
-    {
-      title: "使用天数",
-      dataIndex: "usePeriod",
+      title: "预估工时",
+      dataIndex: "planTime",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[0]?.usePeriod || e}
-          // value={props.value[0]?.usePeriod || e}
-          // value={e || day}
+          defaultValue={props.value[index]?.planTime}
           onChange={(W) => {
             setDay(W.target.value);
             let list = dataSource;
-            list[index].usePeriod = W.target.value;
+            list[index].planTime = W.target.value;
             setDataSource(list);
           }}
         ></Input>
@@ -127,71 +121,38 @@ const ChildTable = (props) => {
     },
     {
       title: "使用单价(元)",
-      dataIndex: "usePrice",
+      dataIndex: "planFee",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[0]?.usePrice}
-          // value={props.value[0]?.usePrice}
+          defaultValue={props.value[index]?.planFee}
           onChange={(W) => {
             setMoneny(W.target.value);
             let list = dataSource;
-            list[index].usePrice = W.target.value;
+            list[index].planFee = W.target.value;
             setDataSource(list);
           }}
         ></Input>
       ),
     },
     {
-      title: "小计",
-      dataIndex: "totalPrice",
-      width: "120px",
-      render: (_, row, index) => {
-        let list = dataSource;
-        list[index].totalPrice = row.usePeriod * row.usePrice;
-        return row.usePeriod * row.usePrice || "";
-      },
+      title: "损坏说明",
+      dataIndex: "remark",
+      render: (e, row, index) => (
+        <Input
+          defaultValue={props.value[index]?.remark}
+          onChange={(W) => {
+            setRemark(W.target.value);
+            let list = dataSource;
+            list[index].remark = W.target.value;
+            setDataSource(list);
+          }}
+        ></Input>
+      ),
     },
     {
       title: "应用项目",
       dataIndex: "",
     },
-    // {
-    //   title: "单位",
-    //   dataIndex: "unit",
-    //   ele: (
-    //     <FormSelect
-    //       request={getUserCompany}
-    //       storeKey="userCompany"
-    //       labelString="name"
-    //       valueString="id"
-    //     ></FormSelect>
-    //   ),
-    // },
-
-    // {
-    //   title: "品牌",
-    //   dataIndex: "brand",
-    //   rules: [{ require: false }],
-    // },
-    // {
-    //   title: "备注",
-    //   dataIndex: "remark",
-    //   rules: [{ require: false }],
-    // },
-    // {
-    //   title: "设备类别",
-    //   dataIndex: "categoryId",
-    //   ele: (
-    //     <FormSelect
-    //       request={getLimsBasiccategory}
-    //       storeKey="deviceType"
-    //       labelString="name"
-    //       valueString="id"
-    //     ></FormSelect>
-    //   ),
-    //   rules: [{ require: false }],
-    // },
-
     {
       title: "操作",
       dataIndex: "",
@@ -209,6 +170,7 @@ const ChildTable = (props) => {
     // };
     setDay("");
     setMoneny("");
+    setRemark("");
     props.onChange(selected);
     setDataSource(selected);
     setVisible(false);
@@ -228,7 +190,7 @@ const ChildTable = (props) => {
         value={dataSource}
         columns={columns}
         dataSource={dataSource}
-        rowKey={"deviceNo"}
+        rowKey={"id"}
       ></Table>
       <Modal
         visible={visible}

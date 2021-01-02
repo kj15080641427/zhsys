@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Col, Timeline, Input } from "antd";
+import { Button, Form, Row, Col, Timeline, Input, Modal } from "antd";
 import ChildTable from "./childTable";
 import FormSelect from "../../../components/formItems/select";
 import {
@@ -15,6 +15,8 @@ import { connect } from "react-redux";
 //工作流表单
 const FlowForm = (props) => {
   const [lendInfo, setLendInfo] = useState(null); //借出信息
+  const [showDetail, setShowDetail] = useState(false); //查看借出资料
+
   const {
     onFinish, //提交按钮回调
     baseFormItem = [], //基础信息
@@ -79,7 +81,16 @@ const FlowForm = (props) => {
       element: (
         <div>
           {lendInfo &&
-            `姓名:${lendInfo.realName}, 证件号:${lendInfo?.cardNo}, 单位:${lendInfo?.lendCompanyName}`}
+            `姓名:${lendInfo.realName}, 证件号:${lendInfo?.cardNo}, 单位:${lendInfo?.lendCompanyName}   `}
+          {lendInfo && (
+            <a
+              onClick={() => {
+                setShowDetail(true);
+              }}
+            >
+              查看借出提供资料
+            </a>
+          )}
         </div>
       ),
       col: 24,
@@ -88,202 +99,226 @@ const FlowForm = (props) => {
   ];
 
   return (
-    <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
-      <div className="form-info">
-        <div className="line"></div>
-        归还信息:
-      </div>
-      {console.log(sendBacklendDetail, "sendBacklendDetail")}
-      <Row>
-        {/* 借出信息 */}
-        {info.map((item) => (
-          <Col span={item.col || 8} className="form-item-box" key={item.label}>
-            <Form.Item
-              disabled={true}
-              labelAlign="right"
-              label={item.label}
-              name={item.name}
-              width={"200px"}
-              labelCol={{ span: item.labelCol || 6 }}
+    <>
+      <Modal visible={showDetail} onCancel={() => setShowDetail(false)}>
+        {console.log(lendInfo)}
+        <Row>
+          <Col span={12}>借出人：{lendInfo?.realName}</Col>
+          <Col span={12}>单位：{lendInfo?.lendCompanyName}</Col>
+        </Row>
+        <Row>
+          <Col span={12}>借出人证件号：{lendInfo?.cardNo}</Col>
+          <Col span={12}>联系方式{lendInfo?.phone}</Col>
+        </Row>
+        <Row>
+          <Col span={12}>借出日期：{lendInfo?.lendDate}</Col>
+          <Col span={12}>总金额：{lendInfo?.totalFee}</Col>
+        </Row>
+      </Modal>
+      <Form
+        name={name}
+        onFinish={onFinish}
+        ref={formRef}
+        labelCol={{ span: 5 }}
+      >
+        <div className="form-info">
+          <div className="line"></div>
+          归还信息:
+        </div>
+        <Row>
+          {/* 借出信息 */}
+          {info.map((item) => (
+            <Col
+              span={item.col || 8}
+              className="form-item-box"
+              key={item.label}
             >
-              {item.element}
-            </Form.Item>
-          </Col>
-        ))}
-        {/* 渲染基础表单 */}
-        {baseFormItem.map((item, index) => {
-          return (
-            <Col key={index} className="form-item-box" span={item.col || 8}>
               <Form.Item
                 disabled={true}
                 labelAlign="right"
                 label={item.label}
                 name={item.name}
-                rules={item.rules}
                 width={"200px"}
-                style={item.style}
                 labelCol={{ span: item.labelCol || 6 }}
               >
-                {item.ele}
+                {item.element}
               </Form.Item>
             </Col>
-          );
-        })}
-      </Row>
-      <div className="card-line"></div>
-      <div className="form-info">
-        <div className="line"></div>归还清单:
-      </div>
-      <Row>
-        {/* 列表 */}
-        <Col span={24}>
-          <Form.Item
-            labelAlign="right"
-            label={""}
-            name={"limsUsereturnapplyitemDTOList"}
-          >
-            <ChildTable
-              records={records}
-              deviceList={sendBacklendDetail?.limsUselendapplyitemList}
-            ></ChildTable>
-          </Form.Item>
-        </Col>
-      </Row>
-      {/* 编辑时提交id */}
-      <Form.Item name={id}></Form.Item>
-
-      {records?.status && (
-        <Timeline>
-          {records.taskInfo?.map((item) => {
+          ))}
+          {/* 渲染基础表单 */}
+          {baseFormItem.map((item, index) => {
             return (
-              <Timeline.Item key={item.activityId} dot={""}>
-                {item.activityName == "StartEvent"
-                  ? "开始"
-                  : item.activityName == "EndEvent"
-                  ? "结束"
-                  : item.activityName}
-                <div className="flow-timeline">
-                  <div>
-                    {item.fullMessage && `审批意见:${item.fullMessage}`}
-                  </div>
-                  <div>审核时间:{item.time}</div>
-                </div>
-              </Timeline.Item>
+              <Col key={index} className="form-item-box" span={item.col || 8}>
+                <Form.Item
+                  disabled={true}
+                  labelAlign="right"
+                  label={item.label}
+                  name={item.name}
+                  rules={item.rules}
+                  width={"200px"}
+                  style={item.style}
+                  labelCol={{ span: item.labelCol || 6 }}
+                >
+                  {item.ele}
+                </Form.Item>
+              </Col>
             );
           })}
-        </Timeline>
-      )}
-      {/* 审批意见 */}
-      {records?.status == "1" ? (
-        <Col span={24}>
-          <Form.Item
-            name={"msg"}
-            label="审批意见"
-            labelCol={{ span: 2 }}
-            rules={[{ required: true }]}
-          >
-            <Input></Input>
-          </Form.Item>
-        </Col>
-      ) : (
-        ""
-      )}
-      <Form.Item>
-        <div className="flow-form-bottom">
-          {records?.status !== "1" &&
-          records?.status !== "0" &&
-          records?.status ? (
-            <Button className="flow-form-calcel" onClick={cancelClick}>
-              关闭
-            </Button>
-          ) : records?.status == "0" || !records?.status ? (
-            <>
-              <Button
-                htmlType="submit"
-                className="flow-form-submit"
-                // onClick={uploadFile}
-              >
-                保存
-              </Button>
-              <Button
-                className="flow-form-flow"
-                onClick={() => {
-                  submitFlow();
-                  // uploadFile();
-                }}
-                // onClick={uploadFile}
-              >
-                提交审批
-              </Button>
-              {/* </Popconfirm> */}
-              <Button className="flow-form-calcel" onClick={cancelClick}>
-                关闭
-              </Button>
-            </>
-          ) : (
-            <div>
-              <Button
-                className="flow-form-calcel"
-                onClick={() => {
-                  approvalFlow({
-                    req: approvaReturn,
-                    param: {
-                      id: records.id,
-                      msg: formRef.current.getFieldValue().msg,
-                      type: 0,
-                    },
-                    msg: "审批成功",
-                  });
-                }}
-              >
-                审批
-              </Button>
-              <Button
-                className="flow-form-calcel"
-                onClick={() => {
-                  approvalFlow({
-                    req: approvaReturn,
-                    param: {
-                      id: records.id,
-                      msg: formRef.current.getFieldValue().msg,
-                      type: 1,
-                    },
-                    msg: "审批成功",
-                  });
-                }}
-                // onClick={approvalClick1}
-              >
-                驳回
-              </Button>
-              <Button
-                className="flow-form-calcel"
-                onClick={() => {
-                  approvalFlow({
-                    req: approvaReturn,
-                    param: {
-                      id: records.id,
-                      msg: formRef.current.getFieldValue().msg,
-                      type: 2,
-                    },
-                    msg: "审批成功",
-                  });
-                }}
-                // onClick={approvalClick2}
-              >
-                拒绝
-              </Button>
-              <Button className="flow-form-calcel" onClick={() => {}}>
-                打印
-              </Button>
-              <Button className="flow-form-calcel" onClick={cancelClick}>
-                关闭
-              </Button>
-            </div>
-          )}
+        </Row>
+        <div className="card-line"></div>
+        <div className="form-info">
+          <div className="line"></div>归还清单:
         </div>
-      </Form.Item>
+        <Row>
+          {/* 列表 */}
+          <Col span={24}>
+            <Form.Item
+              labelAlign="right"
+              label={""}
+              name={"limsUsereturnapplyitemDTOList"}
+            >
+              <ChildTable
+                records={records}
+                deviceList={sendBacklendDetail?.limsUselendapplyitemList}
+              ></ChildTable>
+            </Form.Item>
+          </Col>
+        </Row>
+        {/* 编辑时提交id */}
+        <Form.Item name={id}></Form.Item>
 
-      {/* <div className="flow-form-bottom">
+        {records?.status && (
+          <Timeline>
+            {records.taskInfo?.map((item) => {
+              return (
+                <Timeline.Item key={item.activityId} dot={""}>
+                  {item.activityName == "StartEvent"
+                    ? "开始"
+                    : item.activityName == "EndEvent"
+                    ? "结束"
+                    : item.activityName}
+                  <div className="flow-timeline">
+                    <div>
+                      {item.fullMessage && `审批意见:${item.fullMessage}`}
+                    </div>
+                    <div>审核时间:{item.time}</div>
+                  </div>
+                </Timeline.Item>
+              );
+            })}
+          </Timeline>
+        )}
+        {/* 审批意见 */}
+        {records?.status == "1" ? (
+          <Col span={24}>
+            <Form.Item
+              name={"msg"}
+              label="审批意见"
+              labelCol={{ span: 2 }}
+              rules={[{ required: true }]}
+            >
+              <Input></Input>
+            </Form.Item>
+          </Col>
+        ) : (
+          ""
+        )}
+        <Form.Item>
+          <div className="flow-form-bottom">
+            {records?.status !== "1" &&
+            records?.status !== "0" &&
+            records?.status ? (
+              <Button className="flow-form-calcel" onClick={cancelClick}>
+                关闭
+              </Button>
+            ) : records?.status == "0" || !records?.status ? (
+              <>
+                <Button
+                  htmlType="submit"
+                  className="flow-form-submit"
+                  // onClick={uploadFile}
+                >
+                  保存
+                </Button>
+                <Button
+                  className="flow-form-flow"
+                  onClick={() => {
+                    submitFlow();
+                    // uploadFile();
+                  }}
+                  // onClick={uploadFile}
+                >
+                  提交审批
+                </Button>
+                {/* </Popconfirm> */}
+                <Button className="flow-form-calcel" onClick={cancelClick}>
+                  关闭
+                </Button>
+              </>
+            ) : (
+              <div>
+                <Button
+                  className="flow-form-calcel"
+                  onClick={() => {
+                    approvalFlow({
+                      req: approvaReturn,
+                      param: {
+                        id: records.id,
+                        msg: formRef.current.getFieldValue().msg,
+                        type: 0,
+                      },
+                      msg: "审批成功",
+                    });
+                  }}
+                >
+                  审批
+                </Button>
+                <Button
+                  className="flow-form-calcel"
+                  onClick={() => {
+                    approvalFlow({
+                      req: approvaReturn,
+                      param: {
+                        id: records.id,
+                        msg: formRef.current.getFieldValue().msg,
+                        type: 1,
+                      },
+                      msg: "审批成功",
+                    });
+                  }}
+                  // onClick={approvalClick1}
+                >
+                  驳回
+                </Button>
+                <Button
+                  className="flow-form-calcel"
+                  onClick={() => {
+                    approvalFlow({
+                      req: approvaReturn,
+                      param: {
+                        id: records.id,
+                        msg: formRef.current.getFieldValue().msg,
+                        type: 2,
+                      },
+                      msg: "审批成功",
+                    });
+                  }}
+                  // onClick={approvalClick2}
+                >
+                  拒绝
+                </Button>
+                <Button className="flow-form-calcel" onClick={() => {}}>
+                  打印
+                </Button>
+                <Button className="flow-form-calcel" onClick={cancelClick}>
+                  关闭
+                </Button>
+              </div>
+            )}
+          </div>
+        </Form.Item>
+
+        {/* <div className="flow-form-bottom">
           <Button htmlType="submit" className="flow-form-submit">
             保存
           </Button>
@@ -294,7 +329,8 @@ const FlowForm = (props) => {
             关闭
           </Button>
         </div> */}
-    </Form>
+      </Form>
+    </>
   );
 };
 const mapStateToProps = (state) => {

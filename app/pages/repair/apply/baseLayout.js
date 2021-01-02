@@ -143,7 +143,7 @@ class LendLayout extends React.Component {
         }));
         row = {
           ...res.data.limsRepairapply,
-          deviceIdList: lsit,
+          limsRepairapplyitemSaveDTOS: lsit,
         };
         formatList.map((item) => {
           row = { ...row, [item]: moment(row[item]) };
@@ -162,22 +162,22 @@ class LendLayout extends React.Component {
         };
       });
       let totalFee = 0;
-      let deviceList = formData.deviceIdList.map((item) => {
-        totalFee = totalFee + item.totalPrice;
+      let deviceList = formData.limsRepairapplyitemSaveDTOS.map((item) => {
+        totalFee = totalFee + Number(item.planFee);
         return {
           deviceId: item.id, //设备ID
           complexFundId: "791606316736065536", //经费ID
           foundId: "791606316736065536", //经费ID
           foundFee: 11000, //经费余额
-          totalPrice: item.totalPrice, //x小计金额
-          usePeriod: item.usePeriod, //使用天数
-          usePrice: item.usePrice, //单价
+          // totalPrice: item.totalPrice, //x小计金额
+          planTime: item.planTime, //使用天数
+          planFee: item.planFee, //单价
         };
       });
       let submitValue = {
         ...formData,
         submitType: 1,
-        deviceIdList: deviceList,
+        limsRepairapplyitemSaveDTOS: deviceList,
         totalFee: totalFee,
         limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
@@ -198,22 +198,23 @@ class LendLayout extends React.Component {
         };
       });
       let totalvalue = 0;
-      let deviceList = values.deviceIdList.map((item) => {
-        totalvalue = totalvalue + item.totalPrice;
+      let deviceList = values.limsRepairapplyitemSaveDTOS.map((item) => {
+        totalvalue = totalvalue + Number(item.planFee);
         return {
           deviceId: item.id, //设备ID
           complexFundId: "791606316736065536", //经费ID
           foundId: "791606316736065536", //经费ID
           foundFee: 11000, //经费余额
-          totalPrice: item.totalPrice, //x小计金额
-          usePeriod: item.usePeriod, //使用天数
-          usePrice: item.usePrice, //单价
+          // totalPrice: item.totalPrice, //x小计金额
+          planTime: item.planTime, //使用天数
+          planFee: item.planFee, //单价
+          remark: item.remark,
         };
       });
       let submitValue = {
         ...values,
         submitType: 0,
-        deviceIdList: deviceList,
+        limsRepairapplyitemSaveDTOS: deviceList,
         totalFee: totalvalue,
         limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
@@ -275,9 +276,7 @@ class LendLayout extends React.Component {
             <div className="view-query">
               <div className="view-query-left">
                 {renderBreadcrumb()}
-                <Button className="base-add-button" onClick={() => {}}>
-                  导出
-                </Button>
+                <Button className="base-add-button">导出</Button>
               </div>
               <div className={"view-query-right"}>
                 <Form

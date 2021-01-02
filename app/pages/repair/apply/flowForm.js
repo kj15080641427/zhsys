@@ -80,19 +80,19 @@ const FlowForm = (props) => {
       </Row>
       <div className="card-line"></div>
       <div className="form-info">
-        <div className="line"></div>借出清单:
+        <div className="line"></div>维修清单:
       </div>
       <Row>
         {/* 列表 */}
         <Col span={24}>
-          <Form.Item labelAlign="right" label={""} name={"deviceIdList"}>
+          <Form.Item labelAlign="right" label={""} name={"limsRepairapplyitemSaveDTOS"}>
             <ChildTable records={records}></ChildTable>
           </Form.Item>
         </Col>
       </Row>
       <div className="form-info">
         <div className="line"></div>
-        维修清单:
+        附件相关:
       </div>
       <Row>
         <Col span={24}>

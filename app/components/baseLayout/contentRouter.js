@@ -18,7 +18,8 @@ import SendBack from "../../pages/use/sendBack";
 import Lanapply from "../../pages/purp/lanApply/index";
 import LendapplyList from "../../pages/purp/lanapplyList/lanapplyList";
 import Complexfund from "../../pages/base/complexfund";
-import ReparirApply from '../../pages/repair/apply/index'
+import ReparirApply from "../../pages/repair/apply/index";
+import Repair from "../../pages/repair/repair/index";
 
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
@@ -31,25 +32,26 @@ class ContentRouter extends React.PureComponent {
       <Switch>
         <Route exact path={path} component={Home} />
         <Route path={"/#/"} component={Login} />
-        <Route path={ "/DataMonitoring"} component={DataMonitoring} />
-        <Route path={ "/Company"} component={Company} />
-        <Route path={ "/Department"} component={Department} />
-        <Route path={ "/User"} component={User} />
-        <Route path={ "/Role"} component={Role} />
-        <Route path={ "/Jurisdiction"} component={Jurisdiction} />
-        <Route path={ "/DeviceType"} component={DeviceType} />
-        <Route path={ "/BaseDevice"} component={BaseDevice} />
-        <Route path={ "/Supplier"} component={Supplier} />
-        <Route path={ "/BaseDict"} component={BaseDict} />
-        <Route path={ "/Uselendapply"} component={Lendapply} />
-        <Route path={ "/Lanapply"} component={Lanapply} />
-        <Route path={ "/LendapplyList"} component={LendapplyList} />
-        <Route path={ "/SendBack"} component={SendBack} />
-        <Route path={ "/ReparirApply"} component={ReparirApply} />
-        <Route path={ "/Complexfund"} component={Complexfund} />
-        {/* <Route path={ "/BaseDevice"} component={BaseDevice} /> */}
+        <Route path={"/DataMonitoring"} component={DataMonitoring} />
+        <Route path={"/Company"} component={Company} />
+        <Route path={"/Department"} component={Department} />
+        <Route path={"/User"} component={User} />
+        <Route path={"/Role"} component={Role} />
+        <Route path={"/Jurisdiction"} component={Jurisdiction} />
+        <Route path={"/DeviceType"} component={DeviceType} />
+        <Route path={"/BaseDevice"} component={BaseDevice} />
+        <Route path={"/Supplier"} component={Supplier} />
+        <Route path={"/BaseDict"} component={BaseDict} />
+        <Route path={"/Uselendapply"} component={Lendapply} />
+        <Route path={"/Lanapply"} component={Lanapply} />
+        <Route path={"/LendapplyList"} component={LendapplyList} />
+        <Route path={"/SendBack"} component={SendBack} />
+        <Route path={"/ReparirApply"} component={ReparirApply} />
+        <Route path={"/Repair"} component={Repair} />
         {/* <Route path={ "/Supplier"} component={Supplier} /> */}
         {/* <Route path={ "/BaseDict"} component={BaseDict} /> */}
+        <Route path={"/Complexfund"} component={Complexfund} />
+
         <Route component={Nothing} />
       </Switch>
     );
