@@ -275,6 +275,10 @@ export function getLimsUselanapplyById(data) {
 export function approvalLimsUselanapply(data) {
   return fetchJSONData("POST", "/api/base/LimsPurplanapply/approval", data);
 }
+//导出购置申请
+export function exportLimsUselanapply() {
+  return "/api/base/LimsPurplanapply/export";
+}
 
 //查询购置申请清单
 export function getLimsUselanapplyList(data) {

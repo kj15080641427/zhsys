@@ -25,10 +25,7 @@ class HeadBase extends React.PureComponent {
       visible: false,
     };
   }
-  componentDidMount() {
-    let a = getStore();
-    console.log(a, "AA");
-  }
+
   render() {
     const { visible } = this.state;
     return (

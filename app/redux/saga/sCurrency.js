@@ -205,7 +205,7 @@ function* getAttachment({ data }) {
 //审批流程
 function* approvalFlow({ data }) {
   try {
-    const { req, param, msg = "审批成功" } = data;
+    const { req, param, msg = "操作成功" } = data;
     let result = yield call(req, param);
     if (result.code == code) {
       message.success(msg);

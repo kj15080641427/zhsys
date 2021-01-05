@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Popconfirm } from "antd";
+import { Button, Form, Popconfirm, Row, Col } from "antd";
 
 const DYForm = (props) => {
   const {
@@ -18,20 +18,22 @@ const DYForm = (props) => {
 
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
-      {formItem.map((item, index) => (
-        <Form.Item
-          labelAlign="right"
-          label={item.label}
-          name={item.name}
-          key={index}
-          rules={item.rules}
-          width={item.width}
-          style={item.style}
-          // required
-        >
-          {item.ele}
-        </Form.Item>
-      ))}
+      <Row>
+        {formItem.map((item, index) => (
+          <Col key={index} span={item.col || 24}>
+            <Form.Item
+              labelAlign="right"
+              label={item.label}
+              name={item.name}
+              rules={item.rules}
+              width={item.width}
+              style={item.style}
+            >
+              {item.ele}
+            </Form.Item>
+          </Col>
+        ))}
+      </Row>
 
       <Form.Item name={id}></Form.Item>
       {/* {showChild && <ChildTable></ChildTable>} */}
@@ -57,7 +59,7 @@ const DYForm = (props) => {
           )}
           {showCancel ? (
             <Button style={{ marginLeft: "50px" }} onClick={cancelClick}>
-              取消
+              关闭
             </Button>
           ) : (
             ""

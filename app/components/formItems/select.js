@@ -34,7 +34,7 @@ const FormSelect = (props) => {
   return (
     <Select
       disabled={props.disabled}
-      style={{ width: "200px" }}
+      style={{ width: "100%" }}
       onChange={(e) => onChange(e)}
       value={value}
     >
@@ -51,12 +51,16 @@ const FormSelect = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    [key]: state.currency[key],
+    [`dict${key}`]: state.currency[`dict${key}`],
     dictuser: state.currency.dictuser,
     dictuserCompany: state.currency.dictuserCompany,
     dictdeviceType: state.currency.dictdeviceType,
     dictsupplier: state.currency.dictsupplier,
     dictuseLend: state.currency.dictuseLend,
+    dictsglx: state.currency.dictsglx,
+    dictpp: state.currency.dictpp,
+    dictdw: state.currency.dictdw,
+    dictsbfl: state.currency.dictsbfl,
   };
 };
 

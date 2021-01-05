@@ -34,7 +34,7 @@ const ReparirApply = () => {
     },
     {
       title: "申请人",
-      dataIndex: "applyPhone",
+      dataIndex: "applyUser",
       hidden: true,
     },
     {
@@ -84,7 +84,7 @@ const ReparirApply = () => {
   const formItems = columnsToFormFlow([
     {
       title: "申请人",
-      dataIndex: "applyPhone",
+      dataIndex: "applyUser",
       require: true,
       ele: (
         <FormSelect
@@ -150,6 +150,7 @@ const ReparirApply = () => {
       name: "维修申请",
     },
   ];
+
   return (
     <div>
       <LendLayout

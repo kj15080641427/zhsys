@@ -7,6 +7,7 @@ import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 import { filterFileList } from "../../../utils/common";
 import AttachmentList from "../../../components/formItems/attachment";
+import { approvaRepair, getRepair } from "../../../request";
 
 //工作流表单
 const FlowForm = (props) => {
@@ -29,27 +30,38 @@ const FlowForm = (props) => {
     approvalClick2, //审批
     taskInfo, //审批流程信息
   } = props;
-  const { setTotalPrice } = props.actions;
+  const { setTotalPrice, approvalFlow, getBase, setShowForm } = props.actions;
 
   useEffect(() => {
     let price = 0;
-    formRef?.current?.getFieldValue().limsUselendapplyitemList?.map((item) => {
-      price = price + item.price;
+    formRef?.current?.getFieldValue().limsRepairapplyitemSaveDTOS?.map((item) => {
+      price = price + item.planFee;
     });
     setTotalPrice(price);
-  }, [formRef?.current?.getFieldValue().limsUselendapplyitemList]);
-  // useEffect(() => {
-  //   let { file, image } = filterFileList(defaultFileList);
-  //   setFileList(file);
-  //   setImageList(image);
-  //   return () => {
-  //     setFileList([]);
-  //     setImageList([]);
-  //   };
-  // }, [defaultFileList]);
-  // const setDevice = (e) => {
-  //   setTotalPrice(e);
-  // };
+  }, [formRef?.current?.getFieldValue().limsRepairapplyitemSaveDTOS]);
+
+  const approval = (type) => {
+    approvalFlow({
+      req: approvaRepair,
+      param: {
+        id: records.id,
+        msg: formRef.current.getFieldValue().msg,
+        type: type,
+      },
+      msg: "操作成功",
+    });
+    setShowForm(false);
+    getBase({
+      request: getRepair,
+      key: "repairApply",
+      param: {
+        current: 1,
+        size: 10,
+      },
+    });
+    console.log(result, "---");
+  };
+
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
@@ -85,7 +97,11 @@ const FlowForm = (props) => {
       <Row>
         {/* 列表 */}
         <Col span={24}>
-          <Form.Item labelAlign="right" label={""} name={"limsRepairapplyitemSaveDTOS"}>
+          <Form.Item
+            labelAlign="right"
+            label={""}
+            name={"limsRepairapplyitemSaveDTOS"}
+          >
             <ChildTable records={records}></ChildTable>
           </Form.Item>
         </Col>
@@ -187,21 +203,21 @@ const FlowForm = (props) => {
               <Button
                 className="flow-form-calcel"
                 value="0"
-                onClick={approvalClick0}
+                onClick={() => approval(0)}
               >
                 审批
               </Button>
               <Button
                 className="flow-form-calcel"
                 value="1"
-                onClick={approvalClick1}
+                onClick={() => approval(1)}
               >
                 驳回
               </Button>
               <Button
                 className="flow-form-calcel"
                 value="2"
-                onClick={approvalClick2}
+                onClick={() => approval(2)}
               >
                 拒绝
               </Button>

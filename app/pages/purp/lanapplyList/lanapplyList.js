@@ -14,6 +14,7 @@ import {
   updLimsUselanapplyListPur,
   getUser, //查询用户
   getLimsSupplier, //查询供应商
+  getLimsBasicDict,
 } from "../../../request/index";
 import FormSelect from "../../../components/formItems/select";
 import BaseNewPageLayout from "./lanapplyListComponent";
@@ -25,29 +26,10 @@ export const columns = [
     dataIndex: "code",
     hidden: true,
   },
-  // {
-  //   title: "购置类型",
-  //   dataIndex: "title",
-  //   ele: (
-  //     <Select>
-  //       <Select.Option value={"1"}>购置</Select.Option>
-  //     </Select>
-  //   ),
-  // },
   {
-    title: "供应商",
-    dataIndex: "supplierName",
-    hidden: true,
-  },
-  {
-    title: "购置日期",
-    dataIndex: "purDate",
-    ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
-    formWidth: "120px",
-  },
-  {
-    title: "购置人",
-    dataIndex: "realName",
+    title: "购置类型",
+    dataIndex: "type",
+    sort: 1,
     hidden: true,
   },
   {
@@ -57,8 +39,33 @@ export const columns = [
   },
 
   {
+    title: "供应商",
+    dataIndex: "supplierName",
+    hidden: true,
+    sort: 2,
+  },
+  {
     title: "购置金额",
     dataIndex: "totalPrice",
+    hidden: true,
+  },
+  {
+    title: "购置日期",
+    dataIndex: "purDate",
+    ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
+    formWidth: "120px",
+    sort: 3,
+    hidden: true,
+  },
+  {
+    title: "购置人",
+    dataIndex: "realName",
+    hidden: true,
+    sort: 4,
+  },
+  {
+    title: "状态",
+    dataIndex: "status",
     hidden: true,
   },
 ];
@@ -68,7 +75,20 @@ const LendapplyList = (props) => {
   }, []);
 
   const baseFormItems = columnsToForm([
-    ...columns,
+    {
+      title: "购置类型",
+      dataIndex: "type",
+      ele: (
+        <FormSelect
+          style={{ width: "100%" }}
+          request={getLimsBasicDict}
+          param={{ current: 1, size: -1, businessType: "2" }}
+          storeKey="sglx"
+          labelString="name"
+          valueString="basicDictId"
+        ></FormSelect>
+      ),
+    },
     {
       title: "供应商",
       dataIndex: "supplierId",
@@ -81,6 +101,19 @@ const LendapplyList = (props) => {
           valueString="id"
         ></FormSelect>
       ),
+    },
+    {
+      title: "购置日期",
+      dataIndex: "purDate",
+      ele: (
+        <DatePicker
+          showTime
+          format="YYYY-MM-DD HH:mm:ss"
+          style={{ width: "100%" }}
+        ></DatePicker>
+      ),
+      formWidth: "120px",
+      sort: 3,
     },
     {
       title: "购置人",

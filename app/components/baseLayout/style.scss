@@ -5,7 +5,7 @@
     height: 64px;
     flex-shrink: 0;
     color: white;
-    font-size: 20px;
+    font-size: 14px;
     position: relative;
     right: 0;
     left: 47px;
@@ -13,6 +13,22 @@
   }
   .hm-content {
     flex-grow: 1;
+  }
+  .menu-content {
+    // width: 72px;
+    height: 18px;
+    font-size: 18px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: #7a8b9f;
+    line-height: 35px;
+  }
+  .ant-menu-dark.ant-menu-inline .ant-menu-submenu-title {
+    display: flex;
+    align-items: center;
+  }
+  img {
+    margin-right: 5px;
   }
 }
 .menu-layout {
@@ -103,16 +119,16 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  div{
+  div {
     width: 80px;
   }
-  input{
+  input {
     margin-right: 20px;
   }
 }
-.warning-text{
+.warning-text {
   color: red;
 }
-.home{
+.home {
   // font-size: 101px;
 }

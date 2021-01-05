@@ -6,11 +6,14 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
-import { getLimsUselanapplyById } from "../../../request/index";
-import { approvalLimsUselanapply } from "../../../request/index";
+import {
+  getLimsUselanapplyById,
+  exportLimsUselanapply,
+  approvalLimsUselanapply,
+} from "../../../request/index";
+import { downloadFile } from "./downFile";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -222,13 +225,17 @@ class BaseNewPageLayout extends React.Component {
           msg: formData?.msg,
           type: e,
         }).then((res) => {
-          getBase({
-            request: get,
-            key: storeKey,
-            param: { current: 1, size: 10 },
-          });
-          setShowForm(false);
-          console.log(res);
+          if (res.code == 200) {
+            message.success(res.msg);
+            getBase({
+              request: get,
+              key: storeKey,
+              param: { current: 1, size: 10 },
+            });
+            setShowForm(false);
+          } else {
+            message.error(res.msg);
+          }
         });
       } else {
         message.error("请输入审批意见");
@@ -252,7 +259,13 @@ class BaseNewPageLayout extends React.Component {
         <div className="view-query-breacrumd" style={{ width: "230px" }}>
           <Breadcrumb separator=">">
             {breadcrumb.map((item) => (
-              <Breadcrumb.Item key={item.name}>{item.name}</Breadcrumb.Item>
+              <Breadcrumb.Item
+                key={item.name}
+                onClick={item.click}
+                style={{ cursor: item.click ? "pointer" : "" }}
+              >
+                {item.name}
+              </Breadcrumb.Item>
             ))}
           </Breadcrumb>
         </div>
@@ -268,6 +281,15 @@ class BaseNewPageLayout extends React.Component {
                 <Button
                   className="base-add-button"
                   onClick={() => {
+                    downloadFile(
+                      exportLimsUselanapply(),
+                      {
+                        current: 0,
+                        size: 5,
+                      },
+                      "购置清单.xlsx"
+                    );
+                    // exportLimsUselanapply({ current: 1, size: 10 });
                     // this.formRef.current.resetFields;
                     // showModal();
                   }}
@@ -289,6 +311,7 @@ class BaseNewPageLayout extends React.Component {
                     >
                       <div className="base-rowSelect-flex">
                         <Input
+                          placeholder="请输入名称，单号"
                           onChange={(e) =>
                             this.setState({
                               rowSelectData: e.target.value,
@@ -347,6 +370,7 @@ class BaseNewPageLayout extends React.Component {
             <div className="view-query-left">{renderBreadcrumb()}</div>
             <div className="head-line"></div>
             <FlowForm
+              formatList={formatList}
               taskInfo={this.state.taskInfo}
               approvalClick0={approvalClick0}
               approvalClick1={approvalClick1}
@@ -373,34 +397,13 @@ class BaseNewPageLayout extends React.Component {
     );
   }
 }
-BaseNewPageLayout.propTypes = {
-  children: PropTypes.any,
-  actions: PropTypes.any,
-  get: PropTypes.func,
-  storeKey: PropTypes.string,
-  add: PropTypes.func,
-  upd: PropTypes.func,
-  del: PropTypes.func,
-  keyId: PropTypes.string,
-  formItem: PropTypes.array,
-  columns: PropTypes.array,
-  rowSelect: PropTypes.array,
-  columnsProps: PropTypes.array,
-  rowSelection: PropTypes.object,
-  showEdit: PropTypes.bool,
-  handleQuery: PropTypes.func,
-  loading: PropTypes.bool,
-  visible: PropTypes.bool,
-  formatList: PropTypes.array,
-  stringList: PropTypes.array,
-};
+
 const mapStateToProps = (state) => {
   return {
     [storeLabel]: state.currency[storeLabel],
     loading: state.currency.loading,
     visible: state.currency.visible,
     showForm: state.currency.showForm,
-    // dict: state.currency.dict,
   };
 };
 

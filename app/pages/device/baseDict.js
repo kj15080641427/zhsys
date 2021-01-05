@@ -15,6 +15,14 @@ import {columnsToForm} from "../../utils/common";
 const BaseDict = () => {
   const columns = [
     {
+      title: "字典类型",
+      dataIndex: "businessName",
+    },
+    {
+      title: "类型编号",
+      dataIndex: "businessType",
+    },
+    {
       title: "字典编号",
       dataIndex: "code",
     },

@@ -236,7 +236,7 @@
     // 禁止不必要的字符串字面量或模板字面量的连接
     "no-useless-concat": 2,
     // 禁用不必要的转义字符
-    "no-useless-escape": 0,
+    "no-useless-escape": 2,
     // 禁用 void 操作符
     "no-void": 0,
     // 禁止在注释中使用特定的警告术语
@@ -246,7 +246,7 @@
     // 强制在parseInt()使用基数参数
     "radix": 2,
     // 要求所有的 var 声明出现在它们所在的作用域顶部
-    "vars-on-top": 0,
+    "vars-on-top": 2,
     // 要求 IIFE 使用括号括起来
     "wrap-iife": [2, "any"],
     // 要求或禁止 “Yoda” 条件
@@ -259,7 +259,7 @@
     //////////////
 
     // 要求或禁止 var 声明中的初始化(初值)
-    "init-declarations": 0,
+    "init-declarations": 2,
     // 不允许 catch 子句的参数与外层作用域中的变量同名
     "no-catch-shadow": 0,
     // 禁止删除变量
@@ -277,15 +277,15 @@
     // 禁止将变量初始化为 undefined
     "no-undef-init": 2,
     // 禁止将 undefined 作为标识符
-    "no-undefined": 0,
+    "no-undefined": 2,
     // 禁止出现未使用过的变量
-    // "no-unused-vars": [
-    //   2,
-    //   {
-    //     "vars": "all",
-    //     "args": "none"
-    //   }
-    // ],
+    "no-unused-vars": [
+      2,
+      {
+        "vars": "all",
+        "args": "none"
+      }
+    ],
     // 不允许在变量定义之前使用它们
     "no-use-before-define": 2,
 
@@ -469,7 +469,7 @@
       }
     ],
     // 要求或禁止在 var 声明周围换行
-    "one-var-declaration-per-line": 0,
+    "one-var-declaration-per-line": 2,
     // 要求或禁止在可能的情况下要求使用简化的赋值操作符
     "operator-assignment": 0,
     // 强制操作符使用一致的换行符
@@ -589,7 +589,7 @@
     // 要求使用扩展运算符而非 .apply()
     "prefer-spread": 0,
     // 要求使用模板字面量而非字符串连接
-    "prefer-template": 0,
+    "prefer-template": 2,
     // Suggest using the rest parameters instead of arguments
     "prefer-rest-params": 0,
     // 要求generator 函数内有 yield
@@ -604,8 +604,6 @@
     "yield-star-spacing": 2,
     //
     "react/display-name": 0,
-    // 禁止未使用的变量
-    "no-unused-vars": 2,
     //
     "arrow-body-style": [0, "always"],
     "react/prop-types": [0]

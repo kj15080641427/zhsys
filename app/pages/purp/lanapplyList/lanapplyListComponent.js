@@ -6,7 +6,6 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -342,27 +341,7 @@ class BaseNewPageLayout extends React.Component {
     );
   }
 }
-BaseNewPageLayout.propTypes = {
-  children: PropTypes.any,
-  actions: PropTypes.any,
-  get: PropTypes.func,
-  storeKey: PropTypes.string,
-  add: PropTypes.func,
-  upd: PropTypes.func,
-  del: PropTypes.func,
-  keyId: PropTypes.string,
-  formItem: PropTypes.array,
-  columns: PropTypes.array,
-  rowSelect: PropTypes.array,
-  columnsProps: PropTypes.array,
-  rowSelection: PropTypes.object,
-  showEdit: PropTypes.bool,
-  handleQuery: PropTypes.func,
-  loading: PropTypes.bool,
-  visible: PropTypes.bool,
-  formatList: PropTypes.array,
-  stringList: PropTypes.array,
-};
+
 const mapStateToProps = (state) => {
   return {
     [storeLabel]: state.currency[storeLabel],

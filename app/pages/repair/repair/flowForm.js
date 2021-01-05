@@ -247,7 +247,7 @@ const FlowForm = (props) => {
                       msg: formRef.current.getFieldValue().msg,
                       type: 1,
                     },
-                    msg: "审批成功",
+                    msg: "驳回成功",
                   });
                 }}
                 // onClick={approvalClick1}
@@ -264,7 +264,7 @@ const FlowForm = (props) => {
                       msg: formRef.current.getFieldValue().msg,
                       type: 2,
                     },
-                    msg: "审批成功",
+                    msg: "已拒绝",
                   });
                 }}
                 // onClick={approvalClick2}

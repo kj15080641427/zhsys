@@ -14,6 +14,7 @@ import {
 } from "../../../request/index";
 
 let storeLabel = "base";
+
 class LendLayout extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -60,6 +61,7 @@ class LendLayout extends React.Component {
       fileList,
       imageList,
     } = this.props;
+
     storeLabel = storeKey;
     const {
       getBase,
@@ -141,6 +143,7 @@ class LendLayout extends React.Component {
           ...item,
           ...item.limsRepairapply,
         }));
+
         row = {
           ...res.data.limsRepairapply,
           limsRepairapplyitemSaveDTOS: lsit,
@@ -155,6 +158,7 @@ class LendLayout extends React.Component {
     //提交审批
     const submitFlow = () => {
       let formData = this.formRef.current.getFieldValue();
+
       formatList.forEach((item) => {
         formData = {
           ...formData,
@@ -162,6 +166,7 @@ class LendLayout extends React.Component {
         };
       });
       let totalFee = 0;
+
       let deviceList = formData.limsRepairapplyitemSaveDTOS.map((item) => {
         totalFee = totalFee + Number(item.planFee);
         return {
@@ -174,6 +179,7 @@ class LendLayout extends React.Component {
           planFee: item.planFee, //单价
         };
       });
+
       let submitValue = {
         ...formData,
         submitType: 1,
@@ -181,6 +187,7 @@ class LendLayout extends React.Component {
         totalFee: totalFee,
         limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
+
       addOrUpdateBase({
         request: formData[keyId] ? upd : add,
         key: storeKey,
@@ -198,6 +205,7 @@ class LendLayout extends React.Component {
         };
       });
       let totalvalue = 0;
+
       let deviceList = values.limsRepairapplyitemSaveDTOS.map((item) => {
         totalvalue = totalvalue + Number(item.planFee);
         return {
@@ -211,6 +219,7 @@ class LendLayout extends React.Component {
           remark: item.remark,
         };
       });
+
       let submitValue = {
         ...values,
         submitType: 0,
@@ -218,6 +227,7 @@ class LendLayout extends React.Component {
         totalFee: totalvalue,
         limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
+
       addOrUpdateBase({
         request: values[keyId] ? upd : add,
         key: storeKey,
@@ -228,6 +238,7 @@ class LendLayout extends React.Component {
     //审批
     const approvalClick = (e) => {
       let formData = this.formRef?.current?.getFieldValue();
+
       if (formData.msg) {
         approvalLimsUseLendapply({
           id: formData?.id,
@@ -257,6 +268,7 @@ class LendLayout extends React.Component {
         ? handleQuery({ ...values, current: 1, size: 10 })
         : getBaseHoc({ current: 1, size: 10, ...values });
     };
+
     //面包屑
     const renderBreadcrumb = () => {
       return (
@@ -269,6 +281,7 @@ class LendLayout extends React.Component {
         </div>
       );
     };
+
     return (
       <>
         {
