@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, message, Input } from "antd";
 import { columnsToForm } from "../../utils/common";
 import DYForm from "@app/components/home/form";
-import moment from "moment";
-import FormSelect from "../formItems/select";
+// import moment from "moment";
+// import FormSelect from "../formItems/select";
 import {
   delLimsBasicDevicePart,
   getLimsBasicDevicePart,

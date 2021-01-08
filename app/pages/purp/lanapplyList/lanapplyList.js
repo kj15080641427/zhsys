@@ -1,10 +1,6 @@
 //购置申请清单
-import React, { useEffect } from "react";
-import {
-  Input,
-  DatePicker,
-  // Select
-} from "antd";
+import React from "react";
+import { Input, DatePicker } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
@@ -20,21 +16,25 @@ import FormSelect from "../../../components/formItems/select";
 import BaseNewPageLayout from "./lanapplyListComponent";
 import { columnsToForm } from "../../../utils/common";
 
+const obj = {
+  1: "待购置",
+  2: "已购置",
+};
 export const columns = [
   {
     title: "购置单号",
-    dataIndex: "code",
+    dataIndex: "applyCode",
     hidden: true,
   },
   {
     title: "购置类型",
-    dataIndex: "type",
+    dataIndex: "purTypeName",
     sort: 1,
     hidden: true,
   },
   {
     title: "申请单号",
-    dataIndex: "applyId",
+    dataIndex: "code",
     hidden: true,
   },
 
@@ -67,17 +67,14 @@ export const columns = [
     title: "状态",
     dataIndex: "status",
     hidden: true,
+    render: (e) => obj[e],
   },
 ];
 const LendapplyList = (props) => {
-  useEffect(() => {
-    props.actions;
-  }, []);
-
   const baseFormItems = columnsToForm([
     {
       title: "购置类型",
-      dataIndex: "type",
+      dataIndex: "purType",
       ele: (
         <FormSelect
           style={{ width: "100%" }}
@@ -136,33 +133,7 @@ const LendapplyList = (props) => {
     },
   ]);
 
-  // const listFormItems = columnsToForm([
-  //   {
-  //     title: "",
-  //     dataIndex: "limsBasicdeviceDTOList",
-  //     ele: <ChildTable />,
-  //     labelCol: 1,
-  //   },
-  // ]);
 
-  const rowSelect = [
-    {
-      label: "",
-      name: "name",
-      element: <Input placeholder="单位名称" className=""></Input>,
-    },
-  ];
-  const breadcrumb = [
-    {
-      name: "首页",
-    },
-    {
-      name: "购置管理",
-    },
-    {
-      name: "购置单",
-    },
-  ];
   return (
     <div>
       <BaseNewPageLayout
@@ -172,11 +143,9 @@ const LendapplyList = (props) => {
         columns={columns} // 表格配置项
         baseFormItem={baseFormItems} // 表单配置项
         // listFormItem={listFormItems}
-        rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"purpLanapply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["applyDate", "expectedDate", "purDate"]} //需要转换时间格式的表单字段
-        breadcrumb={breadcrumb} //面包屑
         formWidth={"1000px"} //宽度
       ></BaseNewPageLayout>
     </div>

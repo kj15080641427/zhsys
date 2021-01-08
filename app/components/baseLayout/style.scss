@@ -1,4 +1,20 @@
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #063771 !important;
+  background-image: linear-gradient(to right, #063771, black);
+}
+.ant-table-thead > tr > th {
+  color: #0000009e !important;
+
+  font-weight: bold !important;
+}
 .hm-menu {
+  .ant-menu-dark.ant-menu-inline .ant-menu-item {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+  }
   display: flex;
   flex-direction: column;
   .hm-logo {
@@ -16,19 +32,42 @@
   }
   .menu-content {
     // width: 72px;
-    height: 18px;
-    font-size: 18px;
-    font-family: Adobe Heiti Std;
+    height: 35px;
+    font-size: 15px;
+    // font-family: Adobe Heiti Std;
     font-weight: normal;
     color: #7a8b9f;
     line-height: 35px;
+  }
+  .ant-menu-submenu,
+  .ant-menu-submenu-inline {
+    margin: 10px 0;
+    padding: 5px 0;
+    // height: 45px;
+  }
+
+  .ant-layout-sider {
+    height: auto;
+    min-height: 900px;
+  }
+  .ant-layout-sider-children {
+    min-height: 900px;
   }
   .ant-menu-dark.ant-menu-inline .ant-menu-submenu-title {
     display: flex;
     align-items: center;
   }
   img {
-    margin-right: 5px;
+    margin-right: 17px;
+    width: 20px;
+    height: 20px;
+    margin-left: -9px;
+  }
+  svg {
+    margin-right: 7px;
+    width: 20px;
+    height: 20px;
+    margin-left: -9px;
   }
 }
 .menu-layout {
@@ -83,6 +122,9 @@
     }
   }
 }
+.site-layout {
+  z-index: 9;
+}
 .base-layout-header {
   .site-layout-background {
     background: #0176ff;
@@ -93,8 +135,8 @@
     align-items: center;
     padding: 0 10px;
     img {
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       margin-right: 10px;
     }
     div {
@@ -106,7 +148,7 @@
       svg {
         width: 20px;
         height: 20px;
-        margin-right: 10px;
+        margin-right: 30px;
       }
     }
   }
@@ -120,7 +162,7 @@
   justify-content: space-evenly;
   align-items: center;
   div {
-    width: 80px;
+    width: 60px;
   }
   input {
     margin-right: 20px;
@@ -130,5 +172,9 @@
   color: red;
 }
 .home {
+  .ant-layout-sider{
+    min-height: 950px; 
+    height: auto;
+  }
   // font-size: 101px;
 }

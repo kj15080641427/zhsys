@@ -2,7 +2,10 @@ import React from "react";
 import { Form, Input, Row, Col, DatePicker, Button } from "antd";
 // import DYForm from "./../home/form";
 import FormSelect from "./select";
-import { getLimsBasiccategory } from "../../request/index";
+import {
+  // getLimsBasiccategory
+  getLimsBasicDict,
+} from "../../request/index";
 import { columnsToFormFlow } from "../../utils/common";
 import DevicePart from "./devicePart";
 import "./index.scss";
@@ -29,22 +32,43 @@ export default (props) => {
       title: "单位",
       dataIndex: "unit",
       require: true,
+      ele: (
+        <FormSelect
+          style={{ width: "100%" }}
+          request={getLimsBasicDict}
+          param={{ current: 1, size: -1, businessType: "5" }}
+          storeKey="dw"
+          labelString="name"
+          valueString="basicDictId"
+        ></FormSelect>
+      ),
     },
 
     {
       title: "品牌",
       dataIndex: "brand",
-      rules: [{ require: false }],
+      ele: (
+        <FormSelect
+          style={{ width: "100%" }}
+          request={getLimsBasicDict}
+          param={{ current: 1, size: -1, businessType: "1" }}
+          storeKey="pp"
+          labelString="name"
+          valueString="basicDictId"
+        ></FormSelect>
+      ),
     },
     {
       title: "设备类别",
       dataIndex: "categoryId",
       ele: (
         <FormSelect
-          request={getLimsBasiccategory}
-          storeKey="deviceType"
+          style={{ width: "100%" }}
+          request={getLimsBasicDict}
+          param={{ current: 1, size: -1, businessType: "4" }}
+          storeKey="sbfl"
           labelString="name"
-          valueString="id"
+          valueString="basicDictId"
         ></FormSelect>
       ),
       // rules: [{ require: false }],
@@ -83,6 +107,7 @@ export default (props) => {
       title: "备注",
       dataIndex: "remark",
       col: 24,
+      labelCol: 8,
     },
   ];
   return (

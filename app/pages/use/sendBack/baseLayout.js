@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Breadcrumb, message } from "antd";
+import { Button, Form, message } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -7,8 +7,9 @@ import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
 import moment from "moment";
-import { SearchOutlined } from "@ant-design/icons";
 import { getReturnById } from "../../../request/index";
+import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
+import SearchInput from "../../../components/formItems/searchInput";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -20,10 +21,39 @@ class BaseNewPageLayout extends React.Component {
       filterName: {},
       disabled: false, //表单防重复点击
       records: {},
-
       approvalRecords: {}, //购置申请信息
       defaultFileList: [], //已上传文件列表
     };
+    this.breadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "使用管理",
+      },
+      {
+        name: "归还申请管理",
+        color: "#40A0EA",
+      },
+    ];
+    this.editbreadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "使用管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "归还申请管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "归还申请",
+        click: () => this.props.actions.setShowForm(false),
+        color: "#40A0EA",
+      },
+    ];
   }
   componentWillUnmount() {
     this.props.actions.setShowForm(false);
@@ -46,17 +76,16 @@ class BaseNewPageLayout extends React.Component {
       baseFormItem,
       listFormItem,
       columns,
-      rowSelect = [],
       columnsProps = [],
       rowSelection,
       handleQuery,
       formatList = [],
       stringList = [],
-      breadcrumb = [],
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
       returnBackList,
+      searchInput,
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -202,27 +231,19 @@ class BaseNewPageLayout extends React.Component {
         ? handleQuery({ ...values, current: 1, size: 10 })
         : getBaseHoc({ current: 1, size: 10, ...values });
     };
-    //面包屑
-    const renderBreadcrumb = () => {
-      return (
-        <div className="view-query-breacrumd" style={{ width: "230px" }}>
-          <Breadcrumb separator=">">
-            {breadcrumb.map((item) => (
-              <Breadcrumb.Item key={item.name}>{item.name}</Breadcrumb.Item>
-            ))}
-          </Breadcrumb>
-        </div>
-      );
-    };
     return (
       <>
         {
           <div hidden={showForm}>
             <div className="view-query">
               <div className="view-query-left">
-                {renderBreadcrumb()}
+                <RenderBreadcrumb
+                  showForm={showForm}
+                  breadcrumb={this.breadcrumb}
+                  editbreadcrumb={this.editbreadcrumb}
+                />
                 <Button
-                  className="base-add-button"
+                  className="base-export-button"
                   onClick={() => {
                     // this.formRef.current.resetFields;
                     // showModal();
@@ -232,36 +253,18 @@ class BaseNewPageLayout extends React.Component {
                 </Button>
               </div>
               <div className={"view-query-right"}>
-                <Form
-                  onFinish={rowFinish}
-                  layout="inline"
-                  ref={this.rwoFormRef}
-                >
-                  {rowSelect.map((item) => (
-                    <Form.Item
-                      label={item.label}
-                      name={item.name}
-                      key={item.name}
-                    >
-                      <div className="base-rowSelect-flex">
-                        <Input
-                          onChange={(e) =>
-                            this.setState({
-                              rowSelectData: e.target.value,
-                            })
-                          }
-                          className="base-rowSelect"
-                        ></Input>
-                        <div className="base-rowSelect-icon">
-                          <SearchOutlined
-                            onClick={() =>
-                              rowFinish({ name: this.state.rowSelectData })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                  ))}
+                <Form layout="inline" ref={this.rwoFormRef}>
+                  <Form.Item label={""} name={"code"}>
+                    <SearchInput
+                      placeholder="支持模糊查找归还单号"
+                      searchClick={() =>
+                        rowFinish({
+                          code: searchInput,
+                          // code: this.state.rowSelectData,
+                        })
+                      }
+                    />
+                  </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
                 <Button
@@ -300,7 +303,13 @@ class BaseNewPageLayout extends React.Component {
         }
         {
           <div hidden={!showForm}>
-            <div className="view-query-left">{renderBreadcrumb()}</div>
+            <div className="view-query-left">
+              <RenderBreadcrumb
+                showForm={showForm}
+                breadcrumb={this.breadcrumb}
+                editbreadcrumb={this.editbreadcrumb}
+              />
+            </div>
             <div className="head-line"></div>
             <FlowForm
               approvalRecords={this.state.approvalRecords}
@@ -335,7 +344,7 @@ const mapStateToProps = (state) => {
     visible: state.currency.visible,
     showForm: state.currency.showForm,
     returnBackList: state.currency.returnBackList,
-    // dict: state.currency.dict,
+    searchInput: state.formItems.searchInput, //搜索框值
   };
 };
 

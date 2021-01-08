@@ -7,14 +7,13 @@ import FormSelect from "../../../components/formItems/select";
 import {
   getLimsBasicDict,
   delLimsUselanapplyList,
-  // getLimsUselanapplyList,
 } from "../../../request/index";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 
 const ChildTable = (props) => {
-  const { dictpp, records } = props;
+  const { records } = props;
   const [visible, setVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [type, setType] = useState({});
@@ -123,17 +122,20 @@ const ChildTable = (props) => {
       title: "操作",
       dataIndex: "",
       hidden: true,
-      render: (_, row, index) => (
-        <a
-          onClick={() => {
-            delLimsUselanapplyList({ id: row.itemId }).then((res) =>
-              delDataSource(index)
-            );
-          }}
-        >
-          删除
-        </a>
-      ),
+      render: (_, row, index) =>
+        records?.status && records?.status != 0 ? (
+          ""
+        ) : (
+          <a
+            onClick={() => {
+              delLimsUselanapplyList({ id: row.itemId }).then((res) =>
+                delDataSource(index)
+              );
+            }}
+          >
+            删除
+          </a>
+        ),
     },
   ];
 
@@ -169,19 +171,24 @@ const ChildTable = (props) => {
 
   return (
     <div value={props.value} onChange={() => props.onChange}>
-      <Button
-        className="child-form-add-button"
-        onClick={() => {
-          setVisible(true);
-        }}
-      >
-        新增设备
-      </Button>
+      {records?.status && records?.status != 0 ? (
+        ""
+      ) : (
+        <Button
+          className="child-form-add-button"
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          新增设备
+        </Button>
+      )}
       <Table
         value={dataSource}
         columns={columns}
         dataSource={dataSource}
         rowKey={"id"}
+        pagination={false}
       ></Table>
       <Modal
         visible={visible}
@@ -202,7 +209,6 @@ const ChildTable = (props) => {
 };
 const mapStateToProps = (state) => {
   return {
-    dictpp: state.currency.dictpp,
     dictsbfl: state.currency.dictsbfl,
   };
 };

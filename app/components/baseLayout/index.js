@@ -37,7 +37,12 @@ class BaseLayout extends React.PureComponent {
           ></Head>
         </Layout>
         <Layout className="home">
-          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+          <Sider
+            trigger={null}
+            collapsible
+            collapsed={this.state.collapsed}
+            collapsedWidth={"60"}
+          >
             <div className="logo" />
             <NewMenus></NewMenus>
           </Sider>
@@ -48,6 +53,8 @@ class BaseLayout extends React.PureComponent {
                 margin: "20px",
                 padding: "0px 20px",
                 minHeight: 280,
+                border: "1px solid #dddddd",
+                background: "#FFFFFF",
               }}
             >
               <ContentRouter path={"/home"}></ContentRouter>

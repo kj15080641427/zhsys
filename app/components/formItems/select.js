@@ -57,10 +57,11 @@ const mapStateToProps = (state) => {
     dictdeviceType: state.currency.dictdeviceType,
     dictsupplier: state.currency.dictsupplier,
     dictuseLend: state.currency.dictuseLend,
-    dictsglx: state.currency.dictsglx,
-    dictpp: state.currency.dictpp,
-    dictdw: state.currency.dictdw,
-    dictsbfl: state.currency.dictsbfl,
+    dictsglx: state.currency.dictsglx, //申购类型
+    dictpp: state.currency.dictpp, //品牌
+    dictdw: state.currency.dictdw, //单位（个，台）
+    dictsbfl: state.currency.dictsbfl, //设备分类
+    dictcomplexfund: state.currency.dictcomplexfund,
   };
 };
 
@@ -69,19 +70,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormSelect);
-// export const Company = () => (
-//   <FormSelect
-//     request={getUserCompany}
-//     storeKey="userCompany"
-//     labelString="name"
-//     valueString="id"
-//   ></FormSelect>
-// );
-// export const Category = () => (
-//   <FormSelect
-//     request={getLimsBasiccategory}
-//     storeKey="deviceType"
-//     labelString="name"
-//     valueString="id"
-//   ></FormSelect>
-// );

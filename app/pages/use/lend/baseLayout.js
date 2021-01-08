@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Breadcrumb, message } from "antd";
+import { Button, Form, message } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -7,12 +7,12 @@ import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
 import moment from "moment";
-import { SearchOutlined } from "@ant-design/icons";
 import {
   getLimsUselendById,
   approvalLimsUseLendapply,
 } from "../../../request/index";
-
+import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
+import SearchInput from "../../../components/formItems/searchInput";
 let storeLabel = "base";
 class LendLayout extends React.Component {
   constructor(props, context) {
@@ -25,6 +25,36 @@ class LendLayout extends React.Component {
       records: {},
       taskInfo: {}, //事件详情
     };
+    this.breadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "使用管理",
+      },
+      {
+        name: "借出申请管理",
+        color: "#40A0EA",
+      },
+    ];
+    this.editbreadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "使用管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "借出申请管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "借出申请",
+        click: () => this.props.actions.setShowForm(false),
+        color: "#40A0EA",
+      },
+    ];
   }
   componentWillUnmount() {
     this.props.actions.setShowForm(false);
@@ -47,18 +77,17 @@ class LendLayout extends React.Component {
       baseFormItem,
       listFormItem,
       columns,
-      rowSelect = [],
       columnsProps = [],
       rowSelection,
       handleQuery,
       formatList = [],
       // stringList = [],
-      breadcrumb = [],
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
       fileList,
       imageList,
+      searchInput,
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -166,9 +195,9 @@ class LendLayout extends React.Component {
         totalFee = totalFee + item.totalPrice;
         return {
           deviceId: item.id, //设备ID
-          complexFundId: "791606316736065536", //经费ID
-          foundId: "791606316736065536", //经费ID
-          foundFee: 11000, //经费余额
+          complexFundId: item.foundId, //经费ID
+          foundId: item.foundId, //经费ID
+          foundFee: 0, //经费余额
           totalPrice: item.totalPrice, //x小计金额
           usePeriod: item.usePeriod, //使用天数
           usePrice: item.usePrice, //单价
@@ -202,9 +231,9 @@ class LendLayout extends React.Component {
         totalvalue = totalvalue + item.totalPrice;
         return {
           deviceId: item.id, //设备ID
-          complexFundId: "791606316736065536", //经费ID
-          foundId: "791606316736065536", //经费ID
-          foundFee: 11000, //经费余额
+          complexFundId: item.foundId, //经费ID
+          foundId: item.foundId, //经费ID
+          foundFee: 0, //经费余额
           totalPrice: item.totalPrice, //x小计金额
           usePeriod: item.usePeriod, //使用天数
           usePrice: item.usePrice, //单价
@@ -256,60 +285,32 @@ class LendLayout extends React.Component {
         ? handleQuery({ ...values, current: 1, size: 10 })
         : getBaseHoc({ current: 1, size: 10, ...values });
     };
-    //面包屑
-    const renderBreadcrumb = () => {
-      return (
-        <div className="view-query-breacrumd" style={{ width: "230px" }}>
-          <Breadcrumb separator=">">
-            {breadcrumb.map((item) => (
-              <Breadcrumb.Item key={item.name}>{item.name}</Breadcrumb.Item>
-            ))}
-          </Breadcrumb>
-        </div>
-      );
-    };
     return (
       <>
         {
           <div hidden={showForm}>
             <div className="view-query">
               <div className="view-query-left">
-                {renderBreadcrumb()}
-                <Button className="base-add-button" >
-                  导出
-                </Button>
+                <RenderBreadcrumb
+                  showForm={showForm}
+                  breadcrumb={this.breadcrumb}
+                  editbreadcrumb={this.editbreadcrumb}
+                />
+                <Button className="base-export-button">导出</Button>
               </div>
               <div className={"view-query-right"}>
-                <Form
-                  onFinish={rowFinish}
-                  layout="inline"
-                  ref={this.rwoFormRef}
-                >
-                  {rowSelect.map((item) => (
-                    <Form.Item
-                      label={item.label}
-                      name={item.name}
-                      key={item.name}
-                    >
-                      <div className="base-rowSelect-flex">
-                        <Input
-                          onChange={(e) =>
-                            this.setState({
-                              rowSelectData: e.target.value,
-                            })
-                          }
-                          className="base-rowSelect"
-                        ></Input>
-                        <div className="base-rowSelect-icon">
-                          <SearchOutlined
-                            onClick={() =>
-                              rowFinish({ name: this.state.rowSelectData })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                  ))}
+                <Form layout="inline" ref={this.rwoFormRef}>
+                  <Form.Item label={""} name={"code"}>
+                    <SearchInput
+                      placeholder="支持模糊查找借出单号"
+                      searchClick={() =>
+                        rowFinish({
+                          code: searchInput,
+                          // code: this.state.rowSelectData,
+                        })
+                      }
+                    />
+                  </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
                 <Button
@@ -349,10 +350,15 @@ class LendLayout extends React.Component {
         }
         {
           <div hidden={!showForm}>
-            <div className="view-query-left">{renderBreadcrumb()}</div>
+            <div className="view-query-left">
+              <RenderBreadcrumb
+                showForm={showForm}
+                breadcrumb={this.breadcrumb}
+                editbreadcrumb={this.editbreadcrumb}
+              />
+            </div>
             <div className="head-line"></div>
             <FlowForm
-              defaultFileList={this.state.defaultFileList}
               taskInfo={this.state.taskInfo}
               approvalClick0={approvalClick0}
               approvalClick1={approvalClick1}
@@ -388,7 +394,7 @@ const mapStateToProps = (state) => {
     showForm: state.currency.showForm,
     imageList: state.currency.imageList,
     fileList: state.currency.fileList,
-    // dict: state.currency.dict,
+    searchInput: state.formItems.searchInput, //搜索框值
   };
 };
 

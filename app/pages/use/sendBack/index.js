@@ -30,23 +30,9 @@ export const columns = [
     dataIndex: "",
     hidden: true,
   },
-  // {
-  //   title: "购置类型",
-  //   dataIndex: "title",
-  //   ele: (
-  //     <Select>
-  //       <Select.Option value={"1"}>购置</Select.Option>
-  //     </Select>
-  //   ),
-  // },
-  // {
-  //   title: "供应商",
-  //   dataIndex: "supplierName",
-  //   hidden: true,
-  // },
   {
     title: "借出时间",
-    dataIndex: "",
+    dataIndex: "lendDate",
     ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
     formWidth: "120px",
   },
@@ -58,7 +44,7 @@ export const columns = [
   },
   {
     title: "归还人",
-    dataIndex: "returnUser",
+    dataIndex: "realName",
     hidden: true,
   },
   {
@@ -92,7 +78,7 @@ const LendapplyList = (props) => {
         <FormSelect
           request={getUser}
           storeKey="user"
-          labelString="roleName"
+          labelString="realName"
           valueString="id"
         ></FormSelect>
       ),
@@ -116,17 +102,6 @@ const LendapplyList = (props) => {
       element: <Input placeholder="单位名称" className=""></Input>,
     },
   ];
-  const breadcrumb = [
-    {
-      name: "首页",
-    },
-    {
-      name: "使用管理",
-    },
-    {
-      name: "归还申请",
-    },
-  ];
   return (
     <div>
       <BaseNewPageLayout
@@ -136,13 +111,10 @@ const LendapplyList = (props) => {
         del={delLimsUseReturn} // 删除数据接口
         columns={columns} // 表格配置项
         baseFormItem={baseFormItems} // 表单配置项
-        // listFormItem={listFormItems}
         rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"purpLanapply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["applyDate", "returnDate"]} //需要转换时间格式的表单字段
-        breadcrumb={breadcrumb} //面包屑
-        formWidth={"1000px"} //宽度
       ></BaseNewPageLayout>
     </div>
   );

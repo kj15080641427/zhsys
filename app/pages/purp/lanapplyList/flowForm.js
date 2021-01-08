@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Col, Upload, message } from "antd";
+import React, { useEffect } from "react";
+import { Button, Form, Row, Col, message } from "antd";
 import ChildTable from "./childTable";
 import FormSelect from "../../../components/formItems/select";
 import { getUser, getUserCompany, addAttachment } from "../../../request/index";
@@ -7,10 +7,11 @@ import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
+import moment from "moment";
+import AttachmentList from "../../../components/formItems/attachment";
+
 //工作流表单
 const FlowForm = (props) => {
-  const [imageList, setImageList] = useState([]);
-  const [fileList, setFileList] = useState([]);
   const {
     onFinish, //提交按钮回调
     baseFormItem = [], //基础信息
@@ -18,16 +19,14 @@ const FlowForm = (props) => {
     formRef, //ref
     id, //数据唯一id
     cancelClick, //关闭按钮回调
-    buttonText = "保存", //submit按钮文字
     submitFlow, //提交审批回调
     records, //表单数据
     approvalRecords, //购置申请信息
-    defaultFileList, //已上传文件列表
+    // defaultFileList, //已上传文件列表
     totalPrice, //总金额
-    // approvalClick0, //审批
-    // approvalClick1, //审批
-    // approvalClick2, //审批
-    // taskInfo, //审批流程信息
+    formatList,
+    imageList,
+    fileList,
   } = props;
   const { setTotalPrice } = props.actions;
   useEffect(() => {
@@ -37,40 +36,10 @@ const FlowForm = (props) => {
     });
     setTotalPrice(price);
   }, [formRef?.current?.getFieldValue().limsBasicdevice]);
-  useEffect(() => {
-    let file = [];
-    let image = [];
-    defaultFileList?.map((item, index) => {
-      let type = item.fileName.split(".");
-      if (type[1] == "jpg" || type[1] == "png") {
-        item.filePath &&
-          image.push({
-            uid: index,
-            name: item.fileName,
-            status: "done",
-            url: item.filePath,
-          });
-      } else {
-        item.filePath &&
-          file.push({
-            uid: index,
-            name: item.fileName,
-            status: "done",
-            url: item.filePath,
-          });
-      }
-      setFileList(file);
-      setImageList(image);
-    });
-    return () => {
-      setFileList([]);
-      setImageList([]);
-    };
-  }, [defaultFileList]);
   const info = [
     {
       label: "申请单号",
-      element: <div>{approvalRecords.id}</div>,
+      element: <div>{approvalRecords.code}</div>,
     },
     {
       label: "申请人",
@@ -118,6 +87,13 @@ const FlowForm = (props) => {
   const setDevice = (e) => {
     setTotalPrice(e);
   };
+  // const renderItem = (item) => {
+  //   if (formatList.indexOf(item.name) !== -1) {
+  //     return moment(records[item.name]).format("YYYY-MM-DD");
+  //   } else {
+  //     return records[item.labelName || item.name];
+  //   }
+  // };
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
@@ -144,6 +120,9 @@ const FlowForm = (props) => {
         ))}
 
         {baseFormItem.map((item, index) => {
+          const newItem = React.cloneElement(item.ele, {
+            disabled: records?.status != "1",
+          });
           return (
             <Col key={index} className="form-item-box" span={item.col || 8}>
               <Form.Item
@@ -156,7 +135,12 @@ const FlowForm = (props) => {
                 style={item.style}
                 labelCol={{ span: item.labelCol || 4 }}
               >
-                {item.ele}
+                {newItem}
+                {/* {records?.status == "1" ? (
+                  item.ele
+                ) : (
+                  <div>{renderItem(item)}</div>
+                )} */}
               </Form.Item>
             </Col>
           );
@@ -186,58 +170,8 @@ const FlowForm = (props) => {
             name={"file"}
             rules={[{ require: false }]}
           >
-            {console.log(fileList, "???")}
-            <div className="purplist-upload-box">
-              <div className="purplist-upload-left">
-                <Upload
-                  accept=".word,.xlsx,.docx,.pdf"
-                  action="http://47.115.10.75:9011/api/file/all/upload"
-                  multiple
-                  fileList={fileList}
-                  onRemove={(file) => {
-                    setFileList(fileList.filter((v) => v.url !== file.url));
-                  }}
-                  onChange={(fileInfo) => {
-                    setFileList(fileInfo.fileList);
-                  }}
-                >
-                  <div className="purplist-flex">
-                    <Button className="pruplist-upload-excel">
-                      上传购置资料
-                    </Button>
-                    <div>.word .xlsx .docx .pdf</div>
-                  </div>
-                </Upload>
-              </div>
-              <div className="purplist-upload-right">
-                <Upload
-                  accept=".jpg,.png"
-                  action="http://47.115.10.75:9011/api/file/all/upload"
-                  multiple
-                  listType="picture"
-                  fileList={imageList}
-                  onRemove={(file) => {
-                    setImageList(imageList.filter((v) => v.url !== file.url));
-                  }}
-                  onChange={(fileInfo) => {
-                    setImageList(fileInfo.fileList);
-                  }}
-                >
-                  <div className="purplist-flex">
-                    <Button className="purplist-upload-image">
-                      上传购置凭证
-                    </Button>
-                    <div> .jpg .png</div>
-                  </div>
-                </Upload>
-              </div>
-            </div>
+            <AttachmentList records={records}></AttachmentList>
           </Form.Item>
-          {/* <Button
-            onClick={() => console.log(formRef.current.getFieldValue(), "VVV")}
-          >
-            上传测试
-          </Button> */}
         </Col>
       </Row>
       {/* 编辑时提交id */}
@@ -274,7 +208,7 @@ const FlowForm = (props) => {
                 });
               }}
             >
-              {buttonText}
+              保存
             </Button>
             <Button className="flow-form-flow" onClick={submitFlow}>
               到货验收
@@ -291,6 +225,8 @@ const FlowForm = (props) => {
 const mapStateToProps = (state) => {
   return {
     totalPrice: state.currency.totalPrice,
+    imageList: state.currency.imageList,
+    fileList: state.currency.fileList,
   };
 };
 

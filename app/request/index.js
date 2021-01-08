@@ -316,6 +316,11 @@ export function getLimsUselanapplyListPurItem(data) {
   return fetchJSONData("POST", "/api/base/LimsPuritem/query", data);
 }
 
+//购置单管理导出
+export function exportLimsUselanapplyListPurItem(data) {
+  return "/api/base/LimsPur/export";
+}
+
 //查询单据附件
 export function getAttachment(data) {
   return fetchJSONData("POST", "/api/base/LimsAttachment/page", data);
@@ -375,4 +380,9 @@ export function updComplexfound(data) {
 //删除年度经费
 export function delComplexfound(data) {
   return fetchJSONData("POST", "/api/base/LimsComplexfund/del", data);
+}
+
+//查询工作流
+export function getFlow(data) {
+  return fetchJSONData("POST", "/api/base/LimsActivitimodel/page", data);
 }

@@ -13,6 +13,9 @@ import system from "../../resource/系统设置.png";
 import user from "../../resource/用户管理.png";
 import all from "../../resource/综合管理.png";
 import hcgl from "../../resource/耗材管理.png";
+import edit from "../../resource/edit.svg";
+import Test from "../../svg/svg";
+import { EditOutlined } from "@ant-design/icons";
 const { SubMenu } = Menu;
 
 const Menus = (props) => {
@@ -47,7 +50,7 @@ const Menus = (props) => {
       {/* <div className="hm-logo">智慧实验室</div> */}
       <div className="hm-content">
         <Menu
-          className='menu-content'
+          className="menu-content"
           mode="inline"
           theme="dark"
           inlineCollapsed={true}
@@ -57,7 +60,12 @@ const Menus = (props) => {
         >
           <SubMenu
             key="1"
-            icon={<img src={home}></img>}
+            // icon={<span><Test /></span>}
+            icon={
+              <span>
+                <img src={home}></img>
+              </span>
+            }
             title="首页"
             inlineCollapsed={false}
           >
@@ -66,13 +74,19 @@ const Menus = (props) => {
           <SubMenu
             key="2"
             icon={<img src={purp}></img>}
+            // icon={<EditOutlined style={{ fontSize: "20px" }}></EditOutlined>}
             title="购置管理"
             inlineCollapsed={false}
           >
             <Menu.Item key="/Lanapply">购置申请</Menu.Item>
             <Menu.Item key="/LendapplyList">购置单管理</Menu.Item>
           </SubMenu>
-          <SubMenu key="3" icon={<img src={use}></img>} title="使用管理">
+          <SubMenu
+            key="3"
+            // icon={<img src={use}></img>}
+            icon={<EditOutlined style={{ fontSize: "20px" }}></EditOutlined>}
+            title="使用管理"
+          >
             <Menu.Item key="/Uselendapply">借出申请</Menu.Item>
             <Menu.Item key="/SendBack">归还申请</Menu.Item>
           </SubMenu>

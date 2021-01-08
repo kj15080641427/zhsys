@@ -1,3 +1,4 @@
+/**上传附件 */
 import React, { useEffect } from "react";
 import { Upload, Button } from "antd";
 import { filterFileList } from "../../utils/common";
@@ -6,7 +7,13 @@ import { bindActionCreators } from "redux";
 import * as actions from "../../redux/actions/aCurrency";
 
 const AttachmentList = (props) => {
-  const { fileList, imageList, attachmentList } = props;
+  const {
+    fileList,
+    imageList,
+    attachmentList,
+    fileLabel = "上传资料",
+    imageLabel = "上传凭证",
+  } = props;
   const { steUselendFile, steUselendImage } = props.actions;
 
   useEffect(() => {
@@ -35,12 +42,12 @@ const AttachmentList = (props) => {
           }}
         >
           <div className="purplist-flex">
-            <Button className="pruplist-upload-excel">上传购置资料</Button>
+            <Button>{fileLabel}</Button>
             <div>.word .xlsx .docx .pdf .doc</div>
           </div>
         </Upload>
       </div>
-      <div className="purplist-upload-right">
+      <div>
         <Upload
           accept=".jpg,.png"
           action="http://47.115.10.75:9011/api/file/all/upload"
@@ -55,7 +62,7 @@ const AttachmentList = (props) => {
           }}
         >
           <div className="purplist-flex">
-            <Button className="purplist-upload-image">上传购置凭证</Button>
+            <Button>{imageLabel}</Button>
             <div> .jpg .png</div>
           </div>
         </Upload>

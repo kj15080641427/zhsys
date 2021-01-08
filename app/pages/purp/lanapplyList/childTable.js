@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Table, Modal, DatePicker } from "antd";
-import { columnsToForm } from "../../../utils/common";
+import { Table, Modal } from "antd";
 import moment from "moment";
-import FormSelect from "../../../components/formItems/select";
 import {
-  getLimsBasiccategory,
   updLimsBasicDevice,
   getLimsUselanapplyListPurItem,
   getLimsBasicDevicePart, //查询设备部件列表
@@ -71,25 +68,21 @@ const ChildTable = (props) => {
     {
       title: "设备编号",
       dataIndex: "deviceNo",
-      require: true,
     },
     {
       title: "设备名称",
       dataIndex: "deviceName",
-      require: true,
     },
     {
       title: "单位",
       dataIndex: "unit",
-      require: true,
     },
     {
       title: "规格型号",
       dataIndex: "model",
-      require: false,
     },
     {
-      title: "品牌",
+      title: "品 牌",
       dataIndex: "brand",
     },
     {
@@ -99,35 +92,19 @@ const ChildTable = (props) => {
     {
       title: "设备类别",
       dataIndex: "categoryId",
-      ele: (
-        <FormSelect
-          request={getLimsBasiccategory}
-          storeKey="deviceType"
-          labelString="name"
-          valueString="id"
-        ></FormSelect>
-      ),
-      render: (e) => (
-        <FormSelect
-          disabled
-          value={e}
-          request={getLimsBasiccategory}
-          storeKey="deviceType"
-          labelString="name"
-          valueString="id"
-        ></FormSelect>
-      ),
     },
     {
       title: "生产日期",
       dataIndex: "produceDate",
-      ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
     },
     {
       title: "操作",
       dataIndex: "",
       hidden: true,
-      render: (row) => <a onClick={() => getDeviceInfo(row)}>完善资料</a>,
+      render: (row) =>
+        records?.status == "1" && (
+          <a onClick={() => getDeviceInfo(row)}>完善资料</a>
+        ),
     },
   ];
 
@@ -152,7 +129,6 @@ const ChildTable = (props) => {
           deviceInfo={deviceInfo}
           onFinish={onFinish}
           formRef={formRef}
-          formItem={columnsToForm(columns)}
         ></DeviceForm>
       </Modal>
     </div>

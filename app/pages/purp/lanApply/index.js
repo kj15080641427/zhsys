@@ -15,7 +15,6 @@ import {
 } from "../../../request/index";
 import BaseNewPageLayout from "./newPageComponent";
 import { columnsToForm } from "../../../utils/common";
-import ChildTable from "./childTable";
 import FormSelect from "../../../components/formItems/select";
 import { statusElement } from "../../../components/formItems/baseDict";
 
@@ -40,6 +39,7 @@ export const columns = [
   {
     title: "申请标题",
     dataIndex: "title",
+    width: "250px",
   },
   {
     title: "申购类型",
@@ -55,6 +55,7 @@ export const columns = [
     dataIndex: "status",
     hidden: true,
     render: (e) => statusElement[e],
+    width: "100px",
   },
 ];
 const Lendapply = (props) => {
@@ -129,23 +130,16 @@ const Lendapply = (props) => {
     },
   ]);
 
-  const listFormItems = columnsToForm([
-    {
-      title: "",
-      dataIndex: "limsBasicdeviceDTOList",
-      ele: <ChildTable />,
-      rules: [{ required: true, message: "请输入购置清单" }],
-      labelCol: 1,
-    },
-  ]);
+  // const listFormItems = columnsToForm([
+  //   {
+  //     title: "",
+  //     dataIndex: "limsBasicdeviceDTOList",
+  //     ele: <ChildTable />,
+  //     rules: [{ required: true, message: "请输入购置清单" }],
+  //     labelCol: 1,
+  //   },
+  // ]);
 
-  const rowSelect = [
-    {
-      label: "",
-      name: "name",
-      element: <Input placeholder="单位名称" className=""></Input>,
-    },
-  ];
   const breadcrumb = [
     {
       name: "首页",
@@ -160,7 +154,7 @@ const Lendapply = (props) => {
     },
   ];
   return (
-    <div>
+    <div className="purp">
       <BaseNewPageLayout
         get={getLimsUselanapply} // 分页查询接口
         add={addLimsUselanapply} // 添加数据接口
@@ -169,7 +163,6 @@ const Lendapply = (props) => {
         columns={columns} // 表格配置项
         baseFormItem={baseFormItems} // 表单配置项
         // listFormItem={listFormItems}
-        rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"purpLanapply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["applyDate", "expectedDate"]} //需要转换时间格式的表单字段

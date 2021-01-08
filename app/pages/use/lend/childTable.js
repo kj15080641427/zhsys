@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, DatePicker, Input } from "antd";
+import { Table, Button, Modal, DatePicker, Input, Select } from "antd";
 // import { columnsToForm } from "../../../utils/common";
 // import DYForm from "../sendBack/node_modules/@app/components/home/form";
 // import moment from "moment";
-// import FormSelect from "../../../components/formItems/select";
 import { getLimsBasicDevice, getComplexfound } from "../../../request/index";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -17,11 +16,10 @@ const ChildTable = (props) => {
   const [day, setDay] = useState(0); //使用天数
   const [momeny, setMoneny] = useState(0);
   const { getBase, setTotalPrice } = props.actions;
-  const { baseDevice } = props;
+  const { baseDevice, complexfund } = props;
 
   useEffect(() => {
     props.value && setDataSource(props.value);
-    console.log(props.value, "========");
   }, [props.value]);
 
   useEffect(() => {
@@ -113,7 +111,7 @@ const ChildTable = (props) => {
       dataIndex: "usePeriod",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[index]?.usePeriod || e}
+          value={props.value[index]?.usePeriod || e}
           // value={props.value[0]?.usePeriod || e}
           // value={e || day}
           onChange={(W) => {
@@ -130,7 +128,7 @@ const ChildTable = (props) => {
       dataIndex: "usePrice",
       render: (e, row, index) => (
         <Input
-          defaultValue={props.value[index]?.usePrice}
+          value={props.value[index]?.usePrice}
           // value={props.value[0]?.usePrice}
           onChange={(W) => {
             setMoneny(W.target.value);
@@ -153,45 +151,27 @@ const ChildTable = (props) => {
     },
     {
       title: "应用项目",
-      dataIndex: "",
+      dataIndex: "foundId",
+      render: (e, _, index) => (
+        <Select
+          defaultValue={e}
+          onChange={(w) => {
+            let list = dataSource;
+            list[index].foundId = w;
+            setDataSource(list);
+          }}
+        >
+          {complexfund?.records?.map((item) => {
+            return (
+              <Select.Option key={item.id} value={item.id}>
+                {item.projectName}
+                &nbsp;&nbsp;&nbsp;经费余额：{item.surplusFund}
+              </Select.Option>
+            );
+          })}
+        </Select>
+      ),
     },
-    // {
-    //   title: "单位",
-    //   dataIndex: "unit",
-    //   ele: (
-    //     <FormSelect
-    //       request={getUserCompany}
-    //       storeKey="userCompany"
-    //       labelString="name"
-    //       valueString="id"
-    //     ></FormSelect>
-    //   ),
-    // },
-
-    // {
-    //   title: "品牌",
-    //   dataIndex: "brand",
-    //   rules: [{ require: false }],
-    // },
-    // {
-    //   title: "备注",
-    //   dataIndex: "remark",
-    //   rules: [{ require: false }],
-    // },
-    // {
-    //   title: "设备类别",
-    //   dataIndex: "categoryId",
-    //   ele: (
-    //     <FormSelect
-    //       request={getLimsBasiccategory}
-    //       storeKey="deviceType"
-    //       labelString="name"
-    //       valueString="id"
-    //     ></FormSelect>
-    //   ),
-    //   rules: [{ require: false }],
-    // },
-
     {
       title: "操作",
       dataIndex: "",

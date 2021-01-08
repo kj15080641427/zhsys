@@ -14,6 +14,7 @@ import { getStore } from "../../redux/store";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../redux/actions/aCurrency";
+import avator from "../../resource/头像.svg";
 
 const hashHistory = createHashHistory();
 
@@ -33,7 +34,7 @@ class HeadBase extends React.PureComponent {
         <div className="top-header-inner">
           <Layout.Header className="site-layout-background">
             <div>
-              <img src={timg}></img>
+              <img src={timg} style={{ width: "18px", height: "18px" }}></img>
               <div>智慧实验室设备管理系统</div>
               <img
                 src={openImg}
@@ -45,7 +46,7 @@ class HeadBase extends React.PureComponent {
               <BellOutlined />
               <MessageOutlined />
               <Tooltip title="退出登录">
-                <PoweroffOutlined onClick={() => hashHistory.push("/")} />
+                <PoweroffOutlined onClick={() => hashHistory.push("/login")} />
               </Tooltip>
               <Popover
                 content={
@@ -60,7 +61,7 @@ class HeadBase extends React.PureComponent {
                   </a>
                 }
               >
-                <div>管理员</div>
+                <img src={avator}></img>
               </Popover>
             </div>
           </Layout.Header>

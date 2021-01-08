@@ -1,15 +1,15 @@
 import React from "react";
-import { Button, Form, Row, Col, Input, Timeline } from "antd";
+import { Button, Form, Row, Col, Input } from "antd";
 import "./style.scss";
 import moment from "moment";
 import ChildTable from "./childTable";
+import Flow from "../../../components/formItems/flow";
 
 //工作流表单
 const FlowForm = (props) => {
   const {
     onFinish, //提交按钮回调
     baseFormItem = [], //基础信息
-    listFormItem = [], //列表清单
     name, //表单dataindex
     formRef, //ref
     id, //数据唯一id
@@ -39,9 +39,6 @@ const FlowForm = (props) => {
       <Row>
         {/* 渲染基础表单 */}
         {baseFormItem.map((item, index) => {
-          const newElement = React.cloneElement(item.ele, {
-            disabled: records?.status == "0" || !records?.status ? false : true,
-          });
           return (
             <Col key={index} className="form-item-box" span={item.col || 8}>
               <Form.Item
@@ -49,7 +46,9 @@ const FlowForm = (props) => {
                 labelAlign="right"
                 label={item.label}
                 name={item.name}
-                rules={item.rules}
+                rules={
+                  records?.status == "0" || !records?.status ? item.rules : []
+                }
                 width={"200px"}
                 style={item.style}
                 labelCol={{ span: item.labelCol || 8 }}
@@ -90,7 +89,8 @@ const FlowForm = (props) => {
             购置审批流程:
           </div>
           <br />
-          <Timeline>
+          <Flow taskInfo={taskInfo}></Flow>
+          {/* <Timeline>
             {taskInfo?.activitiDOList?.map((item) => {
               return (
                 <Timeline.Item key={item.activityId} dot={""}>
@@ -100,20 +100,29 @@ const FlowForm = (props) => {
                     ? "结束"
                     : item.activityName}
                   <div className="flow-timeline">
-                    {item.realName && (
-                      <div>
-                        {item.activityName}:{item.realName}
-                      </div>
-                    )}
                     <div>
-                      {item.fullMessage && `审批意见:${item.fullMessage}`}
+                      {item.realName && (
+                        <div>
+                          {item.activityName}:{item.realName}
+                        </div>
+                      )}
+                      <div>
+                        {item.fullMessage && `审批意见:${item.fullMessage}`}
+                      </div>
                     </div>
-                    <div>审核时间:{item.time}</div>
+                    <div className="flow-timeline-date">
+                      {item.activityName == "EndEvent"
+                        ? "结束时间"
+                        : item.activityName == "StartEvent"
+                        ? "开始时间"
+                        : "审核时间"}
+                      :{item.time}
+                    </div>
                   </div>
                 </Timeline.Item>
               );
             })}
-          </Timeline>
+          </Timeline> */}
         </>
       ) : (
         ""
@@ -123,7 +132,7 @@ const FlowForm = (props) => {
         <Col span={24}>
           <Form.Item
             name={"msg"}
-            label="审批意见"
+            label="审批意见:"
             labelCol={{ span: 2 }}
             rules={[{ required: true }]}
           >
@@ -159,29 +168,27 @@ const FlowForm = (props) => {
           ) : (
             <div>
               <Button
-                className="flow-form-calcel"
+                className="flow-form-calcel1"
                 value="0"
                 onClick={approvalClick0}
               >
                 审批
               </Button>
               <Button
-                className="flow-form-calcel"
+                className="flow-form-calcel2"
                 value="1"
                 onClick={approvalClick1}
               >
                 驳回
               </Button>
               <Button
-                className="flow-form-calcel"
+                className="flow-form-calcel3"
                 value="2"
                 onClick={approvalClick2}
               >
                 拒绝
               </Button>
-              <Button className="flow-form-calcel" onClick={() => {}}>
-                打印
-              </Button>
+              <Button className="flow-form-calcel">打印</Button>
               <Button className="flow-form-calcel" onClick={cancelClick}>
                 关闭
               </Button>

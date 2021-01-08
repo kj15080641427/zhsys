@@ -27,6 +27,11 @@ const Lendapply = () => {
       hidden: true,
     },
     {
+      title: "借出时间",
+      dataIndex: "lendDate",
+      hidden: true,
+    },
+    {
       title: "借出人",
       dataIndex: "realName",
       hidden: true,
@@ -37,27 +42,17 @@ const Lendapply = () => {
       hidden: true,
     },
     {
-      title: "借出时间",
-      dataIndex: "lendDate",
-      require: true,
-      ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
-    },
-    {
       title: "借出类型",
       dataIndex: "lendType",
       require: true,
-      ele: (
-        <Select>
-          <Select.Option value={"1"}>内部借出</Select.Option>
-        </Select>
-      ),
+      hidden: true,
       render: (e) => type[e],
     },
     {
       title: "联系电话",
       dataIndex: "phone",
+      hidden: true,
       require: true,
-      ele: <Input type="tel" style={{ width: "100%" }}></Input>,
     },
     {
       title: "借出理由",
@@ -86,7 +81,7 @@ const Lendapply = () => {
         <FormSelect
           request={getUser}
           storeKey="user"
-          labelString="roleName"
+          labelString="realName"
           valueString="id"
         ></FormSelect>
       ),
@@ -104,11 +99,38 @@ const Lendapply = () => {
         ></FormSelect>
       ),
     },
-    ...columns,
+    {
+      title: "借出时间",
+      dataIndex: "lendDate",
+      ele: (
+        <DatePicker
+          showTime
+          format="YYYY-MM-DD HH:mm:ss"
+          style={{ width: "100%" }}
+        ></DatePicker>
+      ),
+    },
+    {
+      title: "借出类型",
+      dataIndex: "lendType",
+      require: true,
+      ele: (
+        <Select>
+          <Select.Option value={"1"}>内部借出</Select.Option>
+        </Select>
+      ),
+      render: (e) => type[e],
+    },
     {
       title: "证件号码",
       dataIndex: "cardNo",
       require: true,
+    },
+    {
+      title: "联系电话",
+      dataIndex: "phone",
+      require: true,
+      ele: <Input type="tel" style={{ width: "100%" }}></Input>,
     },
     {
       title: "借出理由",

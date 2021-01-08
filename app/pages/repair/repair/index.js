@@ -31,20 +31,6 @@ export const columns = [
     dataIndex: "",
     hidden: true,
   },
-  // {
-  //   title: "购置类型",
-  //   dataIndex: "title",
-  //   ele: (
-  //     <Select>
-  //       <Select.Option value={"1"}>购置</Select.Option>
-  //     </Select>
-  //   ),
-  // },
-  // {
-  //   title: "供应商",
-  //   dataIndex: "supplierName",
-  //   hidden: true,
-  // },
   {
     title: "申请时间",
     dataIndex: "",
@@ -84,10 +70,6 @@ export const columns = [
   },
 ];
 const LendapplyList = (props) => {
-  useEffect(() => {
-    props.actions;
-  }, []);
-
   const baseFormItems = columnsToForm([
     {
       title: "归还人",

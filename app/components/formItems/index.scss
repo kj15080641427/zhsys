@@ -24,3 +24,53 @@
     margin-right: 10px;
   }
 }
+
+.base-rowSelect-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 300px;
+  .base-rowSelect-icon {
+    position: absolute;
+    right: 17px;
+    width: 30px;
+    cursor: pointer;
+    // height: 50px;
+  }
+  img {
+    height: 16px;
+    width: 16px;
+  }
+  .base-rowSelect {
+    width: 322px;
+    height: 30px;
+    border: 1px solid #dddddd;
+    border-radius: 13px;
+  }
+}
+
+//附件
+.purplist-upload-box {
+  display: flex;
+  justify-content: flex-start;
+  button {
+    width: 115px;
+    height: 35px;
+    border: 1px solid #40a0ea;
+    border-radius: 10px;
+    color: #40a0ea;
+    margin-right: 10px;
+  }
+  .purplist-flex {
+    display: flex;
+    align-items: center;
+  }
+  .purplist-upload-left {
+    width: 50%;
+  }
+  .ant-upload-list-picture .ant-upload-list-item {
+    width: 400px;
+    padding-right: 40px;
+  }
+}

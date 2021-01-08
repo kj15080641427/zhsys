@@ -21,7 +21,8 @@ export function fetchJSONData(method, url, data) {
     body: data ? JSON.stringify(data) : null,
   }).then((res) => {
     if (res.status == 500) {
-      message.error("网络请求失败,500");
+      console.log(res, "RES");
+      message.error(`网络请求失败,${res?.statusText}`);
     }
     if (res.status == 400) {
       hashHistory.push("/login");

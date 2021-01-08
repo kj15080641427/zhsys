@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Breadcrumb } from "antd";
+import { Button, Form } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -7,12 +7,27 @@ import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
 import moment from "moment";
-import { SearchOutlined } from "@ant-design/icons";
 import {
-  getLimsUselanapplyListPurItem,
   getLanapplyPurByList,
-  getAttachment,
+  exportLimsUselanapplyListPurItem,
 } from "../../../request/index";
+import SearchInput from "../../../components/formItems/searchInput";
+import { downloadFile } from "../lanApply/downFile";
+import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
+import { formatAttachment } from "../../../utils/format";
+
+const breadcrumb = [
+  {
+    name: "首页",
+  },
+  {
+    name: "购置管理",
+  },
+  {
+    name: "购置单管理",
+    color: "#40A0EA",
+  },
+];
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -28,7 +43,26 @@ class BaseNewPageLayout extends React.Component {
       approvalRecords: {}, //购置申请信息
       defaultFileList: [], //已上传文件列表
     };
+    this.editbreadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "购置管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "购置单管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "查看购置单",
+        click: () => this.props.actions.setShowForm(false),
+        color: "#40A0EA",
+      },
+    ];
   }
+
   componentWillUnmount() {
     this.props.actions.setShowForm(false);
   }
@@ -49,17 +83,18 @@ class BaseNewPageLayout extends React.Component {
       baseFormItem,
       listFormItem,
       columns,
-      rowSelect = [],
       columnsProps = [],
       rowSelection,
       handleQuery,
       formatList = [],
       stringList = [],
-      breadcrumb = [],
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
       totalPrice,
+      searchInput,
+      imageList,
+      fileList,
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -69,6 +104,7 @@ class BaseNewPageLayout extends React.Component {
       hideModal,
       setShowForm,
       // getPurListInfo, //购置清单详情
+      getAttachmentById, //根据id获取附件
     } = this.props.actions;
     const { loading } = this.props;
     const getBaseHoc = (
@@ -115,27 +151,16 @@ class BaseNewPageLayout extends React.Component {
     };
     // 修改
     const update = (row) => {
-      getAttachment({
-        businessId: row.id,
+      //根据id获取附件
+      getAttachmentById({
+        businessId: row?.id,
         businessType: "1",
         current: 1,
         size: -1,
-      }).then((res) => {
-        this.setState({
-          defaultFileList: res.data.records,
-        });
       });
+      //查询清单
       getLanapplyPurByList({ id: row.id }).then((res) => {
-        this.setState({
-          approvalRecords: res.data.limsPurplanapply,
-        });
-      });
-      getLimsUselanapplyListPurItem({
-        current: 1,
-        mainId: row.id,
-        size: -1,
-      }).then((res) => {
-        let list = res.data.map((item) => {
+        let list = res.data.limsPuritemDOList.map((item) => {
           return { ...item, ...item.limsBasicdevice };
         });
         row = { ...row, limsBasicdevice: list };
@@ -146,6 +171,7 @@ class BaseNewPageLayout extends React.Component {
           }
         });
         this.setState({
+          approvalRecords: res.data.limsPurplanapply,
           records: row,
         });
         this.formRef.current.setFieldsValue(row);
@@ -169,7 +195,9 @@ class BaseNewPageLayout extends React.Component {
       });
       let updvalue = {
         ...values,
-        submitType: 0,
+        submitType: 1,
+        limsPuritemUpdateDTOList: values.limsBasicdevice,
+        limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
 
       addOrUpdateBase({
@@ -197,6 +225,8 @@ class BaseNewPageLayout extends React.Component {
         ...values,
         totalPrice: totalPrice,
         submitType: 0,
+        limsPuritemUpdateDTOList: values.limsBasicdevice,
+        limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
 
       addOrUpdateBase({
@@ -216,66 +246,46 @@ class BaseNewPageLayout extends React.Component {
         ? handleQuery({ ...values, current: 1, size: 10 })
         : getBaseHoc({ current: 1, size: 10, ...values });
     };
-    //面包屑
-    const renderBreadcrumb = () => {
-      return (
-        <div className="view-query-breacrumd" style={{ width: "230px" }}>
-          <Breadcrumb separator=">">
-            {breadcrumb.map((item) => (
-              <Breadcrumb.Item key={item.name}>{item.name}</Breadcrumb.Item>
-            ))}
-          </Breadcrumb>
-        </div>
-      );
-    };
     return (
       <>
         {
           <div hidden={showForm}>
             <div className="view-query">
               <div className="view-query-left">
-                {renderBreadcrumb()}
+                <RenderBreadcrumb
+                  showForm={showForm}
+                  breadcrumb={breadcrumb}
+                  editbreadcrumb={this.editbreadcrumb}
+                />
                 <Button
-                  className="base-add-button"
+                  className="base-export-button"
                   onClick={() => {
-                    // this.formRef.current.resetFields;
-                    // showModal();
+                    downloadFile(
+                      exportLimsUselanapplyListPurItem(),
+                      {
+                        current: 1,
+                        size: 999,
+                      },
+                      "购置单.xlsx"
+                    );
                   }}
                 >
                   导出
                 </Button>
               </div>
               <div className={"view-query-right"}>
-                <Form
-                  onFinish={rowFinish}
-                  layout="inline"
-                  ref={this.rwoFormRef}
-                >
-                  {rowSelect.map((item) => (
-                    <Form.Item
-                      label={item.label}
-                      name={item.name}
-                      key={item.name}
-                    >
-                      <div className="base-rowSelect-flex">
-                        <Input
-                          onChange={(e) =>
-                            this.setState({
-                              rowSelectData: e.target.value,
-                            })
-                          }
-                          className="base-rowSelect"
-                        ></Input>
-                        <div className="base-rowSelect-icon">
-                          <SearchOutlined
-                            onClick={() =>
-                              rowFinish({ name: this.state.rowSelectData })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                  ))}
+                <Form layout="inline" ref={this.rwoFormRef}>
+                  <Form.Item>
+                    <SearchInput
+                      placeholder="支持模糊查找申请单号"
+                      searchClick={() =>
+                        rowFinish({
+                          code: searchInput,
+                          // code: this.state.rowSelectData,
+                        })
+                      }
+                    />
+                  </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
                 {/* <Button
@@ -293,6 +303,7 @@ class BaseNewPageLayout extends React.Component {
               </div>
             </div>
             <DYTable
+              showDel={false}
               rowSelection={rowSelection}
               columnsProps={columnsProps}
               columns={columns}
@@ -314,9 +325,19 @@ class BaseNewPageLayout extends React.Component {
         }
         {
           <div hidden={!showForm}>
-            <div className="view-query-left">{renderBreadcrumb()}</div>
+            <div className="view-query-left">
+              <RenderBreadcrumb
+                showForm={showForm}
+                breadcrumb={breadcrumb}
+                editbreadcrumb={this.editbreadcrumb}
+              />
+              <div className="purp-apply-code">
+                购置单号：{this.state.records.applyCode}
+              </div>
+            </div>
             <div className="head-line"></div>
             <FlowForm
+              formatList={formatList}
               approvalRecords={this.state.approvalRecords}
               records={this.state.records}
               defaultFileList={this.state.defaultFileList}
@@ -349,6 +370,10 @@ const mapStateToProps = (state) => {
     visible: state.currency.visible,
     showForm: state.currency.showForm,
     totalPrice: state.currency.totalPrice,
+    searchInput: state.formItems.searchInput,
+
+    imageList: state.currency.imageList,
+    fileList: state.currency.fileList,
     // dict: state.currency.dict,
   };
 };

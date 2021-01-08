@@ -34,7 +34,7 @@ const ReparirApply = () => {
     },
     {
       title: "申请人",
-      dataIndex: "applyUser",
+      dataIndex: "userRealName",
       hidden: true,
     },
     {

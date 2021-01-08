@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Breadcrumb, message } from "antd";
+import { Button, Form, message } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -7,13 +7,14 @@ import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
 import moment from "moment";
-import { SearchOutlined } from "@ant-design/icons";
+import SearchInput from "../../../components/formItems/searchInput";
 import {
   getLimsUselanapplyById,
   exportLimsUselanapply,
   approvalLimsUselanapply,
 } from "../../../request/index";
 import { downloadFile } from "./downFile";
+import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -27,6 +28,38 @@ class BaseNewPageLayout extends React.Component {
       records: {},
       taskInfo: {}, //事件详情
     };
+    this.breadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "购置管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "购置申请管理",
+        click: () => this.props.actions.setShowForm(false),
+        color: "#40A0EA",
+      },
+    ];
+    this.editbreadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "购置管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "购置申请管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "购置申请",
+        click: () => this.props.actions.setShowForm(false),
+        color: "#40A0EA",
+      },
+    ];
   }
   componentWillUnmount() {
     this.props.actions.setShowForm(false);
@@ -49,16 +82,15 @@ class BaseNewPageLayout extends React.Component {
       baseFormItem,
       listFormItem,
       columns,
-      rowSelect = [],
       columnsProps = [],
       rowSelection,
       handleQuery,
       formatList = [],
       stringList = [],
-      breadcrumb = [],
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
+      searchInput, //搜索框值
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -253,82 +285,46 @@ class BaseNewPageLayout extends React.Component {
         ? handleQuery({ ...values, current: 1, size: 10 })
         : getBaseHoc({ current: 1, size: 10, ...values });
     };
-    //面包屑
-    const renderBreadcrumb = () => {
-      return (
-        <div className="view-query-breacrumd" style={{ width: "230px" }}>
-          <Breadcrumb separator=">">
-            {breadcrumb.map((item) => (
-              <Breadcrumb.Item
-                key={item.name}
-                onClick={item.click}
-                style={{ cursor: item.click ? "pointer" : "" }}
-              >
-                {item.name}
-              </Breadcrumb.Item>
-            ))}
-          </Breadcrumb>
-        </div>
-      );
-    };
     return (
       <>
         {
           <div hidden={showForm}>
             <div className="view-query">
               <div className="view-query-left">
-                {renderBreadcrumb()}
+                <RenderBreadcrumb
+                  showForm={showForm}
+                  breadcrumb={this.breadcrumb}
+                  editbreadcrumb={this.editbreadcrumb}
+                />
                 <Button
-                  className="base-add-button"
+                  className="base-export-button"
                   onClick={() => {
                     downloadFile(
                       exportLimsUselanapply(),
                       {
                         current: 0,
-                        size: 5,
+                        size: 999,
                       },
                       "购置清单.xlsx"
                     );
-                    // exportLimsUselanapply({ current: 1, size: 10 });
-                    // this.formRef.current.resetFields;
-                    // showModal();
                   }}
                 >
                   导出
                 </Button>
               </div>
               <div className={"view-query-right"}>
-                <Form
-                  onFinish={rowFinish}
-                  layout="inline"
-                  ref={this.rwoFormRef}
-                >
-                  {rowSelect.map((item) => (
-                    <Form.Item
-                      label={item.label}
-                      name={item.name}
-                      key={item.name}
-                    >
-                      <div className="base-rowSelect-flex">
-                        <Input
-                          placeholder="请输入名称，单号"
-                          onChange={(e) =>
-                            this.setState({
-                              rowSelectData: e.target.value,
-                            })
-                          }
-                          className="base-rowSelect"
-                        ></Input>
-                        <div className="base-rowSelect-icon">
-                          <SearchOutlined
-                            onClick={() =>
-                              rowFinish({ name: this.state.rowSelectData })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                  ))}
+                <Form layout="inline" ref={this.rwoFormRef}>
+                  <Form.Item label={""} name={"title"}>
+                    <SearchInput
+                      placeholder="支持模糊查找申请标题"
+                      searchClick={() =>
+                        rowFinish({
+                          title: searchInput,
+                          // code: this.state.rowSelectData,
+                        })
+                      }
+                    />
+                  </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
                 <Button
@@ -341,7 +337,7 @@ class BaseNewPageLayout extends React.Component {
                     this.formRef.current.resetFields();
                   }}
                 >
-                  添加
+                  新增
                 </Button>
               </div>
             </div>
@@ -367,7 +363,13 @@ class BaseNewPageLayout extends React.Component {
         }
         {
           <div hidden={!showForm}>
-            <div className="view-query-left">{renderBreadcrumb()}</div>
+            <div className="view-query-left">
+              <RenderBreadcrumb
+                showForm={showForm}
+                breadcrumb={this.breadcrumb}
+                editbreadcrumb={this.editbreadcrumb}
+              />
+            </div>
             <div className="head-line"></div>
             <FlowForm
               formatList={formatList}
@@ -404,6 +406,7 @@ const mapStateToProps = (state) => {
     loading: state.currency.loading,
     visible: state.currency.visible,
     showForm: state.currency.showForm,
+    searchInput: state.formItems.searchInput, //搜索框值
   };
 };
 

@@ -25,12 +25,7 @@
   margin-left: -20px;
   margin-bottom: 15px;
 }
-.view-query-breacrumd {
-  width: 230px;
-  .ant-breadcrumb {
-    width: 230px;
-  }
-}
+
 .base-layout-modal {
   .ant-modal-content {
     margin-top: -50px;
@@ -40,24 +35,7 @@
     height: 650px;
   }
 }
-.base-rowSelect-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-  .base-rowSelect-icon {
-    position: absolute;
-    right: 10px;
-    width: 30px;
-    // height: 50px;
-  }
-}
-.base-rowSelect {
-  width: 322px;
-  height: 30px;
-  border: 1px solid #dddddd;
-  border-radius: 13px;
-}
+
 .base-add-button {
   width: 78px;
   height: 30px;
@@ -127,25 +105,6 @@
   z-index: 999;
   right: 1px;
   top: -40px;
-}
-.purplist-upload-box {
-  display: flex;
-  justify-content: flex-start;
-  button {
-    width: 115px;
-    height: 35px;
-    border: 1px solid #40a0ea;
-    border-radius: 10px;
-    color: #40a0ea;
-    margin-right: 10px;
-  }
-}
-.purplist-flex {
-  display: flex;
-  align-items: center;
-}
-.purplist-upload-left {
-  width: 50%;
 }
 .approval-info {
   display: flex;
