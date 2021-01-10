@@ -2,10 +2,7 @@ import React from "react";
 import { Form, Input, Row, Col, DatePicker, Button } from "antd";
 // import DYForm from "./../home/form";
 import FormSelect from "./select";
-import {
-  // getLimsBasiccategory
-  getLimsBasicDict,
-} from "../../request/index";
+import { getLimsBasiccategory, getLimsBasicDict } from "../../request/index";
 import { columnsToFormFlow } from "../../utils/common";
 import DevicePart from "./devicePart";
 import "./index.scss";
@@ -64,11 +61,11 @@ export default (props) => {
       ele: (
         <FormSelect
           style={{ width: "100%" }}
-          request={getLimsBasicDict}
-          param={{ current: 1, size: -1, businessType: "4" }}
+          request={getLimsBasiccategory}
+          param={{ current: 1, size: -1 }}
           storeKey="sbfl"
           labelString="name"
-          valueString="basicDictId"
+          valueString="id"
         ></FormSelect>
       ),
       // rules: [{ require: false }],

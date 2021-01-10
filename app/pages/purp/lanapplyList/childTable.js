@@ -55,8 +55,8 @@ const ChildTable = (props) => {
       }).then((result) => {
         let price = 0;
         let list = result.data.map((item) => {
-          price = price + item.limsBasicdevice.price;
-          return { ...item, ...item.limsBasicdevice };
+          price = price + item.limsBasicdeviceItemDO.price;
+          return { ...item, ...item.limsBasicdeviceItemDO };
         });
         setDataSource(list); //设置购置清单列表
         setTotalPrice(price);
@@ -76,6 +76,7 @@ const ChildTable = (props) => {
     {
       title: "单位",
       dataIndex: "unit",
+      render: (_, row) => row.unitName,
     },
     {
       title: "规格型号",
@@ -84,6 +85,7 @@ const ChildTable = (props) => {
     {
       title: "品 牌",
       dataIndex: "brand",
+      render: (_, row) => row.brandName,
     },
     {
       title: "备注",
@@ -92,6 +94,7 @@ const ChildTable = (props) => {
     {
       title: "设备类别",
       dataIndex: "categoryId",
+      render: (_, row) => row.categoryName,
     },
     {
       title: "生产日期",
@@ -110,6 +113,7 @@ const ChildTable = (props) => {
 
   return (
     <div value={props.value} onChange={() => props.onChange}>
+      {console.log(dataSource, "???")}
       <Table
         value={dataSource}
         columns={columns}

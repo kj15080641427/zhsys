@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Row, Col, Input } from "antd";
 import ChildTable from "./childTable";
 import "./style.scss";
@@ -7,11 +7,10 @@ import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 import AttachmentList from "../../../components/formItems/attachment";
 import Flow from "../../../components/formItems/flow";
+import moment from "moment";
 
 //工作流表单
 const FlowForm = (props) => {
-  // const [imageList, setImageList] = useState([]);
-  // const [fileList, setFileList] = useState([]);
   const {
     onFinish, //提交按钮回调
     baseFormItem = [], //基础信息
@@ -26,8 +25,15 @@ const FlowForm = (props) => {
     approvalClick1, //审批
     approvalClick2, //审批
     taskInfo, //审批流程信息
+    formatList,
   } = props;
   const { setTotalPrice } = props.actions;
+
+  const [isDisible, setIsDisible] = useState(false);
+
+  useEffect(() => {
+    setIsDisible(records?.status != "0" && records?.status);
+  }, [records]);
 
   useEffect(() => {
     let price = 0;
@@ -36,6 +42,15 @@ const FlowForm = (props) => {
     });
     setTotalPrice(price);
   }, [formRef?.current?.getFieldValue().limsUselendapplyitemList]);
+
+  const renderItem = (item) => {
+    if (formatList.indexOf(item.name) !== -1) {
+      return moment(records[item.name]).format("YYYY-MM-DD");
+    } else {
+      return records[item.labelName || item.name];
+    }
+  };
+
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
@@ -57,7 +72,8 @@ const FlowForm = (props) => {
                 style={item.style}
                 labelCol={{ span: item.labelCol || 4 }}
               >
-                {item.ele}
+                {/* {item.ele} */}
+                {isDisible ? <div>{renderItem(item)}</div> : item.ele}
               </Form.Item>
             </Col>
           );
@@ -71,7 +87,7 @@ const FlowForm = (props) => {
         {/* 列表 */}
         <Col span={24}>
           <Form.Item labelAlign="right" label={""} name={"deviceIdList"}>
-            <ChildTable records={records}></ChildTable>
+            <ChildTable isDisible={isDisible}></ChildTable>
           </Form.Item>
         </Col>
       </Row>
@@ -87,35 +103,14 @@ const FlowForm = (props) => {
             name={"limsAttachmentSaveDTOS"}
             rules={[{ require: false }]}
           >
-            <AttachmentList records={records}></AttachmentList>
+            <AttachmentList disabled={isDisible}></AttachmentList>
           </Form.Item>
         </Col>
       </Row>
       {/* 编辑时提交id */}
       <Form.Item name={id}></Form.Item>
 
-      {records?.status && (
-        <Flow taskInfo={taskInfo}></Flow>
-        // <Timeline>
-        //   {taskInfo?.activitiDOList?.map((item) => {
-        //     return (
-        //       <Timeline.Item key={item.activityId} dot={""}>
-        //         {item.activityName == "StartEvent"
-        //           ? "开始"
-        //           : item.activityName == "EndEvent"
-        //           ? "结束"
-        //           : item.activityName}
-        //         <div className="flow-timeline">
-        //           <div>
-        //             {item.fullMessage && `审批意见:${item.fullMessage}`}
-        //           </div>
-        //           <div>审核时间:{item.time}</div>
-        //         </div>
-        //       </Timeline.Item>
-        //     );
-        //   })}
-        // </Timeline>
-      )}
+      {isDisible && <Flow taskInfo={taskInfo}></Flow>}
       {/* 审批意见 */}
       {records?.status == "1" ? (
         <Col span={24}>
@@ -146,24 +141,17 @@ const FlowForm = (props) => {
             </Button>
           ) : records?.status == "0" || !records?.status ? (
             <>
-              <Button
-                htmlType="submit"
-                className="flow-form-submit"
-                // onClick={uploadFile}
-              >
+              <Button htmlType="submit" className="flow-form-submit">
                 保存
               </Button>
               <Button
                 className="flow-form-flow"
                 onClick={() => {
                   submitFlow();
-                  // uploadFile();
                 }}
-                // onClick={uploadFile}
               >
                 提交审批
               </Button>
-              {/* </Popconfirm> */}
               <Button className="flow-form-calcel" onClick={cancelClick}>
                 关闭
               </Button>

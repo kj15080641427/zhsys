@@ -16,7 +16,7 @@ const ChildTable = (props) => {
   const [day, setDay] = useState(0); //使用天数
   const [momeny, setMoneny] = useState(0);
   const { getBase, setTotalPrice } = props.actions;
-  const { baseDevice, complexfund } = props;
+  const { baseDevice, complexfund, isDisible } = props;
 
   useEffect(() => {
     props.value && setDataSource(props.value);
@@ -111,6 +111,7 @@ const ChildTable = (props) => {
       dataIndex: "usePeriod",
       render: (e, row, index) => (
         <Input
+          disabled={isDisible}
           value={props.value[index]?.usePeriod || e}
           // value={props.value[0]?.usePeriod || e}
           // value={e || day}
@@ -128,6 +129,7 @@ const ChildTable = (props) => {
       dataIndex: "usePrice",
       render: (e, row, index) => (
         <Input
+          disabled={isDisible}
           value={props.value[index]?.usePrice}
           // value={props.value[0]?.usePrice}
           onChange={(W) => {
@@ -154,6 +156,7 @@ const ChildTable = (props) => {
       dataIndex: "foundId",
       render: (e, _, index) => (
         <Select
+          disabled={isDisible}
           defaultValue={e}
           onChange={(w) => {
             let list = dataSource;
@@ -176,9 +179,8 @@ const ChildTable = (props) => {
       title: "操作",
       dataIndex: "",
       hidden: true,
-      render: (_, __, index) => (
-        <a onClick={() => delDataSource(index)}>删除</a>
-      ),
+      render: (_, __, index) =>
+        isDisible ? "" : <a onClick={() => delDataSource(index)}>删除</a>,
     },
   ];
 

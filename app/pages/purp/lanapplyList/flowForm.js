@@ -1,14 +1,13 @@
 import React, { useEffect } from "react";
 import { Button, Form, Row, Col, message } from "antd";
 import ChildTable from "./childTable";
-import FormSelect from "../../../components/formItems/select";
-import { getUser, getUserCompany, addAttachment } from "../../../request/index";
+import { addAttachment, getLimsSupplier } from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
-import moment from "moment";
 import AttachmentList from "../../../components/formItems/attachment";
+import moment from "moment";
 
 //工作流表单
 const FlowForm = (props) => {
@@ -22,20 +21,32 @@ const FlowForm = (props) => {
     submitFlow, //提交审批回调
     records, //表单数据
     approvalRecords, //购置申请信息
+    formatList,
     // defaultFileList, //已上传文件列表
     totalPrice, //总金额
-    formatList,
     imageList,
     fileList,
+    supplier, //供应商
   } = props;
-  const { setTotalPrice } = props.actions;
+  const { setTotalPrice, getBase } = props.actions;
   useEffect(() => {
     let price = 0;
-    formRef?.current?.getFieldValue().limsBasicdevice?.map((item) => {
+    formRef?.current?.getFieldValue().limsBasicdeviceItemDO?.map((item) => {
       price = price + item.price;
     });
     setTotalPrice(price);
-  }, [formRef?.current?.getFieldValue().limsBasicdevice]);
+  }, [formRef?.current?.getFieldValue().limsBasicdeviceItemDO]);
+  useEffect(() => {
+    records?.status != "1" &&
+      getBase({
+        request: getLimsSupplier,
+        key: "supplier",
+        param: {
+          size: -1,
+          current: 1,
+        },
+      });
+  }, []);
   const info = [
     {
       label: "申请单号",
@@ -43,33 +54,11 @@ const FlowForm = (props) => {
     },
     {
       label: "申请人",
-      element: (
-        <div>
-          <FormSelect
-            disabled
-            value={approvalRecords.applyUser}
-            request={getUser}
-            storeKey="user"
-            labelString="roleName"
-            valueString="id"
-          ></FormSelect>
-        </div>
-      ),
+      element: <div>{approvalRecords.userRealName}</div>,
     },
     {
       label: "申请单位",
-      element: (
-        <div>
-          <FormSelect
-            disabled
-            value={approvalRecords.applyCompany}
-            request={getUserCompany}
-            storeKey="userCompany"
-            labelString="name"
-            valueString="id"
-          ></FormSelect>
-        </div>
-      ),
+      element: <div>{approvalRecords.compayName}</div>,
     },
     {
       label: "申请标题",
@@ -87,13 +76,21 @@ const FlowForm = (props) => {
   const setDevice = (e) => {
     setTotalPrice(e);
   };
-  // const renderItem = (item) => {
-  //   if (formatList.indexOf(item.name) !== -1) {
-  //     return moment(records[item.name]).format("YYYY-MM-DD");
-  //   } else {
-  //     return records[item.labelName || item.name];
-  //   }
-  // };
+  const renderItem = (item) => {
+    if (item.name == "supplierId") {
+      let supp = supplier?.records?.filter((i) => {
+        return i.id == records[item.name];
+      });
+      if (supp && supp[0]) {
+        return supp[0].name;
+      }
+    }
+    if (formatList.indexOf(item.name) !== -1) {
+      return moment(records[item.name]).format("YYYY-MM-DD");
+    } else {
+      return records[item.labelName || item.name];
+    }
+  };
   return (
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
@@ -101,7 +98,7 @@ const FlowForm = (props) => {
         购置信息:
       </div>
 
-      {/* 渲染基础表单 */}
+      {/* 借出信息 */}
       <Row>
         {info.map((item) => (
           <Col span={8} className="form-item-box" key={item.label}>
@@ -118,11 +115,8 @@ const FlowForm = (props) => {
             </Form.Item>
           </Col>
         ))}
-
+        {/* 审核详情 */}
         {baseFormItem.map((item, index) => {
-          const newItem = React.cloneElement(item.ele, {
-            disabled: records?.status != "1",
-          });
           return (
             <Col key={index} className="form-item-box" span={item.col || 8}>
               <Form.Item
@@ -135,12 +129,12 @@ const FlowForm = (props) => {
                 style={item.style}
                 labelCol={{ span: item.labelCol || 4 }}
               >
-                {newItem}
-                {/* {records?.status == "1" ? (
+                {/* {newItem} */}
+                {records?.status == "1" ? (
                   item.ele
                 ) : (
                   <div>{renderItem(item)}</div>
-                )} */}
+                )}
               </Form.Item>
             </Col>
           );
@@ -153,7 +147,11 @@ const FlowForm = (props) => {
       <Row>
         {/* 列表 */}
         <Col span={24}>
-          <Form.Item labelAlign="right" label={""} name={"limsBasicdevice"}>
+          <Form.Item
+            labelAlign="right"
+            label={""}
+            name={"limsBasicdeviceItemDO"}
+          >
             <ChildTable records={records} setDevice={setDevice}></ChildTable>
           </Form.Item>
         </Col>
@@ -170,7 +168,10 @@ const FlowForm = (props) => {
             name={"file"}
             rules={[{ require: false }]}
           >
-            <AttachmentList records={records}></AttachmentList>
+            <AttachmentList
+              records={records}
+              disabled={records?.status != "1" }
+            ></AttachmentList>
           </Form.Item>
         </Col>
       </Row>
@@ -227,6 +228,7 @@ const mapStateToProps = (state) => {
     totalPrice: state.currency.totalPrice,
     imageList: state.currency.imageList,
     fileList: state.currency.fileList,
+    supplier: state.currency.supplier,
   };
 };
 

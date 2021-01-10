@@ -161,9 +161,9 @@ class BaseNewPageLayout extends React.Component {
       //查询清单
       getLanapplyPurByList({ id: row.id }).then((res) => {
         let list = res.data.limsPuritemDOList.map((item) => {
-          return { ...item, ...item.limsBasicdevice };
+          return { ...item, ...item.limsBasicdeviceItemDO };
         });
-        row = { ...row, limsBasicdevice: list };
+        row = { ...row, limsBasicdeviceItemDO: list };
 
         formatList.map((item) => {
           if (row[item]) {
@@ -180,31 +180,33 @@ class BaseNewPageLayout extends React.Component {
     };
     //到货验收
     const submitFlow = () => {
-      let values = this.formRef.current.getFieldValue();
-      formatList.forEach((item) => {
-        values = {
+      this.formRef.current.validateFields().then(() => {
+        let values = this.formRef.current.getFieldValue();
+        formatList.forEach((item) => {
+          values = {
+            ...values,
+            [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
+          };
+        });
+        stringList.forEach((item) => {
+          values = {
+            ...values,
+            [item]: String(values[item]),
+          };
+        });
+        let updvalue = {
           ...values,
-          [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
+          submitType: 1,
+          limsPuritemUpdateDTOList: values.limsBasicdeviceItemDO,
+          limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
         };
-      });
-      stringList.forEach((item) => {
-        values = {
-          ...values,
-          [item]: String(values[item]),
-        };
-      });
-      let updvalue = {
-        ...values,
-        submitType: 1,
-        limsPuritemUpdateDTOList: values.limsBasicdevice,
-        limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
-      };
 
-      addOrUpdateBase({
-        request: upd,
-        key: storeKey,
-        query: get,
-        param: updvalue,
+        addOrUpdateBase({
+          request: upd,
+          key: storeKey,
+          query: get,
+          param: updvalue,
+        });
       });
     };
     // 提交
@@ -225,7 +227,7 @@ class BaseNewPageLayout extends React.Component {
         ...values,
         totalPrice: totalPrice,
         submitType: 0,
-        limsPuritemUpdateDTOList: values.limsBasicdevice,
+        limsPuritemUpdateDTOList: values.limsBasicdeviceItemDO,
         limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
 

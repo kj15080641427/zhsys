@@ -13,6 +13,7 @@ const AttachmentList = (props) => {
     attachmentList,
     fileLabel = "上传资料",
     imageLabel = "上传凭证",
+    disabled
   } = props;
   const { steUselendFile, steUselendImage } = props.actions;
 
@@ -42,7 +43,7 @@ const AttachmentList = (props) => {
           }}
         >
           <div className="purplist-flex">
-            <Button>{fileLabel}</Button>
+            <Button disabled={disabled}>{fileLabel}</Button>
             <div>.word .xlsx .docx .pdf .doc</div>
           </div>
         </Upload>
@@ -62,7 +63,7 @@ const AttachmentList = (props) => {
           }}
         >
           <div className="purplist-flex">
-            <Button>{imageLabel}</Button>
+            <Button disabled={disabled}>{imageLabel}</Button>
             <div> .jpg .png</div>
           </div>
         </Upload>

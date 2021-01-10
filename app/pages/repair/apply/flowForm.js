@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { filterFileList } from "../../../utils/common";
 import AttachmentList from "../../../components/formItems/attachment";
 import { approvaRepair, getRepair } from "../../../request";
+import moment from "moment";
 
 //工作流表单
 const FlowForm = (props) => {
@@ -28,17 +29,28 @@ const FlowForm = (props) => {
     approvalClick0, //审批
     approvalClick1, //审批
     approvalClick2, //审批
+    formatList,
     taskInfo, //审批流程信息
   } = props;
   const { setTotalPrice, approvalFlow, getBase, setShowForm } = props.actions;
 
   useEffect(() => {
     let price = 0;
-    formRef?.current?.getFieldValue().limsRepairapplyitemSaveDTOS?.map((item) => {
-      price = price + item.planFee;
-    });
+    formRef?.current
+      ?.getFieldValue()
+      .limsRepairapplyitemSaveDTOS?.map((item) => {
+        price = price + item.planFee;
+      });
     setTotalPrice(price);
   }, [formRef?.current?.getFieldValue().limsRepairapplyitemSaveDTOS]);
+
+  const renderItem = (item) => {
+    if (formatList.indexOf(item.name) !== -1) {
+      return moment(records[item.name]).format("YYYY-MM-DD");
+    } else {
+      return records[item.labelName || item.name];
+    }
+  };
 
   const approval = (type) => {
     approvalFlow({
@@ -59,7 +71,6 @@ const FlowForm = (props) => {
         size: 10,
       },
     });
-    console.log(result, "---");
   };
 
   return (
@@ -84,7 +95,12 @@ const FlowForm = (props) => {
                 style={item.style}
                 labelCol={{ span: item.labelCol || 4 }}
               >
-                {item.ele}
+                {/* {item.ele} */}
+                {records?.status == "0" || !records?.status ? (
+                  item.ele
+                ) : (
+                  <div>{renderItem(item)}</div>
+                )}
               </Form.Item>
             </Col>
           );

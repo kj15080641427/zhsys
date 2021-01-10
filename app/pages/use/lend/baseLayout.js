@@ -359,6 +359,7 @@ class LendLayout extends React.Component {
             </div>
             <div className="head-line"></div>
             <FlowForm
+              formatList={formatList}
               taskInfo={this.state.taskInfo}
               approvalClick0={approvalClick0}
               approvalClick1={approvalClick1}

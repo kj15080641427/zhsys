@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, DatePicker, Select } from "antd";
+import { Input, DatePicker, Select, InputNumber } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
@@ -9,88 +9,67 @@ import {
   updRepair,
   delRepair,
   getUser,
+  getLimsBasicDict,
 } from "../../../request/index";
 import LendLayout from "./baseLayout";
 import { columnsToFormFlow } from "../../../utils/common";
 import FormSelect from "../../../components/formItems/select";
 import { statusElement } from "../../../components/formItems/baseDict";
 
-const type = {
-  1: "内部借出",
-};
 const ReparirApply = () => {
   const columns = [
     {
       title: "申请单号",
       dataIndex: "code",
-      hidden: true,
     },
     {
       title: "申请时间",
       dataIndex: "applyDate",
-      require: true,
-      hidden: true,
-      ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
+      render: (e) => e.slice(0, 10),
     },
     {
       title: "申请人",
       dataIndex: "userRealName",
-      hidden: true,
     },
     {
       title: "联系电话",
       dataIndex: "applyPhone",
-      hidden: true,
     },
     {
       title: "申请内容",
       dataIndex: "remark",
-      hidden: true,
     },
 
     {
       title: "业务类型",
-      dataIndex: "lendType",
-      require: true,
-      hidden: true,
-      ele: (
-        <Select>
-          <Select.Option value={"1"}>归还损坏</Select.Option>
-        </Select>
-      ),
-      render: (e) => type[e],
+      dataIndex: "bussineName",
     },
     {
       title: "业务单号",
-      dataIndex: "phone",
-      require: true,
-      hidden: true,
-      ele: <Input type="tel" style={{ width: "100%" }}></Input>,
+      dataIndex: "bussineId",
     },
 
     {
       title: "预估费用(元)",
       dataIndex: "totalFee",
-      hidden: true,
     },
     {
       title: "审批状态",
       dataIndex: "status",
-      hidden: true,
       render: (e) => statusElement[e],
-      // render: (e) => (e == 0 ? "启用" : "停用"),
     },
   ];
   const formItems = columnsToFormFlow([
     {
       title: "申请人",
       dataIndex: "applyUser",
+      labelName: "userRealName",
       require: true,
       ele: (
         <FormSelect
           request={getUser}
           storeKey="user"
-          labelString="roleName"
+          labelString="realName"
           valueString="id"
         ></FormSelect>
       ),
@@ -109,19 +88,24 @@ const ReparirApply = () => {
     {
       title: "业务类型",
       dataIndex: "bussineType",
+      labelName: "bussineName",
       require: true,
       ele: (
-        <Select>
-          <Select.Option value={"1"}>归还损坏</Select.Option>
-        </Select>
+        <FormSelect
+          style={{ width: "100%" }}
+          request={getLimsBasicDict}
+          param={{ current: 1, size: -1, businessType: "7" }}
+          storeKey="ghsh"
+          labelString="name"
+          valueString="basicDictId"
+        ></FormSelect>
       ),
-      render: (e) => type[e],
     },
     {
       title: "业务单号",
       dataIndex: "bussineId",
       require: true,
-      ele: <Input type="tel" style={{ width: "100%" }}></Input>,
+      ele: <InputNumber type="tel" style={{ width: "100%" }}></InputNumber>,
     },
     {
       title: "申请内容",
@@ -132,25 +116,6 @@ const ReparirApply = () => {
     },
   ]);
 
-  const rowSelect = [
-    {
-      label: "",
-      name: "name",
-      element: <Input placeholder="" className=""></Input>,
-    },
-  ];
-  const breadcrumb = [
-    {
-      name: "首页",
-    },
-    {
-      name: "维护管理",
-    },
-    {
-      name: "维修申请",
-    },
-  ];
-
   return (
     <div>
       <LendLayout
@@ -160,11 +125,9 @@ const ReparirApply = () => {
         del={delRepair} // 删除数据接口
         columns={columns} // 表格配置项
         baseFormItem={formItems} // 表单配置项
-        rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"repairApply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["applyDate"]} //需要转换时间格式的表单字段
-        breadcrumb={breadcrumb} //面包屑
       ></LendLayout>
     </div>
   );

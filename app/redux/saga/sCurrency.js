@@ -210,7 +210,7 @@ function* approvalFlow({ data }) {
     if (result.code == code) {
       message.success(msg);
     } else {
-      message.error(result.message);
+      message.error(result.msg);
     }
   } catch (e) {
     console.error(e);

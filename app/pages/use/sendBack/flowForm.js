@@ -11,6 +11,7 @@ import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
+import moment from "moment";
 
 //工作流表单
 const FlowForm = (props) => {
@@ -28,6 +29,7 @@ const FlowForm = (props) => {
     records, //表单数据
     dictuseLend, //借出信息
     sendBacklendDetail,
+    formatList,
   } = props;
   const { getBase, approvalFlow } = props.actions;
 
@@ -51,14 +53,21 @@ const FlowForm = (props) => {
       });
   }, [lendInfo]);
 
-  const type = {
-    1: "内部借出",
+  const renderItem = (item) => {
+    if (formatList.indexOf(item.name) !== -1) {
+      return moment(records[item.name]).format("YYYY-MM-DD");
+    } else {
+      return records[item.labelName || item.name];
+    }
   };
+
   const info = [
     {
       label: "借出单号",
+      name: "lendId",
       element: (
         <FormSelect
+          disabled={records?.status != "0" && records?.status}
           onChange={changeCode}
           request={getLimsUselendapply}
           storeKey="useLend"
@@ -70,7 +79,7 @@ const FlowForm = (props) => {
     },
     {
       label: "借出类型",
-      element: <div>{type[lendInfo?.lendType]}</div>,
+      element: <div>{lendInfo?.lendType}</div>,
     },
     {
       label: "借出时间",
@@ -159,7 +168,12 @@ const FlowForm = (props) => {
                   style={item.style}
                   labelCol={{ span: item.labelCol || 6 }}
                 >
-                  {item.ele}
+                  {/* {item.ele} */}
+                  {records?.status == "0" || !records?.status ? (
+                    item.ele
+                  ) : (
+                    <div>{renderItem(item)}</div>
+                  )}
                 </Form.Item>
               </Col>
             );

@@ -27,7 +27,7 @@ export const columns = [
   },
   {
     title: "借出单号",
-    dataIndex: "",
+    dataIndex: "lendCode",
     hidden: true,
   },
   {
@@ -49,7 +49,7 @@ export const columns = [
   },
   {
     title: "归还单位",
-    dataIndex: "returnCompany",
+    dataIndex: "lendCompanyName",
     hidden: true,
   },
 
@@ -74,6 +74,7 @@ const LendapplyList = (props) => {
     {
       title: "归还人",
       dataIndex: "returnUser",
+      labelName: "realName",
       ele: (
         <FormSelect
           request={getUser}

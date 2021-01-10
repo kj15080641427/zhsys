@@ -68,6 +68,7 @@ export const columnsToFormFlow = (columns) => {
       width: item.formWidth,
       col: item.col,
       labelCol: item.labelCol,
+      labelName: item.labelName,
     };
   });
   return formItem;

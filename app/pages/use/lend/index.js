@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, DatePicker, Select } from "antd";
+import { Input, DatePicker } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
@@ -10,15 +10,13 @@ import {
   delLimsUselendapply,
   getUser,
   getUserCompany,
+  getLimsBasicDict,
 } from "../../../request/index";
 import LendLayout from "./baseLayout";
 import { columnsToFormFlow } from "../../../utils/common";
 import FormSelect from "../../../components/formItems/select";
 import { statusElement } from "../../../components/formItems/baseDict";
 
-const type = {
-  1: "内部借出",
-};
 const Lendapply = () => {
   const columns = [
     {
@@ -43,10 +41,9 @@ const Lendapply = () => {
     },
     {
       title: "借出类型",
-      dataIndex: "lendType",
+      dataIndex: "lendTypeName",
       require: true,
       hidden: true,
-      render: (e) => type[e],
     },
     {
       title: "联系电话",
@@ -76,6 +73,7 @@ const Lendapply = () => {
     {
       title: "借出人",
       dataIndex: "lendUser",
+      labelName: "realName",
       require: true,
       ele: (
         <FormSelect
@@ -89,6 +87,7 @@ const Lendapply = () => {
     {
       title: "借出单位",
       dataIndex: "lendCompany",
+      labelName: "lendCompanyName",
       require: true,
       ele: (
         <FormSelect
@@ -113,13 +112,18 @@ const Lendapply = () => {
     {
       title: "借出类型",
       dataIndex: "lendType",
+      labelName: "lendTypeName",
       require: true,
       ele: (
-        <Select>
-          <Select.Option value={"1"}>内部借出</Select.Option>
-        </Select>
+        <FormSelect
+          style={{ width: "100%" }}
+          request={getLimsBasicDict}
+          param={{ current: 1, size: -1, businessType: "6" }}
+          storeKey="jclx"
+          labelString="name"
+          valueString="basicDictId"
+        ></FormSelect>
       ),
-      render: (e) => type[e],
     },
     {
       title: "证件号码",

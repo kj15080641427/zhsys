@@ -7,6 +7,7 @@ import FormSelect from "../../../components/formItems/select";
 import {
   getLimsBasicDict,
   delLimsUselanapplyList,
+  getLimsBasiccategory
 } from "../../../request/index";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
@@ -157,11 +158,11 @@ const ChildTable = (props) => {
       ele: (
         <FormSelect
           style={{ width: "100%" }}
-          request={getLimsBasicDict}
-          param={{ current: 1, size: -1, businessType: "4" }}
+          request={getLimsBasiccategory}
+          param={{ current: 1, size: -1 }}
           storeKey="sbfl"
           labelString="name"
-          valueString="basicDictId"
+          valueString="id"
         ></FormSelect>
       ),
       col: 12,

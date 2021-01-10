@@ -312,6 +312,7 @@ class BaseNewPageLayout extends React.Component {
             </div>
             <div className="head-line"></div>
             <FlowForm
+              formatList={formatList}
               approvalRecords={this.state.approvalRecords}
               records={this.state.records}
               defaultFileList={this.state.defaultFileList}

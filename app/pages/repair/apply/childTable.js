@@ -107,17 +107,17 @@ const ChildTable = (props) => {
     {
       title: "预估工时",
       dataIndex: "planTime",
-      render: (e, row, index) => (
-        <Input
-          defaultValue={props.value[index]?.planTime}
-          onChange={(W) => {
-            setDay(W.target.value);
-            let list = dataSource;
-            list[index].planTime = W.target.value;
-            setDataSource(list);
-          }}
-        ></Input>
-      ),
+      // render: (e, row, index) => (
+      //   <Input
+      //     defaultValue={props.value[index]?.planTime}
+      //     onChange={(W) => {
+      //       setDay(W.target.value);
+      //       let list = dataSource;
+      //       list[index].planTime = W.target.value;
+      //       setDataSource(list);
+      //     }}
+      //   ></Input>
+      // ),
     },
     {
       title: "使用单价(元)",

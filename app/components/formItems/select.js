@@ -61,7 +61,9 @@ const mapStateToProps = (state) => {
     dictpp: state.currency.dictpp, //品牌
     dictdw: state.currency.dictdw, //单位（个，台）
     dictsbfl: state.currency.dictsbfl, //设备分类
-    dictcomplexfund: state.currency.dictcomplexfund,
+    dictcomplexfund: state.currency.dictcomplexfund,//年度经费
+    dictjclx: state.currency.dictjclx,//借出类型
+    dictghsh: state.currency.dictghsh,//业务类型 : 归还损坏
   };
 };
 

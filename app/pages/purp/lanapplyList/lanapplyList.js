@@ -28,7 +28,7 @@ export const columns = [
   },
   {
     title: "购置类型",
-    dataIndex: "purTypeName",
+    dataIndex: "purName",
     sort: 1,
     hidden: true,
   },
@@ -75,6 +75,7 @@ const LendapplyList = (props) => {
     {
       title: "购置类型",
       dataIndex: "purType",
+      labelName: "purName",
       ele: (
         <FormSelect
           style={{ width: "100%" }}
@@ -102,6 +103,7 @@ const LendapplyList = (props) => {
     {
       title: "购置日期",
       dataIndex: "purDate",
+      labelName: "purDate",
       ele: (
         <DatePicker
           showTime
@@ -115,11 +117,12 @@ const LendapplyList = (props) => {
     {
       title: "购置人",
       dataIndex: "purUser",
+      labelName: "realName",
       ele: (
         <FormSelect
           request={getUser}
           storeKey="user"
-          labelString="roleName"
+          labelString="realName"
           valueString="id"
         ></FormSelect>
       ),
@@ -132,7 +135,6 @@ const LendapplyList = (props) => {
       labelCol: 2,
     },
   ]);
-
 
   return (
     <div>

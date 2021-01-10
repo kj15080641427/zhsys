@@ -5,7 +5,7 @@ import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 
 const ChildTable = (props) => {
-  const { deviceList } = props;
+  const { deviceList, records } = props;
   const { setReturnbackList } = props.actions;
 
   const [dataSource, setDataSource] = useState([]);
@@ -65,6 +65,7 @@ const ChildTable = (props) => {
       dataIndex: "status",
       render: (e) => (
         <Radio.Group
+          disabled={records?.status != "0" && records?.status}
           onChange={(e) => setRadioValue(String(e.target.value))}
           // value={e || radioValue}
           defaultValue={e || radioValue}
@@ -79,16 +80,19 @@ const ChildTable = (props) => {
       title: "操作",
       dataIndex: "",
       hidden: true,
-      render: (row) => (
-        <a
-          onClick={() => {
-            setDataSource(dataSource.filter((item) => item.id != row.id));
-            console.log(row);
-          }}
-        >
-          删除
-        </a>
-      ),
+      render: (row) =>
+        records?.status == "0" || !records?.status ? (
+          <a
+            onClick={() => {
+              setDataSource(dataSource.filter((item) => item.id != row.id));
+              console.log(row);
+            }}
+          >
+            删除
+          </a>
+        ) : (
+          ""
+        ),
     },
   ];
 
