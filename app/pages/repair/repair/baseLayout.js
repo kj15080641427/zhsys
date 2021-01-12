@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Breadcrumb, message } from "antd";
+import { Button, Form } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -7,8 +7,11 @@ import * as actions from "../../../redux/actions/aCurrency";
 import "./style.scss";
 import { connect } from "react-redux";
 import moment from "moment";
-import { SearchOutlined } from "@ant-design/icons";
-import { getReturnById } from "../../../request/index";
+import { getRepairItem, exportRepairList } from "../../../request/index";
+import SearchInput from "../../../components/formItems/searchInput";
+import { downloadFile } from "../../purp/lanApply/downFile";
+import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
+import { formatAttachment } from "../../../utils/format";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -21,10 +24,41 @@ class BaseNewPageLayout extends React.Component {
       disabled: false, //表单防重复点击
       records: {},
 
-      approvalRecords: {}, //购置申请信息
+      // approvalRecords: {}, //购置申请信息
       defaultFileList: [], //已上传文件列表
     };
+    this.breadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "设备维护",
+      },
+      {
+        name: "维修管理",
+        color: "#40A0EA",
+      },
+    ];
+    this.editbreadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "设备维护",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "维修管理",
+        click: () => this.props.actions.setShowForm(false),
+      },
+      {
+        name: "设备维修",
+        click: () => this.props.actions.setShowForm(false),
+        color: "#40A0EA",
+      },
+    ];
   }
+
   componentWillUnmount() {
     this.props.actions.setShowForm(false);
   }
@@ -39,24 +73,24 @@ class BaseNewPageLayout extends React.Component {
     const {
       get,
       upd,
-      add,
       del,
       keyId,
       storeKey,
       baseFormItem,
       listFormItem,
       columns,
-      rowSelect = [],
       columnsProps = [],
       rowSelection,
       handleQuery,
       formatList = [],
       stringList = [],
-      breadcrumb = [],
       showChild, //是否加载子表
       buttonText, //提交按钮文字
       showForm, //显示表单
-      returnBackList,
+      totalPrice,
+      searchInput,
+      imageList,
+      fileList,
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -66,6 +100,7 @@ class BaseNewPageLayout extends React.Component {
       hideModal,
       setShowForm,
       // getPurListInfo, //购置清单详情
+      getAttachmentById, //根据id获取附件
     } = this.props.actions;
     const { loading } = this.props;
     const getBaseHoc = (
@@ -112,39 +147,61 @@ class BaseNewPageLayout extends React.Component {
     };
     // 修改
     const update = (row) => {
-      getReturnById({
+      //根据id获取附件
+      getAttachmentById({
+        businessId: row?.id,
+        businessType: "1",
         current: 1,
-        id: row.id,
         size: -1,
-      }).then((res) => {
-        if (res.code == 200) {
-          // let list = res?.data?.limsUsereturnapplyitemList.map((item) => {
-          //   return { ...item, ...item.limsBasicdevice };
-          // });
-          row = {
-            ...row,
-            limsBasicdevice: res?.data?.limsUsereturnapplyitemList,
-            taskInfo: res?.data?.activitiDOList,
-          };
-
-          formatList.map((item) => {
-            if (row[item]) {
-              row = { ...row, [item]: moment(row[item]) };
-            }
-          });
-          this.setState({
-            records: row,
-          });
-          this.formRef.current.setFieldsValue(row);
-          setShowForm(true);
-        } else {
-          message.error(res.msg);
-        }
+      });
+      //查询清单
+      getRepairItem({ mainId: row.id, size: 10, current: 1 }).then((res) => {
+        row = { ...row, limsRepairitemUpdateDTOS: res.data.records };
+        formatList.map((item) => {
+          if (row[item]) {
+            row = { ...row, [item]: moment(row[item]) };
+          }
+        });
+        this.setState({
+          records: row,
+        });
+        this.formRef.current.setFieldsValue(row);
+        setShowForm(true);
       });
     };
-    //提交审批
+    //到货验收
     const submitFlow = () => {
-      let values = this.formRef.current.getFieldValue();
+      this.formRef.current.validateFields().then(() => {
+        let values = this.formRef.current.getFieldValue();
+        formatList.forEach((item) => {
+          values = {
+            ...values,
+            [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
+          };
+        });
+        stringList.forEach((item) => {
+          values = {
+            ...values,
+            [item]: String(values[item]),
+          };
+        });
+        let updvalue = {
+          ...values,
+          submitType: 1,
+          // limsRepairitemUpdateDTOS: values.limsBasicdeviceItemDO,
+          limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
+        };
+
+        addOrUpdateBase({
+          request: upd,
+          key: storeKey,
+          query: get,
+          param: updvalue,
+        });
+      });
+    };
+    // 提交
+    const onFinish = (values) => {
       formatList.forEach((item) => {
         values = {
           ...values,
@@ -159,34 +216,13 @@ class BaseNewPageLayout extends React.Component {
       });
       let updvalue = {
         ...values,
-        limsUsereturnapplyitemDTOList: returnBackList,
-        submitType: 1,
-        remark: "归还申请",
+        totalPrice: totalPrice,
+        submitType: 0,
+        limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
 
       addOrUpdateBase({
         request: upd,
-        key: storeKey,
-        query: get,
-        param: updvalue,
-      });
-    };
-    // 保存
-    const onFinish = (values) => {
-      formatList.forEach((item) => {
-        values = {
-          ...values,
-          [item]: moment(values[item]).format("YYYY-MM-DD HH:mm:ss"),
-        };
-      });
-      let updvalue = {
-        ...values,
-        submitType: 0,
-        limsUsereturnapplyitemDTOList: returnBackList,
-        remark: "归还申请",
-      };
-      addOrUpdateBase({
-        request: values[keyId] ? upd : add,
         key: storeKey,
         query: get,
         param: updvalue,
@@ -202,69 +238,49 @@ class BaseNewPageLayout extends React.Component {
         ? handleQuery({ ...values, current: 1, size: 10 })
         : getBaseHoc({ current: 1, size: 10, ...values });
     };
-    //面包屑
-    const renderBreadcrumb = () => {
-      return (
-        <div className="view-query-breacrumd" style={{ width: "230px" }}>
-          <Breadcrumb separator=">">
-            {breadcrumb.map((item) => (
-              <Breadcrumb.Item key={item.name}>{item.name}</Breadcrumb.Item>
-            ))}
-          </Breadcrumb>
-        </div>
-      );
-    };
     return (
       <>
         {
           <div hidden={showForm}>
             <div className="view-query">
               <div className="view-query-left">
-                {renderBreadcrumb()}
+                <RenderBreadcrumb
+                  showForm={showForm}
+                  breadcrumb={this.breadcrumb}
+                  editbreadcrumb={this.editbreadcrumb}
+                />
                 <Button
-                  className="base-add-button"
+                  className="base-export-button"
                   onClick={() => {
-                    // this.formRef.current.resetFields;
-                    // showModal();
+                    downloadFile(
+                      exportRepairList(),
+                      {
+                        current: 1,
+                        size: 999,
+                      },
+                      "购置单.xlsx"
+                    );
                   }}
                 >
                   导出
                 </Button>
               </div>
               <div className={"view-query-right"}>
-                <Form
-                  onFinish={rowFinish}
-                  layout="inline"
-                  ref={this.rwoFormRef}
-                >
-                  {rowSelect.map((item) => (
-                    <Form.Item
-                      label={item.label}
-                      name={item.name}
-                      key={item.name}
-                    >
-                      <div className="base-rowSelect-flex">
-                        <Input
-                          onChange={(e) =>
-                            this.setState({
-                              rowSelectData: e.target.value,
-                            })
-                          }
-                          className="base-rowSelect"
-                        ></Input>
-                        <div className="base-rowSelect-icon">
-                          <SearchOutlined
-                            onClick={() =>
-                              rowFinish({ name: this.state.rowSelectData })
-                            }
-                          />
-                        </div>
-                      </div>
-                    </Form.Item>
-                  ))}
+                <Form layout="inline" ref={this.rwoFormRef}>
+                  <Form.Item>
+                    <SearchInput
+                      placeholder="支持模糊查找维修单号"
+                      searchClick={() =>
+                        rowFinish({
+                          code: searchInput,
+                          // code: this.state.rowSelectData,
+                        })
+                      }
+                    />
+                  </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
-                <Button
+                {/* <Button
                   className="base-add-button"
                   onClick={() => {
                     this.setState({
@@ -275,16 +291,17 @@ class BaseNewPageLayout extends React.Component {
                   }}
                 >
                   添加
-                </Button>
+                </Button> */}
               </div>
             </div>
             <DYTable
+              showDel={false}
               rowSelection={rowSelection}
               columnsProps={columnsProps}
               columns={columns}
               loading={loading}
               total={this.props[storeKey]?.total}
-              dataSource={this.props[storeKey]?.records}
+              dataSource={this.props[storeKey]?.records || []}
               current={this.props[storeKey]?.current}
               size={this.props[storeKey]?.size}
               rowkey={(row) => row[keyId]}
@@ -295,15 +312,28 @@ class BaseNewPageLayout extends React.Component {
               confirm={confirm}
               update={update}
             ></DYTable>
-            {this.props.children}
+            {/* {this.props.children} */}
           </div>
         }
         {
-          <div hidden={!showForm}>
-            <div className="view-query-left">{renderBreadcrumb()}</div>
+          <div
+            hidden={!showForm}
+            // style={{ display: showForm ? "block" : "none" }}
+          >
+            <div className="view-query-left">
+              <RenderBreadcrumb
+                showForm={showForm}
+                breadcrumb={this.breadcrumb}
+                editbreadcrumb={this.editbreadcrumb}
+              />
+              <div className="purp-apply-code">
+                购置单号：{this.state.records.applyCode}
+              </div>
+            </div>
             <div className="head-line"></div>
             <FlowForm
-              approvalRecords={this.state.approvalRecords}
+              formatList={formatList}
+              // approvalRecords={this.state.approvalRecords}
               records={this.state.records}
               defaultFileList={this.state.defaultFileList}
               submitFlow={submitFlow}
@@ -334,7 +364,11 @@ const mapStateToProps = (state) => {
     loading: state.currency.loading,
     visible: state.currency.visible,
     showForm: state.currency.showForm,
-    returnBackList: state.currency.returnBackList,
+    totalPrice: state.currency.totalPrice,
+    searchInput: state.formItems.searchInput,
+
+    imageList: state.currency.imageList,
+    fileList: state.currency.fileList,
     // dict: state.currency.dict,
   };
 };

@@ -134,7 +134,9 @@ const FlowForm = (props) => {
             name={"limsAttachmentSaveDTOS"}
             rules={[{ require: false }]}
           >
-            <AttachmentList records={records}></AttachmentList>
+            <AttachmentList
+              disabled={records?.status && records?.status != "0"}
+            ></AttachmentList>
           </Form.Item>
         </Col>
       </Row>

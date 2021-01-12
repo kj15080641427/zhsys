@@ -9,7 +9,7 @@ import {
   updLimsBasicDevice,
   delLimsBasicDevice,
 } from "../../request/index";
-import BaseLayout from "../../components/baseComponent/connectComponents";
+import BaseLayout from "./devicelayout";
 import { columnsToForm } from "../../utils/common";
 import { UploadOutlined } from "@ant-design/icons";
 
@@ -35,7 +35,7 @@ const BaseDevice = () => {
     },
     {
       title: "单位",
-      dataIndex: "unit",
+      dataIndex: "unitName",
     },
     {
       title: "型号",
@@ -92,24 +92,6 @@ const BaseDevice = () => {
       hidden: true,
     },
   ];
-  const formItems = columnsToForm([
-    ...columns,
-    {
-      title: "设备图片",
-      dataIndex: "image",
-      rules: [{ required: false }],
-      ele: (
-        <Upload
-          name="logo"
-          action="http://47.115.10.75:9011/swagger-ui.html" //上传地址
-          listType="picture-card"
-          method="get"
-        >
-          <Button icon={<UploadOutlined />}>上传</Button>
-        </Upload>
-      ),
-    },
-  ]);
   const rowSelect = [
     {
       label: "",
@@ -136,12 +118,12 @@ const BaseDevice = () => {
         upd={updLimsBasicDevice} // 更新数据接口
         del={delLimsBasicDevice} // 删除数据接口
         columns={columns} // 表格配置项
-        formItem={formItems} // 表单配置项
         rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"baseDevice"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["produceDate"]} //需要转换时间格式的表单字段
         breadcrumb={breadcrumb} //面包屑
+        formWidth={1200}
       ></BaseLayout>
     </div>
   );

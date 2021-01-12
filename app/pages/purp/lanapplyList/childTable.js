@@ -3,8 +3,8 @@ import { Table, Modal } from "antd";
 import moment from "moment";
 import {
   updLimsBasicDevice,
-  getLimsUselanapplyListPurItem,
   getLimsBasicDevicePart, //查询设备部件列表
+  getLimsUselanapplyById,
 } from "../../../request/index";
 import DeviceForm from "../../../components/formItems/deviceForm";
 import { bindActionCreators } from "redux";
@@ -16,13 +16,22 @@ const ChildTable = (props) => {
   const [dataSource, setDataSource] = useState([]);
   const [deviceInfo, setDeviceInfo] = useState({});
   const [devicePart, setDevicePart] = useState([]);
-  const { records } = props;
+  const { records, purpList } = props;
   const { setTotalPrice } = props.actions;
   const formRef = useRef();
-  useEffect(() => {
-    props.value && setDataSource(props.value);
-  }, [props.value]);
+  // useEffect(() => {
+  //   props.value && setDataSource(props.value);
+  // }, [props.value]);
 
+  useEffect(() => {
+    props.onChange(purpList);
+    setDataSource(purpList);
+  }, [purpList]);
+  useEffect(() => {
+    return () => {
+      setDataSource([]);
+    };
+  }, []);
   // 查询设备信息
   const getDeviceInfo = (row) => {
     setDeviceInfo(row);
@@ -48,15 +57,13 @@ const ChildTable = (props) => {
     //更新设备数据
     updLimsBasicDevice(data).then(() => {
       //根据购置单id查询购置清单,也就是设备
-      getLimsUselanapplyListPurItem({
-        current: 1,
-        mainId: records.id,
-        size: -1,
+      getLimsUselanapplyById({
+        id: records.id,
       }).then((result) => {
         let price = 0;
-        let list = result.data.map((item) => {
-          price = price + item.limsBasicdeviceItemDO.price;
-          return { ...item, ...item.limsBasicdeviceItemDO };
+        let list = result.data.limsPurplanapplyitemDOList.map((item) => {
+          price = price + item.price;
+          return item;
         });
         setDataSource(list); //设置购置清单列表
         setTotalPrice(price);
@@ -75,17 +82,15 @@ const ChildTable = (props) => {
     },
     {
       title: "单位",
-      dataIndex: "unit",
-      render: (_, row) => row.unitName,
+      dataIndex: "unitName",
     },
     {
       title: "规格型号",
       dataIndex: "model",
     },
     {
-      title: "品 牌",
-      dataIndex: "brand",
-      render: (_, row) => row.brandName,
+      title: "品牌",
+      dataIndex: "dictName",
     },
     {
       title: "备注",
@@ -93,8 +98,7 @@ const ChildTable = (props) => {
     },
     {
       title: "设备类别",
-      dataIndex: "categoryId",
-      render: (_, row) => row.categoryName,
+      dataIndex: "categoryName",
     },
     {
       title: "生产日期",
@@ -104,21 +108,24 @@ const ChildTable = (props) => {
       title: "操作",
       dataIndex: "",
       hidden: true,
-      render: (row) =>
-        records?.status == "1" && (
-          <a onClick={() => getDeviceInfo(row)}>完善资料</a>
-        ),
+      render: (row) => (
+        // records?.status == "1" || !records?.status ? (
+        <a onClick={() => getDeviceInfo(row)}>完善资料</a>
+      ),
+      // ) : (
+      //   ""
+      // ),
     },
   ];
 
   return (
     <div value={props.value} onChange={() => props.onChange}>
-      {console.log(dataSource, "???")}
+      {/* {console.log(dataSource, "???")} */}
       <Table
         value={dataSource}
         columns={columns}
         dataSource={dataSource}
-        rowKey={"deviceNo"}
+        rowKey={"id"}
       ></Table>
       <Modal
         visible={visible}
@@ -138,8 +145,10 @@ const ChildTable = (props) => {
     </div>
   );
 };
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = (state) => {
+  return {
+    purpList: state.formItems.purpList,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => ({

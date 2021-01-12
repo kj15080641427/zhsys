@@ -191,6 +191,7 @@ class BaseNewPageLayout extends React.Component {
         limsUsereturnapplyitemDTOList: returnBackList,
         submitType: 1,
         remark: "归还申请",
+        returnCompany: "787347120221990912", //TODO
       };
 
       addOrUpdateBase({
@@ -213,6 +214,7 @@ class BaseNewPageLayout extends React.Component {
         submitType: 0,
         limsUsereturnapplyitemDTOList: returnBackList,
         remark: "归还申请",
+        returnCompany: "787347120221990912", //TODO
       };
       addOrUpdateBase({
         request: values[keyId] ? upd : add,

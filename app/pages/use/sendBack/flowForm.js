@@ -65,6 +65,7 @@ const FlowForm = (props) => {
     {
       label: "借出单号",
       name: "lendId",
+      require: true,
       element: (
         <FormSelect
           disabled={records?.status != "0" && records?.status}
@@ -75,11 +76,10 @@ const FlowForm = (props) => {
           valueString="id"
         ></FormSelect>
       ),
-      name: "lendId",
     },
     {
       label: "借出类型",
-      element: <div>{lendInfo?.lendType}</div>,
+      element: <div>{lendInfo?.lendName}</div>,
     },
     {
       label: "借出时间",
@@ -148,6 +148,7 @@ const FlowForm = (props) => {
                 label={item.label}
                 name={item.name}
                 width={"200px"}
+                rules={[{ required: item.require }]}
                 labelCol={{ span: item.labelCol || 6 }}
               >
                 {item.element}

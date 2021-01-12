@@ -145,24 +145,6 @@ const Lendapply = () => {
     },
   ]);
 
-  const rowSelect = [
-    {
-      label: "",
-      name: "name",
-      element: <Input placeholder="" className=""></Input>,
-    },
-  ];
-  const breadcrumb = [
-    {
-      name: "首页",
-    },
-    {
-      name: "使用管理",
-    },
-    {
-      name: "借出申请",
-    },
-  ];
   return (
     <div>
       <LendLayout
@@ -172,11 +154,9 @@ const Lendapply = () => {
         del={delLimsUselendapply} // 删除数据接口
         columns={columns} // 表格配置项
         baseFormItem={formItems} // 表单配置项
-        rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"lendApply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["lendDate"]} //需要转换时间格式的表单字段
-        breadcrumb={breadcrumb} //面包屑
       ></LendLayout>
     </div>
   );

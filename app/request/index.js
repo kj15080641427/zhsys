@@ -302,14 +302,19 @@ export function getLanapplyPurByList(data) {
   return fetchJSONData("POST", "/api/base/LimsPur/query", data);
 }
 
-//查询购置申请清单管理
+//查询购置管理
 export function getLimsUselanapplyListPur(data) {
   return fetchJSONData("POST", "/api/base/LimsPur/page", data);
 }
-//修改购置申请清单管理
+//修改购置管理
 export function updLimsUselanapplyListPur(data) {
   return fetchJSONData("POST", "/api/base/LimsPur/update", data);
 }
+//添加购置管理
+export function addLimsUselanapplyListPur(data) {
+  return fetchJSONData("POST", "/api/base/LimsPur/save", data);
+}
+
 
 //查询购置申请清单 购置清单列表
 export function getLimsUselanapplyListPurItem(data) {
@@ -386,3 +391,55 @@ export function delComplexfound(data) {
 export function getFlow(data) {
   return fetchJSONData("POST", "/api/base/LimsActivitimodel/page", data);
 }
+/**维修单管理 */
+//查询维修管理
+export function getRepairList(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepair/page", data);
+}
+//修改维修管理
+export function updRepairList(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepair/update", data);
+}
+//导出维修管理
+export function exportRepairList() {
+  return "/api/base/LimsRepair/export";
+}
+//查询维修清单
+export function getRepairItem(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairitem/page", data);
+}
+
+/**养护申请 */
+//查询养护申请
+export function getMaintian(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairmaintainapply/page", data);
+}
+//添加养护申请
+export function addMaintian(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairmaintainapply/save", data);
+}
+//更新养护申请
+export function updMaintian(data) {
+  return fetchJSONData(
+    "POST",
+    "/api/base/LimsRepairmaintainapply/update",
+    data
+  );
+}
+//删除养护申请
+export function delMaintian(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairmaintainapply/del", data);
+}
+//根据id查询养护详情
+export function getMaintianById(data) {
+  return fetchJSONData(
+    "POST",
+    "/api/base/LimsRepairmaintainapply/queryById",
+    data
+  );
+}
+//导出养护详情
+export function exportMaintian(data) {
+  return "/api/base/LimsRepairmaintainapply/export";
+}
+/**养护管理 */

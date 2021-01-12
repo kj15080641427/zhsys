@@ -6,15 +6,12 @@ import base from "../../resource/基础管理.png";
 import purp from "../../resource/购置管理.png";
 import device from "../../resource/设备处置.png";
 import repair from "../../resource/设备维护.png";
-import use from "../../resource/使用管理.png";
 import home from "../../resource/首页.png";
 import chart from "../../resource/统计分析.png";
 import system from "../../resource/系统设置.png";
 import user from "../../resource/用户管理.png";
 import all from "../../resource/综合管理.png";
 import hcgl from "../../resource/耗材管理.png";
-import edit from "../../resource/edit.svg";
-import Test from "../../svg/svg";
 import { EditOutlined } from "@ant-design/icons";
 const { SubMenu } = Menu;
 
@@ -93,7 +90,8 @@ const Menus = (props) => {
           <SubMenu key="4" icon={<img src={repair}></img>} title="设备维护">
             <Menu.Item key="/ReparirApply">维修申请</Menu.Item>
             <Menu.Item key="/Repair">设备维修</Menu.Item>
-            <Menu.Item key="/System2">保养申请单</Menu.Item>
+            <Menu.Item key="/Maintian">养护申请</Menu.Item>
+            <Menu.Item key="/MaintianItem">养护管理</Menu.Item>
           </SubMenu>
           <SubMenu key="5" icon={<img src={device}></img>} title="设备处理">
             <Menu.Item key="/stationBasic">设备折旧</Menu.Item>

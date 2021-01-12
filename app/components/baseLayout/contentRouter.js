@@ -20,6 +20,7 @@ import LendapplyList from "../../pages/purp/lanapplyList/lanapplyList";
 import Complexfund from "../../pages/base/complexfund";
 import ReparirApply from "../../pages/repair/apply/index";
 import Repair from "../../pages/repair/repair/index";
+import Maintian from "../../pages/repair/maintian";
 
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
@@ -48,7 +49,7 @@ class ContentRouter extends React.PureComponent {
         <Route path={"/SendBack"} component={SendBack} />
         <Route path={"/ReparirApply"} component={ReparirApply} />
         <Route path={"/Repair"} component={Repair} />
-        {/* <Route path={ "/Supplier"} component={Supplier} /> */}
+        <Route path={ "/Maintian"} component={Maintian} />
         {/* <Route path={ "/BaseDict"} component={BaseDict} /> */}
         <Route path={"/Complexfund"} component={Complexfund} />
 

@@ -47,7 +47,7 @@ export const columnsToForm = (columns) => {
       label: item.title,
       name: item.formDataIndex || item.dataIndex,
       rules: item.rules || [{ required: true }],
-      ele: item.ele || <Input></Input>,
+      ele: item.ele || <Input style={{ width: "100%" }}></Input>,
       width: item.formWidth,
       col: item.col,
       labelCol: item.labelCol,

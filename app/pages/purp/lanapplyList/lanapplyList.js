@@ -1,4 +1,3 @@
-//购置申请清单
 import React from "react";
 import { Input, DatePicker } from "antd";
 import { connect } from "react-redux";
@@ -8,6 +7,7 @@ import {
   delLimsUselanapplyList,
   getLimsUselanapplyListPur,
   updLimsUselanapplyListPur,
+  addLimsUselanapplyListPur,
   getUser, //查询用户
   getLimsSupplier, //查询供应商
   getLimsBasicDict,
@@ -17,6 +17,7 @@ import BaseNewPageLayout from "./lanapplyListComponent";
 import { columnsToForm } from "../../../utils/common";
 
 const obj = {
+  0: "暂存",
   1: "待购置",
   2: "已购置",
 };
@@ -142,6 +143,7 @@ const LendapplyList = (props) => {
         get={getLimsUselanapplyListPur} // 分页查询接口
         upd={updLimsUselanapplyListPur} // 更新数据接口
         del={delLimsUselanapplyList} // 删除数据接口
+        add={addLimsUselanapplyListPur}
         columns={columns} // 表格配置项
         baseFormItem={baseFormItems} // 表单配置项
         // listFormItem={listFormItems}

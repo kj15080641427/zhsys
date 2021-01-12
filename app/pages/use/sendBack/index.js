@@ -96,13 +96,6 @@ const LendapplyList = (props) => {
     },
   ]);
 
-  const rowSelect = [
-    {
-      label: "",
-      name: "name",
-      element: <Input placeholder="单位名称" className=""></Input>,
-    },
-  ];
   return (
     <div>
       <BaseNewPageLayout
@@ -112,7 +105,6 @@ const LendapplyList = (props) => {
         del={delLimsUseReturn} // 删除数据接口
         columns={columns} // 表格配置项
         baseFormItem={baseFormItems} // 表单配置项
-        rowSelect={rowSelect} // 查询配置项
         keyId={"id"} // 数据的唯一ID
         storeKey={"purpLanapply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["applyDate", "returnDate"]} //需要转换时间格式的表单字段

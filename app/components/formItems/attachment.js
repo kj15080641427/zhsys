@@ -13,7 +13,7 @@ const AttachmentList = (props) => {
     attachmentList,
     fileLabel = "上传资料",
     imageLabel = "上传凭证",
-    disabled
+    disabled,
   } = props;
   const { steUselendFile, steUselendImage } = props.actions;
 
@@ -21,11 +21,13 @@ const AttachmentList = (props) => {
     let { file, image } = filterFileList(attachmentList);
     steUselendFile(file);
     steUselendImage(image);
+  }, [attachmentList]);
+  useEffect(() => {
     return () => {
       steUselendFile([]);
       steUselendImage([]);
     };
-  }, [attachmentList]);
+  }, []);
 
   return (
     <div className="purplist-upload-box">

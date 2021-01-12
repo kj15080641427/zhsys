@@ -4,6 +4,7 @@ import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
+import * as formActions from "../../../redux/actions/aFormItems";
 import "./style.scss";
 import { connect } from "react-redux";
 import moment from "moment";
@@ -40,7 +41,7 @@ class BaseNewPageLayout extends React.Component {
       disabled: false, //表单防重复点击
       records: {},
 
-      approvalRecords: {}, //购置申请信息
+      // approvalRecords: {}, //购置申请信息
       defaultFileList: [], //已上传文件列表
     };
     this.editbreadcrumb = [
@@ -77,6 +78,7 @@ class BaseNewPageLayout extends React.Component {
     const {
       get,
       upd,
+      add,
       del,
       keyId,
       storeKey,
@@ -106,6 +108,7 @@ class BaseNewPageLayout extends React.Component {
       // getPurListInfo, //购置清单详情
       getAttachmentById, //根据id获取附件
     } = this.props.actions;
+    const { setPurpList } = this.props.formActions;
     const { loading } = this.props;
     const getBaseHoc = (
       param = {
@@ -163,15 +166,14 @@ class BaseNewPageLayout extends React.Component {
         let list = res.data.limsPuritemDOList.map((item) => {
           return { ...item, ...item.limsBasicdeviceItemDO };
         });
-        row = { ...row, limsBasicdeviceItemDO: list };
-
+        setPurpList(list);
         formatList.map((item) => {
           if (row[item]) {
             row = { ...row, [item]: moment(row[item]) };
           }
         });
         this.setState({
-          approvalRecords: res.data.limsPurplanapply,
+          // approvalRecords: res.data.limsPurplanapply,
           records: row,
         });
         this.formRef.current.setFieldsValue(row);
@@ -194,10 +196,20 @@ class BaseNewPageLayout extends React.Component {
             [item]: String(values[item]),
           };
         });
+        let list = values.limsPurplanapplyitemDOList.map((item) => {
+          return this.state.records.id
+            ? {
+                deviceId: item.id,
+              }
+            : {
+                deviceId: item.id,
+                id: this.state.records.id,
+              };
+        });
         let updvalue = {
           ...values,
           submitType: 1,
-          limsPuritemUpdateDTOList: values.limsBasicdeviceItemDO,
+          limsPuritemUpdateDTOList: list,
           limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
         };
 
@@ -223,16 +235,26 @@ class BaseNewPageLayout extends React.Component {
           [item]: String(values[item]),
         };
       });
+      let list = values.limsPurplanapplyitemDOList.map((item) => {
+        return this.state.records.id
+          ? {
+              deviceId: item.id,
+            }
+          : {
+              deviceId: item.id,
+              id: this.state.records.id,
+            };
+      });
       let updvalue = {
         ...values,
         totalPrice: totalPrice,
         submitType: 0,
-        limsPuritemUpdateDTOList: values.limsBasicdeviceItemDO,
+        limsPuritemUpdateDTOList: list,
         limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
 
       addOrUpdateBase({
-        request: upd,
+        request: values[keyId] ? upd : add,
         key: storeKey,
         query: get,
         param: updvalue,
@@ -290,18 +312,19 @@ class BaseNewPageLayout extends React.Component {
                   </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
-                {/* <Button
+                <Button
                   className="base-add-button"
                   onClick={() => {
                     this.setState({
                       records: {},
+                      // approvalRecords: {},
                     });
                     setShowForm(true);
                     this.formRef.current.resetFields();
                   }}
                 >
                   添加
-                </Button> */}
+                </Button>
               </div>
             </div>
             <DYTable
@@ -333,14 +356,11 @@ class BaseNewPageLayout extends React.Component {
                 breadcrumb={breadcrumb}
                 editbreadcrumb={this.editbreadcrumb}
               />
-              <div className="purp-apply-code">
-                购置单号：{this.state.records.applyCode}
-              </div>
             </div>
             <div className="head-line"></div>
             <FlowForm
               formatList={formatList}
-              approvalRecords={this.state.approvalRecords}
+              // approvalRecords={this.state.approvalRecords}
               records={this.state.records}
               defaultFileList={this.state.defaultFileList}
               submitFlow={submitFlow}
@@ -382,6 +402,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
+  formActions: bindActionCreators(formActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BaseNewPageLayout);
