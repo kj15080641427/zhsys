@@ -21,6 +21,7 @@ export default (props) => {
     columns = [], //表格配置
     showEdit = true, //是否可以编辑
     showDel = true,
+    enit = false,
   } = props;
   const columnsBase = [
     {
@@ -31,7 +32,17 @@ export default (props) => {
       fixed: "right",
       render: (_, row) => (
         <div style={{ display: "flex", alignItems: "center" }}>
-          {row?.status == "0" ? (
+          {enit ? (
+            <Popover content={"修改"}>
+              <img
+                style={{ cursor: "pointer" }}
+                width="20px"
+                height="20px"
+                src={editImg}
+                onClick={() => update(row)}
+              ></img>
+            </Popover>
+          ) : row?.status == "0" ? (
             <Popover content={"修改"}>
               <img
                 style={{ cursor: "pointer" }}

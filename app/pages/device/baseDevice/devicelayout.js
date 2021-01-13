@@ -3,14 +3,14 @@ import { Button, Modal, Form, Input, Breadcrumb, Drawer } from "antd";
 import DYTable from "@app/components/home/table";
 import DYForm from "@app/components/home/form";
 import { bindActionCreators } from "redux";
-import * as actions from "../../redux/actions/aCurrency";
-import "../../components/baseLayout/style.scss";
+import * as actions from "../../../redux/actions/aCurrency";
+import "../../../components/baseLayout/style.scss";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { SearchOutlined } from "@ant-design/icons";
-import DeviceForm from "../../components/formItems/deviceForm";
-import { getLimsBasicDevicePart } from "../../request/index";
+import DeviceForm from "./deviceForm";
+import { getLimsBasicDevicePart } from "../../../request/index";
 
 let storeLabel = "base";
 class BaseLayout extends React.Component {
@@ -45,7 +45,6 @@ class BaseLayout extends React.Component {
       del,
       keyId,
       storeKey,
-      formItem,
       columns,
       rowSelect = [],
       columnsProps = [],
@@ -57,8 +56,6 @@ class BaseLayout extends React.Component {
       breadcrumb = [],
       formWidth = 450,
       formTitle = "",
-      showChild, //是否加载子表
-      buttonText, //提交按钮文字
     } = this.props;
     storeLabel = storeKey;
     const {
@@ -67,6 +64,7 @@ class BaseLayout extends React.Component {
       addOrUpdateBase,
       showModal,
       hideModal,
+      getAttachmentById,
     } = this.props.actions;
     const { loading, visible } = this.props;
     const getBaseHoc = (
@@ -113,6 +111,13 @@ class BaseLayout extends React.Component {
     };
     // 查询设备部件
     const getDeviceInfo = (row) => {
+      //获取附件
+      getAttachmentById({
+        businessId: row?.id,
+        businessType: "1",
+        current: 1,
+        size: -1,
+      });
       //查询设备部件
       getLimsBasicDevicePart({
         current: 1,
@@ -363,6 +368,7 @@ const mapStateToProps = (state) => {
     [storeLabel]: state.currency[storeLabel],
     loading: state.currency.loading,
     visible: state.currency.visible,
+    imageList: state.currency.imageList,
     // dict: state.currency.dict,
   };
 };

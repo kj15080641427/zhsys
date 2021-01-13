@@ -5,7 +5,7 @@ import {
   addAttachment,
   getLimsSupplier,
   // getLimsUselanapplyById,
-  getLimsUselanapply,
+  getMaintian,
 } from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
@@ -35,7 +35,7 @@ const FlowForm = (props) => {
     supplier, //供应商
     // dictpurp,
     purpList,
-    modelPurp,
+    modelMaintian,
     modelRecords,
   } = props;
   const { setTotalPrice, getBase } = props.actions;
@@ -63,28 +63,6 @@ const FlowForm = (props) => {
       });
   }, []);
 
-  // const changeCode = (id) => {
-  //   let a = dictpurp?.records.filter((item) => item.id == id)[0];
-  //   setPurpInfo(a);
-  // };
-  // useEffect(() => {
-  //   changeCode(props?.records?.applyId);
-  // }, [props?.records]);
-
-  // useEffect(() => {
-  //   modelRecords &&
-  //     getBase({
-  //       request: getLimsUselanapplyById,
-  //       key: "purpDetail",
-  //       param: {
-  //         id: modelRecords.id,
-  //       },
-  //     });
-  // }, [modelRecords]);
-
-  // useEffect(() => {
-  //   setPurpInfo(records);
-  // }, [records]);
 
   const info = [
     {
@@ -93,7 +71,7 @@ const FlowForm = (props) => {
       require: true,
       element: (
         <ModalSelect
-          buttonText="选择购置申请"
+          buttonText="选择养护申请"
           columns={[
             {
               title: "申请单号",
@@ -127,11 +105,11 @@ const FlowForm = (props) => {
               render: (e) => (e ? "已购置" : "待购置"),
             },
           ]}
-          req={getLimsUselanapply}
-          storeKey="modelPurp"
-          dataSource={modelPurp?.records}
-          list={modelPurp?.records?.filter((item) => !!item.purId)}
-          dislist={modelPurp?.records?.filter((item) => !item.purId)}
+          req={getMaintian}
+          storeKey="modelMaintian"
+          dataSource={modelMaintian?.records}
+          list={modelMaintian?.records?.filter((item) => !!item.purId)}
+          dislist={modelMaintian?.records?.filter((item) => !item.purId)}
           // disabledList={modelPurp?.records.filter((item) => !!item.purId)}
           code="code"
           param={{ size: -1, current: 1, status: "4" }}
@@ -147,29 +125,25 @@ const FlowForm = (props) => {
         // ></FormSelect>
       ),
     },
-    // {
-    //   label: "申请单号",
-    //   element: <div>{modelRecords?.applyCode}</div>,
-    // },
+    {
+      label: "养护类型",
+      element: <div>{modelRecords?.applyCode}</div>,
+    },
     {
       label: "申请人",
       element: <div>{modelRecords?.userRealName}</div>,
     },
+    // {
+    //   label: "申请单位",
+    //   element: <div>{modelRecords?.compayName}</div>,
+    // },
     {
-      label: "申请单位",
-      element: <div>{modelRecords?.compayName}</div>,
-    },
-    {
-      label: "申请标题",
+      label: "申请时间",
       element: <div> {modelRecords?.title}</div>,
     },
     {
-      label: "申请时间",
+      label: "描述",
       element: <div> {modelRecords?.applyDate}</div>,
-    },
-    {
-      label: "购货时间",
-      element: <div> {modelRecords?.expectedDate}</div>,
     },
   ];
   // const setDevice = (e) => {
@@ -346,7 +320,7 @@ const mapStateToProps = (state) => {
     supplier: state.currency.supplier,
     dictpurp: state.currency.dictpurp,
     purpList: state.formItems.purpList,
-    modelPurp: state.formItems.modelPurp,
+    modelMaintian: state.formItems.modelMaintian,
     modelRecords: state.formItems.modelRecords,
   };
 };

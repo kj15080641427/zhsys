@@ -17,7 +17,7 @@ const ChildTable = (props) => {
   const [deviceInfo, setDeviceInfo] = useState({});
   const [devicePart, setDevicePart] = useState([]);
   const { records, purpList } = props;
-  const { setTotalPrice } = props.actions;
+  const { setTotalPrice, getAttachmentById } = props.actions;
   const formRef = useRef();
   // useEffect(() => {
   //   props.value && setDataSource(props.value);
@@ -110,8 +110,14 @@ const ChildTable = (props) => {
       dataIndex: "",
       hidden: true,
       render: (row) => (
-        // records?.status == "1" || !records?.status ? (
-        <a onClick={() => getDeviceInfo(row)}>完善资料</a>
+        // records?.status == "1" || records?.status == "0" || !records?.status ? (
+        <a
+          onClick={() => {
+            getDeviceInfo(row);
+          }}
+        >
+          完善资料
+        </a>
       ),
       // ) : (
       //   ""

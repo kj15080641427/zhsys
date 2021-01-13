@@ -2,16 +2,14 @@ import React from "react";
 import { Input, Radio, DatePicker, Upload, Button } from "antd";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as actions from "../../redux/actions/aCurrency";
+import * as actions from "../../../redux/actions/aCurrency";
 import {
   getLimsBasicDevice,
   addLimsBasicDevice,
   updLimsBasicDevice,
   delLimsBasicDevice,
-} from "../../request/index";
+} from "../../../request/index";
 import BaseLayout from "./devicelayout";
-import { columnsToForm } from "../../utils/common";
-import { UploadOutlined } from "@ant-design/icons";
 
 const state = {
   0: "默认",

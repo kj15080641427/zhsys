@@ -1,13 +1,12 @@
 import React from "react";
 import { Form, Input, Row, Col, DatePicker, Button, Upload } from "antd";
 // import DYForm from "./../home/form";
-import FormSelect from "./select";
-import { getLimsBasiccategory, getLimsBasicDict } from "../../request/index";
-import { columnsToFormFlow } from "../../utils/common";
-import DevicePart from "./devicePart";
-import AttachmentList from "../../components/formItems/attachment";
-import { formatAttachment } from "../../utils/common";
-import "./index.scss";
+import FormSelect from "../../../components/formItems/select";
+import { getLimsBasiccategory, getLimsBasicDict } from "../../../request/index";
+import { columnsToFormFlow, formatAttachment } from "../../../utils/common";
+// import DevicePart from "./devicePart";
+import AttachmentList from "../../../components/formItems/attachment";
+// import "./index.scss";
 
 export default (props) => {
   const { onFinish, formRef, id = "id", deviceInfo, devicePart } = props;
@@ -160,16 +159,17 @@ export default (props) => {
             showFile={false}
           ></AttachmentList>
         </Form.Item>
-        <div className="form-info">
+        {/* <div className="form-info">
           <div className="form-info">
             <div className="line"></div>
             部件明细
           </div>
         </div>
-        <DevicePart
-          deviceInfo={deviceInfo}
-          devicePart={devicePart}
-        ></DevicePart>
+        <Form.Item
+          name={"limsBasicdevicepartsSaveDTOS"}
+          label="设备部件"
+          labelCol={{ span: 2 }}
+        ></Form.Item> */}
 
         <Form.Item name={id}></Form.Item>
 

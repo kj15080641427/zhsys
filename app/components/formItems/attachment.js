@@ -14,6 +14,7 @@ const AttachmentList = (props) => {
     fileLabel = "上传资料",
     imageLabel = "上传凭证",
     disabled,
+    showFile = true,
   } = props;
   const { steUselendFile, steUselendImage } = props.actions;
 
@@ -31,27 +32,29 @@ const AttachmentList = (props) => {
 
   return (
     <div className="purplist-upload-box">
-      <div className="purplist-upload-left">
-        <Upload
-          accept=".word,.xlsx,.docx,.pdf,.doc"
-          action="http://47.115.10.75:9011/api/file/all/upload"
-          multiple
-          fileList={fileList}
-          onRemove={(file) => {
-            steUselendFile(fileList.filter((v) => v.url !== file.url));
-          }}
-          onChange={(fileInfo) => {
-            steUselendFile(fileInfo.fileList);
-          }}
-        >
-          {!disabled && (
-            <div className="purplist-flex">
-              <Button>{fileLabel}</Button>
-              <div>.word .xlsx .docx .pdf .doc</div>
-            </div>
-          )}
-        </Upload>
-      </div>
+      {showFile && (
+        <div className="purplist-upload-left">
+          <Upload
+            accept=".word,.xlsx,.docx,.pdf,.doc"
+            action="http://47.115.10.75:9011/api/file/all/upload"
+            multiple
+            fileList={fileList}
+            onRemove={(file) => {
+              steUselendFile(fileList.filter((v) => v.url !== file.url));
+            }}
+            onChange={(fileInfo) => {
+              steUselendFile(fileInfo.fileList);
+            }}
+          >
+            {!disabled && (
+              <div className="purplist-flex">
+                <Button>{fileLabel}</Button>
+                <div>.word .xlsx .docx .pdf .doc</div>
+              </div>
+            )}
+          </Upload>
+        </div>
+      )}
       <div>
         <Upload
           accept=".jpg,.png"

@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Login from "../../pages/Login";
 import Home from "../../pages/Home";
-import DataMonitoring from "../../pages/dataMonitoring";
 import Company from "../../pages/user/company";
 import Department from "../../pages/user/department";
 import User from "../../pages/user/user";
@@ -10,7 +9,7 @@ import Role from "../../pages/user/role";
 import Jurisdiction from "../../pages/user/jurisdiction";
 import Nothing from "../../pages/404";
 import DeviceType from "../../pages/device/deviceType";
-import BaseDevice from "../../pages/device/baseDevice";
+import BaseDevice from "../../pages/device/baseDevice/baseDevice";
 import Supplier from "../../pages/device/supplier";
 import BaseDict from "../../pages/device/baseDict";
 import Lendapply from "./../../pages/use/lend/index";
@@ -33,7 +32,6 @@ class ContentRouter extends React.PureComponent {
       <Switch>
         <Route exact path={path} component={Home} />
         <Route path={"/#/"} component={Login} />
-        <Route path={"/DataMonitoring"} component={DataMonitoring} />
         <Route path={"/Company"} component={Company} />
         <Route path={"/Department"} component={Department} />
         <Route path={"/User"} component={User} />
