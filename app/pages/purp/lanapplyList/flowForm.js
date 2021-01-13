@@ -43,11 +43,11 @@ const FlowForm = (props) => {
   // const [purpInfo, setPurpInfo] = useState(null);
 
   useEffect(() => {
+    //计算金额
     let price = 0;
     purpList.map((item) => {
       price = price + item.price;
     });
-    console.log(props);
     setTotalPrice(price);
   }, [purpList]);
 

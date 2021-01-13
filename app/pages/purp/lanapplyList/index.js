@@ -13,7 +13,7 @@ import {
   getLimsBasicDict,
 } from "../../../request/index";
 import FormSelect from "../../../components/formItems/select";
-import BaseNewPageLayout from "./lanapplyListComponent";
+import BaseNewPageLayout from "./baseLayout";
 import { columnsToForm } from "../../../utils/common";
 
 const obj = {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form } from "antd";
+import { Button } from "antd";
 import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
@@ -13,22 +13,9 @@ import {
   exportLimsUselanapplyListPurItem,
 } from "../../../request/index";
 import SearchInput from "../../../components/formItems/searchInput";
-import { downloadFile } from "../lanApply/downFile";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import { formatAttachment } from "../../../utils/format";
-
-const breadcrumb = [
-  {
-    name: "首页",
-  },
-  {
-    name: "购置管理",
-  },
-  {
-    name: "购置单管理",
-    color: "#40A0EA",
-  },
-];
+import DownLoad from "../../../components/formItems/downLoad";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -37,13 +24,20 @@ class BaseNewPageLayout extends React.Component {
     this.formRef = React.createRef();
     this.rwoFormRef = React.createRef();
     this.state = {
-      filterName: {},
-      disabled: false, //表单防重复点击
       records: {},
-
-      // approvalRecords: {}, //购置申请信息
-      defaultFileList: [], //已上传文件列表
     };
+    this.breadcrumb = [
+      {
+        name: "首页",
+      },
+      {
+        name: "购置管理",
+      },
+      {
+        name: "购置单管理",
+        color: "#40A0EA",
+      },
+    ];
     this.editbreadcrumb = [
       {
         name: "首页",
@@ -65,9 +59,11 @@ class BaseNewPageLayout extends React.Component {
   }
 
   componentWillUnmount() {
+    //关闭表单
     this.props.actions.setShowForm(false);
   }
   componentDidMount() {
+    //获取数据
     this.props.actions.getBase({
       request: this.props.get,
       key: this.props.storeKey,
@@ -87,7 +83,6 @@ class BaseNewPageLayout extends React.Component {
       columns,
       columnsProps = [],
       rowSelection,
-      handleQuery,
       formatList = [],
       stringList = [],
       showChild, //是否加载子表
@@ -127,7 +122,7 @@ class BaseNewPageLayout extends React.Component {
       getBaseHoc({
         current: current,
         size: 10,
-        ...this.state.filterName,
+        code: searchInput,
       });
     };
     //
@@ -135,7 +130,7 @@ class BaseNewPageLayout extends React.Component {
       getBaseHoc({
         current: current,
         size: pageSize,
-        ...this.state.filterName,
+        code: searchInput,
       });
     };
     // 删除
@@ -261,15 +256,6 @@ class BaseNewPageLayout extends React.Component {
       });
     };
 
-    // 查询
-    const rowFinish = (values) => {
-      this.setState({
-        filterName: values,
-      });
-      handleQuery
-        ? handleQuery({ ...values, current: 1, size: 10 })
-        : getBaseHoc({ current: 1, size: 10, ...values });
-    };
     return (
       <>
         {
@@ -278,27 +264,22 @@ class BaseNewPageLayout extends React.Component {
               <div className="view-query-left">
                 <RenderBreadcrumb
                   showForm={showForm}
-                  breadcrumb={breadcrumb}
+                  breadcrumb={this.breadcrumb}
                   editbreadcrumb={this.editbreadcrumb}
                 />
-                <Button
-                  className="base-export-button"
-                  onClick={() => {
-                    downloadFile(
-                      exportLimsUselanapplyListPurItem(),
-                      {
-                        current: 1,
-                        size: 999,
-                      },
-                      "购置单.xlsx"
-                    );
-                  }}
-                >
-                  导出
-                </Button>
+                <DownLoad
+                  req={exportLimsUselanapplyListPurItem}
+                  fileName="购置单"
+                ></DownLoad>
               </div>
               <div className={"view-query-right"}>
-                <Form layout="inline" ref={this.rwoFormRef}>
+                <SearchInput
+                  placeholder="支持模糊查找申请单号"
+                  searchClick={() =>
+                    getBaseHoc({ current: 1, size: 10, code: searchInput })
+                  }
+                />
+                {/* <Form layout="inline" ref={this.rwoFormRef}>
                   <Form.Item>
                     <SearchInput
                       placeholder="支持模糊查找申请单号"
@@ -310,7 +291,7 @@ class BaseNewPageLayout extends React.Component {
                       }
                     />
                   </Form.Item>
-                </Form>
+                </Form> */}
                 <Button className="base-add-button">高级</Button>
                 <Button
                   className="base-add-button"
@@ -353,7 +334,7 @@ class BaseNewPageLayout extends React.Component {
             <div className="view-query-left">
               <RenderBreadcrumb
                 showForm={showForm}
-                breadcrumb={breadcrumb}
+                breadcrumb={this.breadcrumb}
                 editbreadcrumb={this.editbreadcrumb}
               />
               {this.state.records.code && (
@@ -365,9 +346,7 @@ class BaseNewPageLayout extends React.Component {
             <div className="head-line"></div>
             <FlowForm
               formatList={formatList}
-              // approvalRecords={this.state.approvalRecords}
               records={this.state.records}
-              defaultFileList={this.state.defaultFileList}
               submitFlow={submitFlow}
               buttonText={buttonText}
               showChild={showChild}

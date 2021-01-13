@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, Row, Col, Input } from "antd";
+import React, { useEffect } from "react";
+import { Button, Form, Row, Col, message } from "antd";
 import ChildTable from "./childTable";
 import {
   addAttachment,
-  getRepairList, //查询维修管理
+  getLimsSupplier,
+  // getLimsUselanapplyById,
+  getLimsUselanapply,
 } from "../../../request/index";
 import "./style.scss";
 import { bindActionCreators } from "redux";
@@ -11,13 +13,14 @@ import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 import AttachmentList from "../../../components/formItems/attachment";
 import moment from "moment";
-import FormSelect from "../../../components/formItems/select";
-import { columnsToFormFlow } from "../../../utils/common";
+// import FormSelect from "../../../components/formItems/select";
+import ModalSelect from "../../../components/formItems/modalSelect";
 
 //工作流表单
 const FlowForm = (props) => {
   const {
     onFinish, //提交按钮回调
+    baseFormItem = [], //基础信息
     name, //表单dataindex
     formRef, //ref
     id, //数据唯一id
@@ -26,82 +29,152 @@ const FlowForm = (props) => {
     records, //表单数据
     formatList,
     // defaultFileList, //已上传文件列表
+    totalPrice, //总金额
     imageList,
     fileList,
     supplier, //供应商
-    dictuseLend, //维修信息
+    // dictpurp,
+    purpList,
+    modelPurp,
+    modelRecords,
   } = props;
+  const { setTotalPrice, getBase } = props.actions;
 
-  const [repairInfo, setRepairInfo] = useState({});
-
-  const changeCode = (id) => {
-    let a = dictuseLend?.records.filter((item) => item.id == id)[0];
-    setRepairInfo(a);
-    console.log(repairInfo);
-  };
+  // const [purpInfo, setPurpInfo] = useState(null);
 
   useEffect(() => {
-    changeCode(props?.records?.lendId);
-  }, [props?.records]);
+    //计算金额
+    let price = 0;
+    purpList.map((item) => {
+      price = price + item.price;
+    });
+    setTotalPrice(price);
+  }, [purpList]);
 
-  const baseFormItem = columnsToFormFlow([
-    {
-      title: "申请单号",
-      dataIndex: "applyCode",
-      ele: (
-        <FormSelect
-          disabled={records?.status != "0" && records?.status}
-          onChange={changeCode}
-          request={getRepairList}
-          storeKey="useLend"
-          labelString="code"
-          valueString="id"
-        ></FormSelect>
-      ),
-      require: true,
-    },
-    {
-      title: "维修技师",
-      dataIndex: "repairUserName",
-      require: true,
-    },
-    {
-      title: "电话",
-      dataIndex: "repairUserPhone",
-      require: true,
-    },
-    {
-      title: "申请内容",
-      dataIndex: "",
-      ele: (
-        <div>
-          {`姓名:${records.userRealName}, 申请时间:${moment(
-            records?.applyDate
-          ).format("YYYY-MM-DD")}, 描述:${records?.applyRemark}`}
-          {records && (
-            <a
-            // onClick={() => {
-            //   setShowDetail(true);
-            // }}
-            >
-              查看申请资料
-            </a>
-          )}
-        </div>
-      ),
-      col: 16,
-      labelCol: 2,
-    },
-    {
-      title: "维修内容",
-      dataIndex: "remark",
-      ele: <Input style={{ width: "100%" }} />,
-      col: 16,
-      labelCol: 2,
-      require: true,
-    },
-  ]);
+  useEffect(() => {
+    records?.status != "1" &&
+      getBase({
+        request: getLimsSupplier,
+        key: "supplier",
+        param: {
+          size: -1,
+          current: 1,
+        },
+      });
+  }, []);
 
+  // const changeCode = (id) => {
+  //   let a = dictpurp?.records.filter((item) => item.id == id)[0];
+  //   setPurpInfo(a);
+  // };
+  // useEffect(() => {
+  //   changeCode(props?.records?.applyId);
+  // }, [props?.records]);
+
+  // useEffect(() => {
+  //   modelRecords &&
+  //     getBase({
+  //       request: getLimsUselanapplyById,
+  //       key: "purpDetail",
+  //       param: {
+  //         id: modelRecords.id,
+  //       },
+  //     });
+  // }, [modelRecords]);
+
+  // useEffect(() => {
+  //   setPurpInfo(records);
+  // }, [records]);
+
+  const info = [
+    {
+      label: "申请单号",
+      name: "applyId",
+      require: true,
+      element: (
+        <ModalSelect
+          buttonText="选择购置申请"
+          columns={[
+            {
+              title: "申请单号",
+              dataIndex: "code",
+            },
+            {
+              title: "申请时间",
+              dataIndex: "applyDate",
+              render: (e) => e && e.slice(0, -9),
+            },
+            {
+              title: "申请人",
+              dataIndex: "userRealName",
+            },
+            {
+              title: "申请单位",
+              dataIndex: "compayName",
+            },
+            {
+              title: "申请标题",
+              dataIndex: "title",
+              width: "250px",
+            },
+            {
+              title: "申购类型",
+              dataIndex: "dictName",
+            },
+            {
+              title: "购置情况",
+              dataIndex: "purId",
+              render: (e) => (e ? "已购置" : "待购置"),
+            },
+          ]}
+          req={getLimsUselanapply}
+          storeKey="modelPurp"
+          dataSource={modelPurp?.records}
+          list={modelPurp?.records?.filter((item) => !!item.purId)}
+          dislist={modelPurp?.records?.filter((item) => !item.purId)}
+          // disabledList={modelPurp?.records.filter((item) => !!item.purId)}
+          code="code"
+          param={{ size: -1, current: 1, status: "4" }}
+        ></ModalSelect>
+        // <Button onClick={() => setVisible(true)}>选择购置申请</Button>
+        // <FormSelect
+        //   // disabled={records?.status != "0" && records?.status}
+        //   onChange={changeCode}
+        //   request={getLimsUselanapply}
+        //   storeKey="purp"
+        //   labelString="code"
+        //   valueString="id"
+        // ></FormSelect>
+      ),
+    },
+    // {
+    //   label: "申请单号",
+    //   element: <div>{modelRecords?.applyCode}</div>,
+    // },
+    {
+      label: "申请人",
+      element: <div>{modelRecords?.userRealName}</div>,
+    },
+    {
+      label: "申请单位",
+      element: <div>{modelRecords?.compayName}</div>,
+    },
+    {
+      label: "申请标题",
+      element: <div> {modelRecords?.title}</div>,
+    },
+    {
+      label: "申请时间",
+      element: <div> {modelRecords?.applyDate}</div>,
+    },
+    {
+      label: "购货时间",
+      element: <div> {modelRecords?.expectedDate}</div>,
+    },
+  ];
+  // const setDevice = (e) => {
+  //   setTotalPrice(e);
+  // };
   const renderItem = (item) => {
     if (item.name == "supplierId") {
       let supp = supplier?.records?.filter((i) => {
@@ -117,35 +190,23 @@ const FlowForm = (props) => {
       return records[item.labelName || item.name];
     }
   };
-
   return (
-    <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
-      <div className="form-info">
-        <div className="line"></div>
-        维修信息:
-      </div>
+    <>
+      <Form
+        name={name}
+        onFinish={onFinish}
+        ref={formRef}
+        labelCol={{ span: 5 }}
+      >
+        <div className="form-info">
+          <div className="line"></div>
+          购置信息:
+        </div>
 
-      {/* 借出信息 */}
-      <Row>
-        {/* {info.map((item) => (
-          <Col span={8} className="form-item-box" key={item.label}>
-            <Form.Item
-              disabled={true}
-              labelAlign="right"
-              label={item.label}
-              name={item.label}
-              // rules={[{ required: true }]}
-              width={"200px"}
-              labelCol={{ span: 4 }}
-            >
-              {item.element}
-            </Form.Item>
-          </Col>
-        ))} */}
-        {/* 审核详情 */}
-        {baseFormItem.map((item, index) => {
-          return (
-            <Col key={index} className="form-item-box" span={item.col || 8}>
+        {/* 借出信息 */}
+        <Row style={{ marginRight: "50px" }}>
+          {info.map((item) => (
+            <Col span={8} className="form-item-box" key={item.label}>
               <Form.Item
                 disabled={true}
                 labelAlign="right"
@@ -153,105 +214,140 @@ const FlowForm = (props) => {
                 name={item.name}
                 rules={[{ required: item.require }]}
                 width={"200px"}
-                style={item.style}
-                labelCol={{ span: item.labelCol || 4 }}
+                labelCol={{ span: 4 }}
               >
-                {/* {newItem} */}
-                {records?.status == "0" ? (
-                  item.ele
-                ) : (
-                  <div>{renderItem(item)}</div>
-                )}
+                {item.element}
               </Form.Item>
             </Col>
-          );
-        })}
-      </Row>
-      <div className="card-line"></div>
-      <div className="form-info">
-        <div className="line"></div>维修清单:
-      </div>
-      <Row>
-        {/* 列表 */}
-        <Col span={24}>
-          <Form.Item
-            labelAlign="right"
-            label={""}
-            name={"limsRepairitemUpdateDTOS"}
-            require={true}
-          >
-            <ChildTable records={records}></ChildTable>
-          </Form.Item>
-        </Col>
-      </Row>
-      <div className="form-info">
-        <div className="line"></div>
-        维修资料:
-      </div>
-      <Row>
-        <Col span={24}>
-          <Form.Item
-            labelAlign="right"
-            label={""}
-            name={"file"}
-            rules={[{ require: false }]}
-          >
-            <AttachmentList
-              records={records}
-              disabled={records?.status == "1"}
-            ></AttachmentList>
-          </Form.Item>
-        </Col>
-      </Row>
-      {/* 编辑时提交id */}
-      <Form.Item name={id}></Form.Item>
-      <Form.Item>
-        <div className="flow-form-bottom">
-          <>
-            <Button
-              htmlType="submit"
-              className="flow-form-submit"
-              onClick={() => {
-                let allList = [...fileList, ...imageList];
-                console.log(allList, "allList");
-
-                let list = allList.map((item) => ({
-                  businessId: records.id,
-                  businessType: "1",
-                  fileName: item.name,
-                  filePath: item?.response?.data || item.url,
-                  fileType: item.type,
-                  smallFilePath: item?.response?.data || item.url,
-                  title: item.name.split(".")[0],
-                }));
-                addAttachment(list).then((res) => {
-                  if (res.code != 200) {
-                    // message.warning("附件上传失败");
-                  } else {
-                    // message.success("附件上传成功");
-                  }
-                });
-              }}
-            >
-              保存
-            </Button>
-            <Button className="flow-form-flow" onClick={submitFlow}>
-              到货验收
-            </Button>
-            <Button className="flow-form-calcel" onClick={cancelClick}>
-              关闭
-            </Button>
-          </>
+          ))}
+          {/* 审核详情 */}
+          {baseFormItem.map((item, index) => {
+            return (
+              <Col key={index} className="form-item-box" span={item.col || 8}>
+                <Form.Item
+                  disabled={true}
+                  labelAlign="right"
+                  label={item.label}
+                  name={item.name}
+                  rules={item.rules}
+                  width={"200px"}
+                  style={item.style}
+                  labelCol={{ span: item.labelCol || 4 }}
+                >
+                  {/* {newItem} */}
+                  {records?.status == "1" ||
+                  records?.status == "0" ||
+                  !records?.status ? (
+                    item.ele
+                  ) : (
+                    <div>{renderItem(item)}</div>
+                  )}
+                </Form.Item>
+              </Col>
+            );
+          })}
+        </Row>
+        <div className="card-line"></div>
+        <div className="form-info">
+          <div className="line"></div>购置清单:
         </div>
-      </Form.Item>
-    </Form>
+        <Row>
+          {/* 列表 */}
+          <Col span={24}>
+            <Form.Item
+              labelAlign="right"
+              label={""}
+              name={"limsPurplanapplyitemDOList"}
+              // rules={[{ required: true }]}
+            >
+              <ChildTable
+                records={modelRecords}
+                data={purpList}
+                //  setDevice={setDevice}
+              ></ChildTable>
+            </Form.Item>
+          </Col>
+        </Row>
+        <div className="form-info">
+          <div className="line"></div>
+          附件相关:
+        </div>
+        <Row>
+          <Col span={24}>
+            <Form.Item
+              labelAlign="right"
+              label={""}
+              name={"file"}
+              rules={[{ require: false }]}
+            >
+              <AttachmentList
+                records={records}
+                disabled={
+                  (records?.status != "1" && records?.status != "0") ||
+                  !records?.status
+                }
+              ></AttachmentList>
+            </Form.Item>
+          </Col>
+        </Row>
+        {/* 编辑时提交id */}
+        <Form.Item name={id}></Form.Item>
+        <Form.Item>
+          <div className="flow-form-bottom">
+            <>
+              <div>
+                合计金额:
+                <span style={{ color: "red" }}>{totalPrice}</span>元
+              </div>
+              <Button
+                htmlType="submit"
+                className="flow-form-submit"
+                onClick={() => {
+                  let allList = [...fileList, ...imageList];
+                  let list = allList.map((item) => ({
+                    businessId: records.id,
+                    businessType: "1",
+                    fileName: item.name,
+                    filePath: item?.response?.data || item.url,
+                    fileType: item.type,
+                    smallFilePath: item?.response?.data || item.url,
+                    title: item.name.split(".")[0],
+                  }));
+                  addAttachment(list).then((res) => {
+                    if (res.code != 200) {
+                      message.warning("附件上传失败");
+                    } else {
+                      message.success("附件上传成功");
+                    }
+                  });
+                }}
+              >
+                保存
+              </Button>
+              <Button className="flow-form-flow" onClick={submitFlow}>
+                到货验收
+              </Button>
+              <Button className="flow-form-calcel" onClick={cancelClick}>
+                关闭
+              </Button>
+            </>
+          </div>
+        </Form.Item>
+      </Form>
+    </>
   );
 };
 const mapStateToProps = (state) => {
+  // console.log(state.formItems.purpList, "OOOOOooo");
   return {
+    totalPrice: state.currency.totalPrice,
     imageList: state.currency.imageList,
     fileList: state.currency.fileList,
     supplier: state.currency.supplier,
+    dictpurp: state.currency.dictpurp,
+    purpList: state.formItems.purpList,
+    modelPurp: state.formItems.modelPurp,
+    modelRecords: state.formItems.modelRecords,
   };
 };
 
