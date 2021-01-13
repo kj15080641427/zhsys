@@ -369,6 +369,11 @@ class BaseNewPageLayout extends React.Component {
                 breadcrumb={this.breadcrumb}
                 editbreadcrumb={this.editbreadcrumb}
               />
+              {this.state.records.code && (
+                <div className="purp-apply-code">
+                  申请单号:{this.state.records.code}
+                </div>
+              )}
             </div>
             <div className="head-line"></div>
             <FlowForm

@@ -34,7 +34,7 @@ const FlowForm = (props) => {
   const { getBase, approvalFlow } = props.actions;
 
   const changeCode = (id) => {
-    let a = dictuseLend?.records.filter((item) => item.id == id)[0];
+    let a = dictuseLend?.records?.filter((item) => item.id == id)[0];
     setLendInfo(a);
   };
 

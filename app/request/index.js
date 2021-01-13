@@ -315,7 +315,6 @@ export function addLimsUselanapplyListPur(data) {
   return fetchJSONData("POST", "/api/base/LimsPur/save", data);
 }
 
-
 //查询购置申请清单 购置清单列表
 export function getLimsUselanapplyListPurItem(data) {
   return fetchJSONData("POST", "/api/base/LimsPuritem/query", data);
@@ -438,8 +437,36 @@ export function getMaintianById(data) {
     data
   );
 }
+//审批养护详情
+export function approvalMaintian(data) {
+  return fetchJSONData(
+    "POST",
+    "/api/base/LimsRepairmaintainapply/approval",
+    data
+  );
+}
 //导出养护详情
 export function exportMaintian(data) {
   return "/api/base/LimsRepairmaintainapply/export";
 }
 /**养护管理 */
+//查询养护管理
+export function getRepairMaintian(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairmaintain/page", data);
+}
+//修改养护管理
+export function updRepairMaintian(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairmaintain/update", data);
+}
+//导出养护管理
+export function exportRepairMaintian(data) {
+  return "/api/base/LimsRepairmaintain/export";
+}
+
+/**设备报废 */
+export function getDeviceScrap(data) {
+  return fetchJSONData("POST", "/api/base/LimsDispose/page", data);
+}
+export function addDeviceScrap(data) {
+  return fetchJSONData("POST", "/api/base/LimsDispose/save", data);
+}

@@ -90,12 +90,13 @@ const ChildTable = (props) => {
     },
     {
       title: "品牌",
-      dataIndex: "dictName",
+      dataIndex: "brand",
+      render: (_, row) => row.dictName || row.brandName,
     },
-    {
-      title: "备注",
-      dataIndex: "remark",
-    },
+    // {
+    //   title: "备注",
+    //   dataIndex: "remark",
+    // },
     {
       title: "设备类别",
       dataIndex: "categoryName",

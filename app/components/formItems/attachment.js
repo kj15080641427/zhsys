@@ -44,10 +44,12 @@ const AttachmentList = (props) => {
             steUselendFile(fileInfo.fileList);
           }}
         >
-          <div className="purplist-flex">
-            <Button disabled={disabled}>{fileLabel}</Button>
-            <div>.word .xlsx .docx .pdf .doc</div>
-          </div>
+          {!disabled && (
+            <div className="purplist-flex">
+              <Button>{fileLabel}</Button>
+              <div>.word .xlsx .docx .pdf .doc</div>
+            </div>
+          )}
         </Upload>
       </div>
       <div>
@@ -64,10 +66,12 @@ const AttachmentList = (props) => {
             steUselendImage(fileInfo.fileList);
           }}
         >
-          <div className="purplist-flex">
-            <Button disabled={disabled}>{imageLabel}</Button>
-            <div> .jpg .png</div>
-          </div>
+          {!disabled && (
+            <div className="purplist-flex">
+              <Button>{imageLabel}</Button>
+              <div> .jpg .png</div>
+            </div>
+          )}
         </Upload>
       </div>
     </div>

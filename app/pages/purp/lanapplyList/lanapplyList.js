@@ -17,14 +17,14 @@ import BaseNewPageLayout from "./lanapplyListComponent";
 import { columnsToForm } from "../../../utils/common";
 
 const obj = {
-  0: "暂存",
+  0: "待购置",
   1: "待购置",
   2: "已购置",
 };
 export const columns = [
   {
     title: "购置单号",
-    dataIndex: "applyCode",
+    dataIndex: "code",
     hidden: true,
   },
   {
@@ -35,7 +35,7 @@ export const columns = [
   },
   {
     title: "申请单号",
-    dataIndex: "code",
+    dataIndex: "applyCode",
     hidden: true,
   },
 

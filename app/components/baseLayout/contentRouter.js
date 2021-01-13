@@ -18,10 +18,10 @@ import SendBack from "../../pages/use/sendBack";
 import Lanapply from "../../pages/purp/lanApply/index";
 import LendapplyList from "../../pages/purp/lanapplyList/lanapplyList";
 import Complexfund from "../../pages/base/complexfund";
-import ReparirApply from "../../pages/repair/apply/index";
-import Repair from "../../pages/repair/repair/index";
-import Maintian from "../../pages/repair/maintian";
-
+import ReparirApply from "../../pages/repair/repairapply/index";
+import Repair from "../../pages/repair/repairManage/index";
+import Maintian from "../../pages/repair/maintianApply";
+import MaintianManage from "../../pages/repair/maintianManage";
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
@@ -49,8 +49,8 @@ class ContentRouter extends React.PureComponent {
         <Route path={"/SendBack"} component={SendBack} />
         <Route path={"/ReparirApply"} component={ReparirApply} />
         <Route path={"/Repair"} component={Repair} />
-        <Route path={ "/Maintian"} component={Maintian} />
-        {/* <Route path={ "/BaseDict"} component={BaseDict} /> */}
+        <Route path={"/Maintian"} component={Maintian} />
+        <Route path={ "/MaintianManage"} component={MaintianManage} />
         <Route path={"/Complexfund"} component={Complexfund} />
 
         <Route component={Nothing} />

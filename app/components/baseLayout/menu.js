@@ -91,7 +91,7 @@ const Menus = (props) => {
             <Menu.Item key="/ReparirApply">维修申请</Menu.Item>
             <Menu.Item key="/Repair">设备维修</Menu.Item>
             <Menu.Item key="/Maintian">养护申请</Menu.Item>
-            <Menu.Item key="/MaintianItem">养护管理</Menu.Item>
+            <Menu.Item key="/MaintianManage">养护管理</Menu.Item>
           </SubMenu>
           <SubMenu key="5" icon={<img src={device}></img>} title="设备处理">
             <Menu.Item key="/stationBasic">设备折旧</Menu.Item>

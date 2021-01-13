@@ -88,7 +88,7 @@ const FlowForm = (props) => {
 
   const info = [
     {
-      label: "购置单号",
+      label: "申请单号",
       name: "applyId",
       require: true,
       element: (
@@ -121,11 +121,20 @@ const FlowForm = (props) => {
               title: "申购类型",
               dataIndex: "dictName",
             },
+            {
+              title: "购置情况",
+              dataIndex: "purId",
+              render: (e) => (e ? "已购置" : "待购置"),
+            },
           ]}
           req={getLimsUselanapply}
           storeKey="modelPurp"
           dataSource={modelPurp?.records}
+          list={modelPurp?.records?.filter((item) => !!item.purId)}
+          dislist={modelPurp?.records?.filter((item) => !item.purId)}
+          // disabledList={modelPurp?.records.filter((item) => !!item.purId)}
           code="code"
+          param={{ size: -1, current: 1, status: "4" }}
         ></ModalSelect>
         // <Button onClick={() => setVisible(true)}>选择购置申请</Button>
         // <FormSelect
@@ -138,10 +147,10 @@ const FlowForm = (props) => {
         // ></FormSelect>
       ),
     },
-    {
-      label: "申请单号",
-      element: <div>{modelRecords?.code}</div>,
-    },
+    // {
+    //   label: "申请单号",
+    //   element: <div>{modelRecords?.applyCode}</div>,
+    // },
     {
       label: "申请人",
       element: <div>{modelRecords?.userRealName}</div>,
@@ -226,7 +235,9 @@ const FlowForm = (props) => {
                   labelCol={{ span: item.labelCol || 4 }}
                 >
                   {/* {newItem} */}
-                  {records?.status == "1" || !records?.status ? (
+                  {records?.status == "1" ||
+                  records?.status == "0" ||
+                  !records?.status ? (
                     item.ele
                   ) : (
                     <div>{renderItem(item)}</div>
@@ -271,7 +282,10 @@ const FlowForm = (props) => {
             >
               <AttachmentList
                 records={records}
-                disabled={records?.status != "1"}
+                disabled={
+                  (records?.status != "1" && records?.status != "0") ||
+                  !records?.status
+                }
               ></AttachmentList>
             </Form.Item>
           </Col>

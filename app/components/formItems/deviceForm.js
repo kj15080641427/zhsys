@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Row, Col, DatePicker, Button } from "antd";
+import { Form, Input, Row, Col, DatePicker, Button, Upload } from "antd";
 // import DYForm from "./../home/form";
 import FormSelect from "./select";
 import { getLimsBasiccategory, getLimsBasicDict } from "../../request/index";
@@ -137,8 +137,21 @@ export default (props) => {
               ))}
             </Row>
           </div>
-          <div className="device-form-image">设备图片</div>
         </div>
+        <Form.Item
+          labelAlign="right"
+          label={""}
+          name={"image"}
+          rules={[{ required: true }]}
+          labelCol={{ span: 6 }}
+        >
+          <Upload
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            listType="picture-card"
+          >
+            新增设备图片
+          </Upload>
+        </Form.Item>
         <div className="form-info">
           <div className="form-info">
             <div className="line"></div>
