@@ -3,6 +3,8 @@ import * as types from "../type/tFormitems";
 const initState = {
   flowNode: [],
   purpList: [], //购置清单
+  repairList: [],
+  maintianList: [],
 };
 
 const formItems = (state = initState, action) => {
@@ -23,6 +25,12 @@ const formItems = (state = initState, action) => {
       break;
     case types.SET_PURP_LIST:
       newState = { ...newState, purpList: action.data };
+      break;
+    case types.SET_REPAIR_LIST:
+      newState = { ...newState, repairList: action.data };
+      break;
+    case types.SET_MAINTIAN_LIST:
+      newState = { ...newState, maintianList: action.data };
       break;
     default:
       return newState;

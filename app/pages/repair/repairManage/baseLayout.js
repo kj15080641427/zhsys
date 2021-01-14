@@ -9,9 +9,9 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { getRepairItem, exportRepairList } from "../../../request/index";
 import SearchInput from "../../../components/formItems/searchInput";
-import { downloadFile } from "../../purp/lanApply/downFile";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import { formatAttachment } from "../../../utils/format";
+import DownLoad from "../../../components/formItems/downLoad";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -73,6 +73,7 @@ class BaseNewPageLayout extends React.Component {
     const {
       get,
       upd,
+      add,
       del,
       keyId,
       storeKey,
@@ -173,6 +174,7 @@ class BaseNewPageLayout extends React.Component {
     const submitFlow = () => {
       this.formRef.current.validateFields().then(() => {
         let values = this.formRef.current.getFieldValue();
+        console.log(values, "VV");
         formatList.forEach((item) => {
           values = {
             ...values,
@@ -193,7 +195,7 @@ class BaseNewPageLayout extends React.Component {
         };
 
         addOrUpdateBase({
-          request: upd,
+          request: this.state.records?.id ? upd : add,
           key: storeKey,
           query: get,
           param: updvalue,
@@ -222,7 +224,7 @@ class BaseNewPageLayout extends React.Component {
       };
 
       addOrUpdateBase({
-        request: upd,
+        request: this.state.records?.id ? upd : add,
         key: storeKey,
         query: get,
         param: updvalue,
@@ -249,27 +251,13 @@ class BaseNewPageLayout extends React.Component {
                   breadcrumb={this.breadcrumb}
                   editbreadcrumb={this.editbreadcrumb}
                 />
-                <Button
-                  className="base-export-button"
-                  onClick={() => {
-                    downloadFile(
-                      exportRepairList(),
-                      {
-                        current: 1,
-                        size: 999,
-                      },
-                      "购置单.xlsx"
-                    );
-                  }}
-                >
-                  导出
-                </Button>
+                <DownLoad req={exportRepairList} fileName="维修申请"></DownLoad>
               </div>
               <div className={"view-query-right"}>
                 <Form layout="inline" ref={this.rwoFormRef}>
                   <Form.Item>
                     <SearchInput
-                      placeholder="支持模糊查找维修单号"
+                      placeholder="支持模糊查找申请单号"
                       searchClick={() =>
                         rowFinish({
                           code: searchInput,
@@ -326,9 +314,11 @@ class BaseNewPageLayout extends React.Component {
                 breadcrumb={this.breadcrumb}
                 editbreadcrumb={this.editbreadcrumb}
               />
-              <div className="purp-apply-code">
-                购置单号：{this.state.records.applyCode}
-              </div>
+              {this.state.records.applyCode && (
+                <div className="purp-apply-code">
+                  维修单号：{this.state.records.applyCode}
+                </div>
+              )}
             </div>
             <div className="head-line"></div>
             <FlowForm

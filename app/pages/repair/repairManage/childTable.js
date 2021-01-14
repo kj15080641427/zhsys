@@ -6,9 +6,14 @@ import { connect } from "react-redux";
 
 const ChildTable = (props) => {
   const [dataSource, setDataSource] = useState([]);
-  const { records } = props;
+  const { records, repairList } = props;
+  useEffect(() => {
+    props.onChange(repairList);
+    setDataSource(repairList);
+  }, [repairList]);
   useEffect(() => {
     props.value && setDataSource(props.value);
+    console.log();
   }, [props.value]);
 
   const columns = [
@@ -51,7 +56,7 @@ const ChildTable = (props) => {
       dataIndex: "status",
       hidden: true,
       render: (_, __, index) =>
-        records?.status == "0" && (
+        records?.status == "0" || records?.status ? (
           <Radio.Group
             defaultValue={dataSource[index]?.status}
             onChange={(W) => {
@@ -63,6 +68,8 @@ const ChildTable = (props) => {
             <Radio value="1">已修复</Radio>
             <Radio value="2">已报废</Radio>
           </Radio.Group>
+        ) : (
+          ""
         ),
     },
   ];
@@ -78,8 +85,10 @@ const ChildTable = (props) => {
     </div>
   );
 };
-const mapStateToProps = () => {
-  return {};
+const mapStateToProps = (state) => {
+  return {
+    repairList: state.formItems.repairList,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => ({

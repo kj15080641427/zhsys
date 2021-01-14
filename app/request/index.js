@@ -363,6 +363,9 @@ export function delRepair(data) {
 export function getRepairById(data) {
   return fetchJSONData("POST", "/api/base/LimsRepairapply/queryById", data);
 }
+export function exportRepairApply() {
+  return "/api/base/LimsRepairapply/export";
+}
 //审批维修流程
 export function approvaRepair(data) {
   return fetchJSONData("POST", "/api/base/LimsRepairapply/approval", data);
@@ -394,6 +397,10 @@ export function getFlow(data) {
 //查询维修管理
 export function getRepairList(data) {
   return fetchJSONData("POST", "/api/base/LimsRepair/page", data);
+}
+//新增维修管理
+export function addRepairList(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepair/save", data);
 }
 //修改维修管理
 export function updRepairList(data) {
@@ -458,9 +465,17 @@ export function getRepairMaintian(data) {
 export function updRepairMaintian(data) {
   return fetchJSONData("POST", "/api/base/LimsRepairmaintain/update", data);
 }
+//添加养护管理
+export function addRepairMaintian(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairmaintain/save", data);
+}
 //导出养护管理
 export function exportRepairMaintian(data) {
   return "/api/base/LimsRepairmaintain/export";
+}
+/**养护管理清单 */
+export function getRepairMaintianItem(data) {
+  return fetchJSONData("POST", "/api/base/LimsRepairmaintainitem/page", data);
 }
 
 /**设备报废 */

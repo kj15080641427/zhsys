@@ -10,9 +10,11 @@ import moment from "moment";
 import {
   getRepairById,
   approvalLimsUseLendapply,
+  exportRepairApply,
 } from "../../../request/index";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import SearchInput from "../../../components/formItems/searchInput";
+import DownLoad from "../../../components/formItems/downLoad";
 
 let storeLabel = "base";
 
@@ -312,7 +314,10 @@ class LendLayout extends React.Component {
                   breadcrumb={this.breadcrumb}
                   editbreadcrumb={this.editbreadcrumb}
                 />
-                <Button className="base-export-button">导出</Button>
+                <DownLoad
+                  req={exportRepairApply}
+                  fileName="维修申请"
+                ></DownLoad>
               </div>
               <div className={"view-query-right"}>
                 <Form layout="inline" ref={this.rwoFormRef}>

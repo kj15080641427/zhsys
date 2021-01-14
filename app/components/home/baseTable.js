@@ -21,9 +21,8 @@ const BaseTable = (props) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  useEffect(() => {
-    baseStoreKey = storeKey;
-    getBase({
+  const getData = () => {
+    return getBase({
       request: get,
       key: storeKey,
       param: {
@@ -31,10 +30,57 @@ const BaseTable = (props) => {
         size: pageSize,
       },
     });
-  }, []);
+  };
 
+  useEffect(() => {
+    // getData();
+    baseStoreKey = storeKey;
+  }, []);
+  useEffect(() => {
+    getData();
+  }, [current]);
+  const itemRender = (current, type, originalElement) => {
+    if (type === "prev") {
+      return (
+        <a
+          className="table-pagination-novi"
+          onClick={() => {
+            setCurrent(1);
+            // getData();
+            // getBase({
+            //   request: get,
+            //   key: storeKey,
+            //   param: {
+            //     current: 1,
+            //     size: pageSize,
+            //   },
+            // });
+          }}
+        >
+          首页
+        </a>
+      );
+    }
+    if (type === "next") {
+      return (
+        <a
+          className="table-pagination-novi"
+          onClick={() => {
+            if (total / 10 == 0) {
+              changePage(total / 10);
+            } else {
+              changePage(Math.floor(total / 10 + 1)); //返回值为大于等于其数字参数的最小整数。
+            }
+          }}
+        >
+          尾页
+        </a>
+      );
+    }
+    return originalElement;
+  };
   const pagination = {
-    // itemRender: itemRender,
+    itemRender: itemRender,
     total: props[baseStoreKey]?.total,
     size: "default",
     current: current,
@@ -42,14 +88,15 @@ const BaseTable = (props) => {
     // showSizeChanger: true,
     onChange: (cur) => {
       setCurrent(cur);
-      getBase({
-        request: get,
-        key: storeKey,
-        param: {
-          current: cur,
-          size: pageSize,
-        },
-      });
+      // getData();
+      // getBase({
+      //   request: get,
+      //   key: storeKey,
+      //   param: {
+      //     current: cur,
+      //     size: pageSize,
+      //   },
+      // });
       //   changePage(current);
     },
     pageSize: pageSize,

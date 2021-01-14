@@ -279,32 +279,18 @@ class BaseNewPageLayout extends React.Component {
                     getBaseHoc({ current: 1, size: 10, code: searchInput })
                   }
                 />
-                {/* <Form layout="inline" ref={this.rwoFormRef}>
-                  <Form.Item>
-                    <SearchInput
-                      placeholder="支持模糊查找申请单号"
-                      searchClick={() =>
-                        rowFinish({
-                          code: searchInput,
-                          // code: this.state.rowSelectData,
-                        })
-                      }
-                    />
-                  </Form.Item>
-                </Form> */}
                 <Button className="base-add-button">高级</Button>
                 <Button
                   className="base-add-button"
                   onClick={() => {
                     this.setState({
                       records: {},
-                      // approvalRecords: {},
                     });
                     setShowForm(true);
                     this.formRef.current.resetFields();
                   }}
                 >
-                  添加
+                  新增
                 </Button>
               </div>
             </div>

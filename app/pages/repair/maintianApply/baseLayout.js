@@ -14,7 +14,7 @@ import {
 } from "../../../request/index";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import SearchInput from "../../../components/formItems/searchInput";
-import { downloadFile } from "../../purp/lanApply/downFile";
+import DownLoad from "../../../components/formItems/downLoad";
 
 let storeLabel = "base";
 
@@ -318,27 +318,13 @@ class LendLayout extends React.Component {
                   breadcrumb={this.breadcrumb}
                   editbreadcrumb={this.editbreadcrumb}
                 />
-                <Button
-                  className="base-export-button"
-                  onClick={() => {
-                    downloadFile(
-                      exportMaintian(),
-                      {
-                        current: 0,
-                        size: 999,
-                      },
-                      "养护申请.xlsx"
-                    );
-                  }}
-                >
-                  导出
-                </Button>
+                <DownLoad req={exportMaintian} fileName="养护申请"></DownLoad>
               </div>
               <div className={"view-query-right"}>
                 <Form layout="inline" ref={this.rwoFormRef}>
                   <Form.Item label={""} name={"code"}>
                     <SearchInput
-                      placeholder="支持模糊查找归还单号"
+                      placeholder="支持模糊查找申请单号"
                       searchClick={() =>
                         rowFinish({
                           code: searchInput,
@@ -395,7 +381,7 @@ class LendLayout extends React.Component {
               />
               {this.state.records.code && (
                 <div className="purp-apply-code">
-                  申请 单号:{this.state.records.code}
+                  申请单号:{this.state.records.code}
                 </div>
               )}
             </div>

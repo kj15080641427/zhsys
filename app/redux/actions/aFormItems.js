@@ -35,10 +35,40 @@ export const getPurpList = (data) => {
     data,
   };
 };
-//获取购置清单
+//设置购置清单
 export const setPurpList = (data) => {
   return {
     type: types.SET_PURP_LIST,
+    data,
+  };
+};
+
+//获取维修清单
+export const getRepairList = (data) => {
+  return {
+    type: types.GET_REPAIR_LIST,
+    data,
+  };
+};
+//设置维修清单
+export const setRepairList = (data) => {
+  return {
+    type: types.SET_REPAIR_LIST,
+    data,
+  };
+};
+
+//获取养护清单
+export const getMaintianList = (data) => {
+  return {
+    type: types.GET_MAINTIAN_LIST,
+    data,
+  };
+};
+//设置养护清单
+export const setMaintianList = (data) => {
+  return {
+    type: types.SET_MAINTIAN_LIST,
     data,
   };
 };

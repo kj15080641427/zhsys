@@ -15,6 +15,7 @@ import {
 } from "../../../request/index";
 import { downloadFile } from "./downFile";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
+import DownLoad from "../../../components/formItems/downLoad";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -296,21 +297,10 @@ class BaseNewPageLayout extends React.Component {
                   breadcrumb={this.breadcrumb}
                   editbreadcrumb={this.editbreadcrumb}
                 />
-                <Button
-                  className="base-export-button"
-                  onClick={() => {
-                    downloadFile(
-                      exportLimsUselanapply(),
-                      {
-                        current: 0,
-                        size: 999,
-                      },
-                      "购置清单.xlsx"
-                    );
-                  }}
-                >
-                  导出
-                </Button>
+                <DownLoad
+                  req={exportLimsUselanapply}
+                  fileName="购置申请"
+                ></DownLoad>
               </div>
               <div className={"view-query-right"}>
                 <Form layout="inline" ref={this.rwoFormRef}>

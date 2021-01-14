@@ -90,7 +90,7 @@ const ReparirApply = () => {
     {
       title: "养护类型",
       dataIndex: "repairType",
-      labelName: "bussineName",
+      labelName: "repairName",
       require: true,
       ele: (
         <FormSelect

@@ -18,11 +18,10 @@ const ChildTable = (props) => {
   const [momeny, setMoneny] = useState(0); //费用
   const [remark, setRemark] = useState(0); //说明
   const { getBase, setTotalPrice } = props.actions;
-  const { baseDevice } = props;
+  const { baseDevice, records } = props;
 
   useEffect(() => {
     props.value && setDataSource(props.value);
-    console.log(props.value, "========");
     return () => setDataSource([]);
   }, [props.value]);
 
@@ -95,6 +94,10 @@ const ChildTable = (props) => {
       dataIndex: "deviceName",
     },
     {
+      title: "单位",
+      dataIndex: "unitName",
+    },
+    {
       title: "规格型号",
       dataIndex: "model",
     },
@@ -109,6 +112,7 @@ const ChildTable = (props) => {
       dataIndex: "planTime",
       render: (e, row, index) => (
         <Input
+          disabled={!(records?.status == "0" || !records?.status)}
           defaultValue={props.value[index]?.planTime}
           onChange={(W) => {
             setDay(W.target.value);
@@ -120,10 +124,11 @@ const ChildTable = (props) => {
       ),
     },
     {
-      title: "使用单价(元)",
+      title: "预估费用(元)",
       dataIndex: "planFee",
       render: (e, row, index) => (
         <Input
+          disabled={!(records?.status == "0" || !records?.status)}
           defaultValue={props.value[index]?.planFee}
           onChange={(W) => {
             setMoneny(W.target.value);
@@ -139,6 +144,7 @@ const ChildTable = (props) => {
       dataIndex: "remark",
       render: (e, row, index) => (
         <Input
+          disabled={!(records?.status == "0" || !records?.status)}
           defaultValue={props.value[index]?.remark}
           onChange={(W) => {
             setRemark(W.target.value);
@@ -148,10 +154,6 @@ const ChildTable = (props) => {
           }}
         ></Input>
       ),
-    },
-    {
-      title: "应用项目",
-      dataIndex: "",
     },
     {
       title: "操作",

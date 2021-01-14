@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Form, Row, Col, message } from "antd";
+import { Button, Form, Row, Col } from "antd";
 import ChildTable from "./childTable";
 import {
   addAttachment,
@@ -10,6 +10,7 @@ import {
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
+import * as formActions from "../../../redux/actions/aFormItems";
 import { connect } from "react-redux";
 import AttachmentList from "../../../components/formItems/attachment";
 import moment from "moment";
@@ -29,27 +30,26 @@ const FlowForm = (props) => {
     records, //表单数据
     formatList,
     // defaultFileList, //已上传文件列表
-    totalPrice, //总金额
     imageList,
     fileList,
     supplier, //供应商
     // dictpurp,
-    purpList,
+    maintianList,
     modelMaintian,
     modelRecords,
   } = props;
-  const { setTotalPrice, getBase } = props.actions;
-
+  const { getBase } = props.actions;
+  const { getMaintianList, setMaintianList } = props.formActions;
   // const [purpInfo, setPurpInfo] = useState(null);
 
-  useEffect(() => {
-    let price = 0;
-    purpList.map((item) => {
-      price = price + item.price;
-    });
-    console.log(props);
-    setTotalPrice(price);
-  }, [purpList]);
+  // useEffect(() => {
+  //   //计算金额
+  //   let price = 0;
+  //   repairList.map((item) => {
+  //     price = price + item.price;
+  //   });
+  //   setTotalPrice(price);
+  // }, [repairList]);
 
   useEffect(() => {
     records?.status != "1" &&
@@ -61,8 +61,31 @@ const FlowForm = (props) => {
           current: 1,
         },
       });
+    console.log(getMaintianList, setMaintianList, "-------");
   }, []);
 
+  // const changeCode = (id) => {
+  //   let a = dictpurp?.records.filter((item) => item.id == id)[0];
+  //   setPurpInfo(a);
+  // };
+  // useEffect(() => {
+  //   changeCode(props?.records?.applyId);
+  // }, [props?.records]);
+
+  // useEffect(() => {
+  //   modelRecords &&
+  //     getBase({
+  //       request: getLimsUselanapplyById,
+  //       key: "purpDetail",
+  //       param: {
+  //         id: modelRecords.id,
+  //       },
+  //     });
+  // }, [modelRecords]);
+
+  // useEffect(() => {
+  //   setPurpInfo(records);
+  // }, [records]);
 
   const info = [
     {
@@ -80,24 +103,27 @@ const FlowForm = (props) => {
             {
               title: "申请时间",
               dataIndex: "applyDate",
-              render: (e) => e && e.slice(0, -9),
+              render: (e) => e.slice(0, 10),
             },
             {
               title: "申请人",
               dataIndex: "userRealName",
             },
             {
-              title: "申请单位",
-              dataIndex: "compayName",
+              title: "联系电话",
+              dataIndex: "applyPhone",
             },
             {
-              title: "申请标题",
-              dataIndex: "title",
-              width: "250px",
+              title: "养护类型",
+              dataIndex: "repairName",
             },
             {
-              title: "申购类型",
-              dataIndex: "dictName",
+              title: "申请内容",
+              dataIndex: "remark",
+            },
+            {
+              title: "预估养护费用",
+              dataIndex: "totalFee",
             },
             {
               title: "购置情况",
@@ -108,11 +134,12 @@ const FlowForm = (props) => {
           req={getMaintian}
           storeKey="modelMaintian"
           dataSource={modelMaintian?.records}
-          list={modelMaintian?.records?.filter((item) => !!item.purId)}
-          dislist={modelMaintian?.records?.filter((item) => !item.purId)}
-          // disabledList={modelPurp?.records.filter((item) => !!item.purId)}
+          list={modelMaintian?.records?.filter((item) => !!item.repairmaintainId)}
+          dislist={modelMaintian?.records?.filter((item) => !item.repairmaintainId)}
           code="code"
           param={{ size: -1, current: 1, status: "4" }}
+          getActions={getMaintianList}
+          setActions={setMaintianList}
         ></ModalSelect>
         // <Button onClick={() => setVisible(true)}>选择购置申请</Button>
         // <FormSelect
@@ -125,30 +152,27 @@ const FlowForm = (props) => {
         // ></FormSelect>
       ),
     },
+    // {
+    //   label: "申请单号",
+    //   element: <div>{modelRecords?.applyCode}</div>,
+    // },
     {
       label: "养护类型",
-      element: <div>{modelRecords?.applyCode}</div>,
+      element: <div>{modelRecords?.repairName}</div>,
     },
     {
       label: "申请人",
       element: <div>{modelRecords?.userRealName}</div>,
     },
-    // {
-    //   label: "申请单位",
-    //   element: <div>{modelRecords?.compayName}</div>,
-    // },
     {
       label: "申请时间",
-      element: <div> {modelRecords?.title}</div>,
+      element: <div> {modelRecords?.applyDate}</div>,
     },
     {
       label: "描述",
-      element: <div> {modelRecords?.applyDate}</div>,
+      element: <div> {modelRecords?.remark}</div>,
     },
   ];
-  // const setDevice = (e) => {
-  //   setTotalPrice(e);
-  // };
   const renderItem = (item) => {
     if (item.name == "supplierId") {
       let supp = supplier?.records?.filter((i) => {
@@ -231,12 +255,12 @@ const FlowForm = (props) => {
             <Form.Item
               labelAlign="right"
               label={""}
-              name={"limsPurplanapplyitemDOList"}
+              name={"limsRepairmaintainitemSaveDTOList"}
               // rules={[{ required: true }]}
             >
               <ChildTable
                 records={modelRecords}
-                data={purpList}
+                data={maintianList}
                 //  setDevice={setDevice}
               ></ChildTable>
             </Form.Item>
@@ -269,10 +293,6 @@ const FlowForm = (props) => {
         <Form.Item>
           <div className="flow-form-bottom">
             <>
-              <div>
-                合计金额:
-                <span style={{ color: "red" }}>{totalPrice}</span>元
-              </div>
               <Button
                 htmlType="submit"
                 className="flow-form-submit"
@@ -288,11 +308,11 @@ const FlowForm = (props) => {
                     title: item.name.split(".")[0],
                   }));
                   addAttachment(list).then((res) => {
-                    if (res.code != 200) {
-                      message.warning("附件上传失败");
-                    } else {
-                      message.success("附件上传成功");
-                    }
+                    // if (res.code != 200) {
+                    //   message.warning("附件上传失败");
+                    // } else {
+                    //   message.success("附件上传成功");
+                    // }
                   });
                 }}
               >
@@ -312,14 +332,13 @@ const FlowForm = (props) => {
   );
 };
 const mapStateToProps = (state) => {
-  // console.log(state.formItems.purpList, "OOOOOooo");
+  console.log(state.formItems.maintianList, "OOOOOooo");
   return {
-    totalPrice: state.currency.totalPrice,
     imageList: state.currency.imageList,
     fileList: state.currency.fileList,
     supplier: state.currency.supplier,
     dictpurp: state.currency.dictpurp,
-    purpList: state.formItems.purpList,
+    maintianList: state.formItems.maintianList,
     modelMaintian: state.formItems.modelMaintian,
     modelRecords: state.formItems.modelRecords,
   };
@@ -327,6 +346,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
+  formActions: bindActionCreators(formActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FlowForm);

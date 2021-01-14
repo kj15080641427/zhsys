@@ -10,6 +10,7 @@ import {
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
+import * as formActions from "../../../redux/actions/aFormItems";
 import { connect } from "react-redux";
 import AttachmentList from "../../../components/formItems/attachment";
 import moment from "moment";
@@ -39,8 +40,7 @@ const FlowForm = (props) => {
     modelRecords,
   } = props;
   const { setTotalPrice, getBase } = props.actions;
-
-  // const [purpInfo, setPurpInfo] = useState(null);
+  const { getPurpList, setPurpList } = props.formActions;
 
   useEffect(() => {
     //计算金额
@@ -62,29 +62,6 @@ const FlowForm = (props) => {
         },
       });
   }, []);
-
-  // const changeCode = (id) => {
-  //   let a = dictpurp?.records.filter((item) => item.id == id)[0];
-  //   setPurpInfo(a);
-  // };
-  // useEffect(() => {
-  //   changeCode(props?.records?.applyId);
-  // }, [props?.records]);
-
-  // useEffect(() => {
-  //   modelRecords &&
-  //     getBase({
-  //       request: getLimsUselanapplyById,
-  //       key: "purpDetail",
-  //       param: {
-  //         id: modelRecords.id,
-  //       },
-  //     });
-  // }, [modelRecords]);
-
-  // useEffect(() => {
-  //   setPurpInfo(records);
-  // }, [records]);
 
   const info = [
     {
@@ -135,6 +112,8 @@ const FlowForm = (props) => {
           // disabledList={modelPurp?.records.filter((item) => !!item.purId)}
           code="code"
           param={{ size: -1, current: 1, status: "4" }}
+          getActions={getPurpList}
+          setActions={setPurpList}
         ></ModalSelect>
         // <Button onClick={() => setVisible(true)}>选择购置申请</Button>
         // <FormSelect
@@ -314,11 +293,11 @@ const FlowForm = (props) => {
                     title: item.name.split(".")[0],
                   }));
                   addAttachment(list).then((res) => {
-                    if (res.code != 200) {
-                      message.warning("附件上传失败");
-                    } else {
-                      message.success("附件上传成功");
-                    }
+                    // if (res.code != 200) {
+                    //   message.warning("附件上传失败");
+                    // } else {
+                    //   message.success("附件上传成功");
+                    // }
                   });
                 }}
               >
@@ -353,6 +332,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
+  formActions: bindActionCreators(formActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FlowForm);

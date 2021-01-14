@@ -4,18 +4,17 @@ import DYTable from "@app/components/home/table";
 import FlowForm from "./flowForm";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
-import * as formActions from "../../../redux/actions/aFormItems";
 import "./style.scss";
 import { connect } from "react-redux";
 import moment from "moment";
 import {
-  getLanapplyPurByList,
-  exportLimsUselanapplyListPurItem,
+  getRepairMaintianItem,
+  exportRepairMaintian,
 } from "../../../request/index";
 import SearchInput from "../../../components/formItems/searchInput";
-import { downloadFile } from "../../purp/lanApply/downFile";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import { formatAttachment } from "../../../utils/format";
+import DownLoad from "../../../components/formItems/downLoad";
 
 let storeLabel = "base";
 class BaseNewPageLayout extends React.Component {
@@ -36,7 +35,7 @@ class BaseNewPageLayout extends React.Component {
         name: "首页",
       },
       {
-        name: "维修管理",
+        name: "设备维护",
       },
       {
         name: "养护管理",
@@ -48,7 +47,7 @@ class BaseNewPageLayout extends React.Component {
         name: "首页",
       },
       {
-        name: "维修管理",
+        name: "设备维护",
         click: () => this.props.actions.setShowForm(false),
       },
       {
@@ -56,7 +55,7 @@ class BaseNewPageLayout extends React.Component {
         click: () => this.props.actions.setShowForm(false),
       },
       {
-        name: "查看养护管理",
+        name: "设备养护",
         click: () => this.props.actions.setShowForm(false),
         color: "#40A0EA",
       },
@@ -107,7 +106,6 @@ class BaseNewPageLayout extends React.Component {
       // getPurListInfo, //购置清单详情
       getAttachmentById, //根据id获取附件
     } = this.props.actions;
-    const { setPurpList } = this.props.formActions;
     const { loading } = this.props;
     const getBaseHoc = (
       param = {
@@ -161,23 +159,21 @@ class BaseNewPageLayout extends React.Component {
         size: -1,
       });
       //查询清单
-      getLanapplyPurByList({ id: row.id }).then((res) => {
-        let list = res.data.limsPuritemDOList.map((item) => {
-          return { ...item, ...item.limsBasicdeviceItemDO };
-        });
-        setPurpList(list);
-        formatList.map((item) => {
-          if (row[item]) {
-            row = { ...row, [item]: moment(row[item]) };
-          }
-        });
-        this.setState({
-          // approvalRecords: res.data.limsPurplanapply,
-          records: row,
-        });
-        this.formRef.current.setFieldsValue(row);
-        setShowForm(true);
-      });
+      getRepairMaintianItem({ mainId: row.id, size: 10, current: 1 }).then(
+        (res) => {
+          row = { ...row, limsRepairmaintainitemSaveDTOList: res.data.records };
+          formatList.map((item) => {
+            if (row[item]) {
+              row = { ...row, [item]: moment(row[item]) };
+            }
+          });
+          this.setState({
+            records: row,
+          });
+          this.formRef.current.setFieldsValue(row);
+          setShowForm(true);
+        }
+      );
     };
     //到货验收
     const submitFlow = () => {
@@ -195,25 +191,15 @@ class BaseNewPageLayout extends React.Component {
             [item]: String(values[item]),
           };
         });
-        let list = values.limsPurplanapplyitemDOList.map((item) => {
-          return this.state.records.id
-            ? {
-                deviceId: item.id,
-              }
-            : {
-                deviceId: item.id,
-                id: this.state.records.id,
-              };
-        });
         let updvalue = {
           ...values,
           submitType: 1,
-          limsPuritemUpdateDTOList: list,
+          // limsRepairitemUpdateDTOS: values.limsBasicdeviceItemDO,
           limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
         };
 
         addOrUpdateBase({
-          request: upd,
+          request: this.state.records?.id ? upd : add,
           key: storeKey,
           query: get,
           param: updvalue,
@@ -234,26 +220,15 @@ class BaseNewPageLayout extends React.Component {
           [item]: String(values[item]),
         };
       });
-      let list = values.limsPurplanapplyitemDOList.map((item) => {
-        return this.state.records.id
-          ? {
-              deviceId: item.id,
-            }
-          : {
-              deviceId: item.id,
-              id: this.state.records.id,
-            };
-      });
       let updvalue = {
         ...values,
         totalPrice: totalPrice,
         submitType: 0,
-        limsPuritemUpdateDTOList: list,
         limsAttachmentSaveDTOS: formatAttachment([...fileList, ...imageList]),
       };
 
       addOrUpdateBase({
-        request: values[keyId] ? upd : add,
+        request: this.state.records?.id ? upd : add,
         key: storeKey,
         query: get,
         param: updvalue,
@@ -280,27 +255,31 @@ class BaseNewPageLayout extends React.Component {
                   breadcrumb={this.breadcrumb}
                   editbreadcrumb={this.editbreadcrumb}
                 />
-                <Button
+                <DownLoad
+                  req={exportRepairMaintian}
+                  fileName="养护管理"
+                ></DownLoad>
+                {/* <Button
                   className="base-export-button"
                   onClick={() => {
                     downloadFile(
-                      exportLimsUselanapplyListPurItem(),
+                      exportRepairMaintian(),
                       {
                         current: 1,
                         size: 999,
                       },
-                      "购置单.xlsx"
+                      "养护单.xlsx"
                     );
                   }}
                 >
                   导出
-                </Button>
+                </Button> */}
               </div>
               <div className={"view-query-right"}>
                 <Form layout="inline" ref={this.rwoFormRef}>
                   <Form.Item>
                     <SearchInput
-                      placeholder="支持模糊查找申请单号"
+                      placeholder="支持模糊查找维修单号"
                       searchClick={() =>
                         rowFinish({
                           code: searchInput,
@@ -316,7 +295,6 @@ class BaseNewPageLayout extends React.Component {
                   onClick={() => {
                     this.setState({
                       records: {},
-                      // approvalRecords: {},
                     });
                     setShowForm(true);
                     this.formRef.current.resetFields();
@@ -344,20 +322,23 @@ class BaseNewPageLayout extends React.Component {
               confirm={confirm}
               update={update}
             ></DYTable>
-            {this.props.children}
+            {/* {this.props.children} */}
           </div>
         }
         {
-          <div hidden={!showForm}>
+          <div
+            hidden={!showForm}
+            // style={{ display: showForm ? "block" : "none" }}
+          >
             <div className="view-query-left">
               <RenderBreadcrumb
                 showForm={showForm}
                 breadcrumb={this.breadcrumb}
                 editbreadcrumb={this.editbreadcrumb}
               />
-              {this.state.records.code && (
+              {this.state.records.applyCode && (
                 <div className="purp-apply-code">
-                  购置单号:{this.state.records.code}
+                  养护单号：{this.state.records.applyCode}
                 </div>
               )}
             </div>
@@ -406,7 +387,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
-  formActions: bindActionCreators(formActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BaseNewPageLayout);

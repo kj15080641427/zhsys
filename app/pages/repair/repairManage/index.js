@@ -2,12 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
-import { getRepairList, updRepairList } from "../../../request/index";
+import {
+  getRepairList,
+  updRepairList,
+  addRepairList,
+} from "../../../request/index";
 import BaseNewPageLayout from "./baseLayout";
+import { Input } from "antd";
 
 const obj = {
-  0: "待维修",
-  1: "已维修",
+  0: "待处理",
+  1: "已处理",
+  2: "已处理",
 };
 export const columns = [
   {
@@ -19,7 +25,7 @@ export const columns = [
     dataIndex: "applyCode",
   },
   {
-    title: "申请日期",
+    title: "申请时间",
     dataIndex: "applyDate",
   },
   {
@@ -53,7 +59,7 @@ export const columns = [
   },
   {
     title: "维修技师",
-    dataIndex: "repairUserName",
+    dataIndex: "repairUser",
     hidden: true,
   },
   {
@@ -63,14 +69,36 @@ export const columns = [
     render: (e) => obj[e],
   },
 ];
+const baseFormItem = [
+  {
+    label: "维修技师",
+    name: "repairUser",
+    rules: [{ required: true }],
+    ele: <Input style={{ width: "100%" }}></Input>,
+  },
+  {
+    label: "联系电话",
+    rules: [{ required: true }],
+    name: "applyPhone",
+    ele: <Input style={{ width: "100%" }}></Input>,
+  },
+  {
+    label: "维修内容",
+    rules: [{ required: true }],
+    name: "remark",
+    ele: <Input style={{ width: "100%" }}></Input>,
+  },
+];
 const LendapplyList = (props) => {
   return (
     <div>
       <BaseNewPageLayout
         get={getRepairList} // 分页查询接口
         upd={updRepairList} // 更新数据接口
+        add={addRepairList}
         columns={columns} // 表格配置项
         // listFormItem={listFormItems}
+        baseFormItem={baseFormItem}
         keyId={"id"} // 数据的唯一ID
         storeKey={"purpLanapply"} // store中的key值. 要与 mapStatetoProps 中的key相同
         formatList={["applyDate"]} //需要转换时间格式的表单字段

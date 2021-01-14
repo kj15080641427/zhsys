@@ -20,18 +20,13 @@ const ModalSelect = (props) => {
     param,
     value,
     onChange,
+    getActions,
+    setActions,
   } = props;
   const { modelRecords, searchInput } = props;
-  const {
-    getModalSelect,
-    setModalRecords,
-    getPurpList,
-    setPurpList,
-  } = props.actions;
+  const { getModalSelect, setModalRecords } = props.actions;
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState();
-  // const [list, setList] = useState([]);
-  // const [disList, setDisList] = useState([]);
   const [radio, setRadio] = useState("0");
 
   useEffect(() => {
@@ -42,20 +37,9 @@ const ModalSelect = (props) => {
       param: param,
     });
     return () => {
-      setPurpList([]);
+      setActions([]);
     };
   }, []);
-
-  // useEffect(() => {
-  //   modelRecords && getPurpList({ id: modelRecords.id });
-  //   // getBase({
-  //   //   request: getLimsUselanapplyById,
-  //   //   key: "purpDetail",
-  //   //   param: {
-  //   //     id: modelRecords.id,
-  //   //   },
-  //   // });
-  // }, [modelRecords]);
 
   useEffect(() => {
     return () => {
@@ -65,8 +49,8 @@ const ModalSelect = (props) => {
 
   useEffect(() => {
     if (props.value) {
-      let list = dataSource.filter((item) => item.id == value);
-      setModalRecords(list[0]);
+      let list = dataSource?.filter((item) => item.id == value);
+      list && setModalRecords(list[0]);
     }
   }, [props.value]);
 
@@ -86,17 +70,14 @@ const ModalSelect = (props) => {
           setVisible(false);
           setModalRecords(selected);
           onChange(selected?.id);
-          getPurpList({ id: selected.id });
+          getActions({ id: selected.id });
+          // getPurpList({ id: selected.id });
         }}
       >
         <div className="modal-select-flex">
           <Radio.Group
             onChange={(e) => {
               setRadio(e.target.value);
-              // let a = dataSource.filter((item) => {
-              //   !!item[flowId];
-              // });
-              // setList(a);
             }}
             value={radio}
           >

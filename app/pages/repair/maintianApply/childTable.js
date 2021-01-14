@@ -22,7 +22,6 @@ const ChildTable = (props) => {
 
   useEffect(() => {
     props.value && setDataSource(props.value);
-    console.log(props.value, "========");
     return () => setDataSource([]);
   }, [props.value]);
 
