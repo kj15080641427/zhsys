@@ -293,39 +293,41 @@ const FlowForm = (props) => {
         <Form.Item name={id}></Form.Item>
         <Form.Item>
           <div className="flow-form-bottom">
-            <>
-              <Button
-                htmlType="submit"
-                className="flow-form-submit"
-                onClick={() => {
-                  let allList = [...fileList, ...imageList];
-                  let list = allList.map((item) => ({
-                    businessId: records.id,
-                    businessType: "1",
-                    fileName: item.name,
-                    filePath: item?.response?.data || item.url,
-                    fileType: item.type,
-                    smallFilePath: item?.response?.data || item.url,
-                    title: item.name.split(".")[0],
-                  }));
-                  addAttachment(list).then((res) => {
-                    // if (res.code != 200) {
-                    //   message.warning("附件上传失败");
-                    // } else {
-                    //   message.success("附件上传成功");
-                    // }
-                  });
-                }}
-              >
-                保存
-              </Button>
-              <Button className="flow-form-flow" onClick={submitFlow}>
-                维修入库
-              </Button>
+            {records.status != "2" ? (
+              <>
+                <Button
+                  htmlType="submit"
+                  className="flow-form-submit"
+                  onClick={() => {
+                    let allList = [...fileList, ...imageList];
+                    let list = allList.map((item) => ({
+                      businessId: records.id,
+                      businessType: "1",
+                      fileName: item.name,
+                      filePath: item?.response?.data || item.url,
+                      fileType: item.type,
+                      smallFilePath: item?.response?.data || item.url,
+                      title: item.name.split(".")[0],
+                    }));
+                    addAttachment(list).then((res) => {
+                      console.log(res);
+                    });
+                  }}
+                >
+                  保存
+                </Button>
+                <Button className="flow-form-flow" onClick={submitFlow}>
+                  维修入库
+                </Button>
+                <Button className="flow-form-calcel" onClick={cancelClick}>
+                  关闭
+                </Button>
+              </>
+            ) : (
               <Button className="flow-form-calcel" onClick={cancelClick}>
                 关闭
               </Button>
-            </>
+            )}
           </div>
         </Form.Item>
       </Form>

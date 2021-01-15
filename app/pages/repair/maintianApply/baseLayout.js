@@ -276,13 +276,13 @@ class LendLayout extends React.Component {
     //审批
     const approvalClick = (e) => {
       let formData = this.formRef?.current?.getFieldValue();
-
       if (formData.msg) {
         approvalMaintian({
           id: formData?.id,
           msg: formData?.msg,
           type: e,
         }).then(() => {
+          message.success("操作成功");
           getBase({
             request: get,
             key: storeKey,

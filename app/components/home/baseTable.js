@@ -15,12 +15,11 @@ const BaseTable = (props) => {
     loading,
     get, //请求
     storeKey, //store中的值的key
-    rowkey = "basicDictId",
+    rowKey = "basicDictId",
+    pageSize = "10",
   } = props;
   const { getBase } = props.actions;
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
   const getData = () => {
     return getBase({
       request: get,
@@ -33,7 +32,6 @@ const BaseTable = (props) => {
   };
 
   useEffect(() => {
-    // getData();
     baseStoreKey = storeKey;
   }, []);
   useEffect(() => {
@@ -46,15 +44,6 @@ const BaseTable = (props) => {
           className="table-pagination-novi"
           onClick={() => {
             setCurrent(1);
-            // getData();
-            // getBase({
-            //   request: get,
-            //   key: storeKey,
-            //   param: {
-            //     current: 1,
-            //     size: pageSize,
-            //   },
-            // });
           }}
         >
           首页
@@ -66,10 +55,10 @@ const BaseTable = (props) => {
         <a
           className="table-pagination-novi"
           onClick={() => {
-            if (total / 10 == 0) {
-              changePage(total / 10);
+            if (props[baseStoreKey]?.total / 10 == 0) {
+              setCurrent(props[baseStoreKey]?.total / 10);
             } else {
-              changePage(Math.floor(total / 10 + 1)); //返回值为大于等于其数字参数的最小整数。
+              setCurrent(Math.floor(props[baseStoreKey]?.total / 10 + 1)); //返回值为大于等于其数字参数的最小整数。
             }
           }}
         >
@@ -84,23 +73,10 @@ const BaseTable = (props) => {
     total: props[baseStoreKey]?.total,
     size: "default",
     current: current,
-    // showQuickJumper: true,
-    // showSizeChanger: true,
     onChange: (cur) => {
       setCurrent(cur);
-      // getData();
-      // getBase({
-      //   request: get,
-      //   key: storeKey,
-      //   param: {
-      //     current: cur,
-      //     size: pageSize,
-      //   },
-      // });
-      //   changePage(current);
     },
     pageSize: pageSize,
-    // pageSize: 5,
     showTotal: () => (
       <span>
         共有
@@ -163,8 +139,7 @@ const BaseTable = (props) => {
         ]}
         loading={loading}
         dataSource={props[baseStoreKey]?.records}
-        // scroll={{ y: 700 }}
-        rowKey={(row) => row[rowkey]}
+        rowKey={(row) => row[rowKey]}
         pagination={pagination}
         // rowSelection={rowSelection}
         // {...props}
@@ -173,7 +148,6 @@ const BaseTable = (props) => {
   );
 };
 const mapStateToProps = (state) => {
-  console.log(state.currency[baseStoreKey]);
   return {
     [baseStoreKey]: state.currency[baseStoreKey],
   };

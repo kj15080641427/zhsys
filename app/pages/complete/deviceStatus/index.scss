@@ -1,0 +1,17 @@
+.device-statue-select {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  #label {
+    width: 150px;
+    text-align: right;
+    margin-right: 10px;
+  }
+}
+.device-state-color {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: red;
+
+}

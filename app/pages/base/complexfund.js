@@ -9,9 +9,12 @@ import {
   addComplexfound,
   updComplexfound,
   delComplexfound,
+  getUserCompany,
+  getUser,
 } from "../../request/index";
 import BaseLayout from "../../components/baseComponent/connectComponents";
 import { columnsToFormFlow } from "./../../utils/common";
+import FormSelect from "../../components/formItems/select";
 
 const DeviceType = () => {
   const columns = [
@@ -38,15 +41,28 @@ const DeviceType = () => {
     {
       title: "领用单位",
       dataIndex: "useCompany",
+      ele: (
+        <FormSelect
+          style={{ width: "100%" }}
+          request={getUserCompany}
+          storeKey="userCompany"
+          labelString="name"
+          valueString="id"
+        ></FormSelect>
+      ),
     },
     {
       title: "领用人",
       dataIndex: "useUser",
-    },
-    {
-      title: "创建人",
-      dataIndex: "createUser",
-      key: "createUser",
+      ele: (
+        <FormSelect
+          style={{ width: "100%" }}
+          request={getUser}
+          storeKey="user"
+          labelString="realName"
+          valueString="id"
+        ></FormSelect>
+      ),
     },
   ];
   const formItem = columnsToFormFlow(columns);

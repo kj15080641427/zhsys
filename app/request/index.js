@@ -485,3 +485,21 @@ export function getDeviceScrap(data) {
 export function addDeviceScrap(data) {
   return fetchJSONData("POST", "/api/base/LimsDispose/save", data);
 }
+
+/**在库资产 */
+//查询在库资产
+export function getDepositstock(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositstock/page", data);
+}
+//添加在库资产
+export function addDepositstock(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositstock/save", data);
+}
+//更新在库资产
+export function updDepositstock(data) {
+  return fetchJSONData("POST", "api/base/LimsDepositstock/update", data);
+}
+//删除在库资产
+export function delDepositstock(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositstock/del", data);
+}

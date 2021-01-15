@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form, Row, Col, Upload, message, Timeline, Input } from "antd";
+import React, { useEffect } from "react";
+import { Button, Form, Row, Col, Input } from "antd";
 import ChildTable from "./childTable";
 import "./style.scss";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
-import { filterFileList } from "../../../utils/common";
 import AttachmentList from "../../../components/formItems/attachment";
 // import { approvalMaintian, getMaintian } from "../../../request";
 import moment from "moment";
+import Flow from "../../../components/formItems/flow";
 
 //工作流表单
 const FlowForm = (props) => {
@@ -21,10 +21,8 @@ const FlowForm = (props) => {
     formRef, //ref
     id, //数据唯一id
     cancelClick, //关闭按钮回调
-    buttonText = "保存", //submit按钮文字
     submitFlow, //提交审批回调
     records, //表单数据
-    defaultFileList, //已上传文件列表
     totalPrice, //总金额
     approvalClick0, //审批
     approvalClick1, //审批
@@ -32,7 +30,7 @@ const FlowForm = (props) => {
     formatList,
     taskInfo, //审批流程信息
   } = props;
-  const { setTotalPrice, approvalFlow, getBase, setShowForm } = props.actions;
+  const { setTotalPrice } = props.actions;
 
   useEffect(() => {
     let price = 0;
@@ -143,32 +141,16 @@ const FlowForm = (props) => {
       {/* 编辑时提交id */}
       <Form.Item name={id}></Form.Item>
 
-      {records?.status && (
+      {records?.status && records?.status != "0" ? (
         <div>
           <div className="form-info">
             <div className="line"></div>
             维修申请流程:
           </div>
-          <Timeline>
-            {taskInfo?.activitiDOList?.map((item) => {
-              return (
-                <Timeline.Item key={item.activityId} dot={""}>
-                  {item.activityName == "StartEvent"
-                    ? "开始"
-                    : item.activityName == "EndEvent"
-                    ? "结束"
-                    : item.activityName}
-                  <div className="flow-timeline">
-                    <div>
-                      {item.fullMessage && `审批意见:${item.fullMessage}`}
-                    </div>
-                    <div>审核时间:{item.time}</div>
-                  </div>
-                </Timeline.Item>
-              );
-            })}
-          </Timeline>
+          <Flow taskInfo={taskInfo} code="10005"></Flow>
         </div>
+      ) : (
+        ""
       )}
       {/* 审批意见 */}
       {records?.status == "1" ? (
@@ -245,9 +227,7 @@ const FlowForm = (props) => {
               >
                 拒绝
               </Button>
-              <Button className="flow-form-calcel" onClick={() => {}}>
-                打印
-              </Button>
+              <Button className="flow-form-calcel">打印</Button>
               <Button className="flow-form-calcel" onClick={cancelClick}>
                 关闭
               </Button>

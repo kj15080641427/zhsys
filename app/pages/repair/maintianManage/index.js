@@ -11,8 +11,9 @@ import BaseNewPageLayout from "./baseLayout";
 import { Input } from "antd";
 
 const obj = {
-  0: "待维修",
-  1: "已维修",
+  0: "待养护",
+  1: "待养护",
+  2: "已养护",
 };
 export const columns = [
   {

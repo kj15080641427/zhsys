@@ -65,7 +65,8 @@ const mapStateToProps = (state) => {
     dictjclx: state.currency.dictjclx, //借出类型
     dictghsh: state.currency.dictghsh, //业务类型 : 归还损坏
     dictyhlx: state.currency.dictyhlx, //养护类型
-    dictpurp: state.currency.dictpurp,//购置信息
+    dictpurp: state.currency.dictpurp, //购置信息
+    dictsb: state.currency.dictsb, //设备
   };
 };
 

@@ -95,18 +95,18 @@ const Menus = (props) => {
           </SubMenu>
           <SubMenu key="5" icon={<img src={device}></img>} title="设备处理">
             <Menu.Item key="/stationBasic">设备折旧</Menu.Item>
-            <Menu.Item key="/siteWater">报废单</Menu.Item>
+            <Menu.Item key="/DeviceScrap">设备报废</Menu.Item>
           </SubMenu>
           <SubMenu key="6" icon={<img src={all}></img>} title="综合管理">
             <Menu.Item key="/sitePump">设备报废预警</Menu.Item>
-            <Menu.Item key="/siteDict">设备状态</Menu.Item>
+            <Menu.Item key="/DeviceStatus">设备状态</Menu.Item>
             <Menu.Item key="/siteDike">出借状态</Menu.Item>
             <Menu.Item key="/Complexfund">年度经费</Menu.Item>
           </SubMenu>
           <SubMenu key="7" icon={<img src={hcgl}></img>} title="耗材管理">
             <Menu.Item key="/message">入库单</Menu.Item>
             <Menu.Item key="/taskList">出库单</Menu.Item>
-            <Menu.Item key="/chartGroup">在库资产</Menu.Item>
+            <Menu.Item key="/Despositstock">在库资产</Menu.Item>
           </SubMenu>
           <SubMenu
             key="8"

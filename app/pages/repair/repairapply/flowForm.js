@@ -144,7 +144,7 @@ const FlowForm = (props) => {
             <div className="line"></div>
             申请流程:
           </div>
-          <Flow taskInfo={taskInfo} code="10001"></Flow>
+          <Flow taskInfo={taskInfo} code="10005"></Flow>
         </>
       )}
       {/* 审批意见 */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Radio } from "antd";
+import { Table, Radio, Input } from "antd";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
@@ -36,23 +36,45 @@ const ChildTable = (props) => {
     },
     {
       title: "品 牌",
-      dataIndex: "brandName",
+      dataIndex: "unitName",
       render: (_, row) => row.brandName,
     },
     {
-      title: "维修工时",
-      dataIndex: "remark",
+      title: "上次保养日期",
+      dataIndex: "",
     },
     {
-      title: "维修费用",
+      title: "保养周期",
+      dataIndex: "",
+    },
+    {
+      title: "距离保养到期",
+      dataIndex: "",
+    },
+    {
+      title: "养护开始日期",
+      dataIndex: "",
+    },
+    {
+      title: "养护天数",
+      dataIndex: "",
+    },
+    {
+      title: "养护费用",
       dataIndex: "fee",
+      render: (e, row, index) => (
+        <Input
+          defaultValue={props.value[index]?.fee}
+          onChange={(W) => {
+            let list = dataSource;
+            list[index].fee = W.target.value;
+            setDataSource(list);
+          }}
+        ></Input>
+      ),
     },
     {
-      title: "备注说明",
-      dataIndex: "remark",
-    },
-    {
-      title: "状态",
+      title: "养护结果",
       dataIndex: "status",
       hidden: true,
       render: (_, __, index) =>
@@ -65,8 +87,8 @@ const ChildTable = (props) => {
               setDataSource(list);
             }}
           >
-            <Radio value="1">已修复</Radio>
-            <Radio value="2">已报废</Radio>
+            <Radio value="1">已养护</Radio>
+            <Radio value="2">已损坏</Radio>
           </Radio.Group>
         ) : (
           ""

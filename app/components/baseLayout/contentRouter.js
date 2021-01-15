@@ -22,6 +22,10 @@ import Repair from "../../pages/repair/repairManage/index";
 import Maintian from "../../pages/repair/maintianApply";
 import MaintianManage from "../../pages/repair/maintianManage";
 import Test from "../../pages/test";
+import DeviceScrap from "../../pages/scrap/index";
+import Despositstock from "../../pages/warehouse/depositstock";
+import DeviceStatus from "../../pages/complete/deviceStatus/index";
+
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
     super(props, context);
@@ -51,6 +55,12 @@ class ContentRouter extends React.PureComponent {
         <Route path={"/Maintian"} component={Maintian} />
         <Route path={"/MaintianManage"} component={MaintianManage} />
         <Route path={"/Complexfund"} component={Complexfund} />
+
+        <Route path={"/DeviceScrap"} component={DeviceScrap} />
+        <Route path={"/Despositstock"} component={Despositstock} />
+        <Route path={"/DeviceStatus"} component={DeviceStatus} />
+        {/* <Route path={"/Complexfund"} component={Complexfund} /> */}
+
         <Route path={"/Test"} component={Test} />
         <Route component={Nothing} />
       </Switch>
