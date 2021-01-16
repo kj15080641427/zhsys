@@ -1,3 +1,6 @@
+.device-state-body {
+  position: relative;
+}
 .device-statue-select {
   display: flex;
   align-items: center;
@@ -8,10 +11,69 @@
     margin-right: 10px;
   }
 }
+.device-state-box {
+  display: flex;
+  position: absolute;
+  right: 60px;
+  // right: 10px;
+}
+.device-state-layout {
+  display: flex;
+  margin-left: 10px;
+}
 .device-state-color {
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  background-color: red;
-
+  margin-left: 2px;
+}
+.device-state-card-box {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+  #nameBox {
+    margin-left: 10px;
+  }
+  #name {
+    font-size: 18px;
+    color: black;
+    width: 110px;
+  }
+  #text {
+    width: 150px;
+  }
+}
+.device-state-card {
+  border: 1px solid #a0a0a0;
+  width: 250px;
+  height: 220px;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #000;
+  cursor: pointer;
+  img {
+    width: 80px;
+    height: 80px;
+  }
+}
+.device-state-text {
+  text-align: center;
+}
+.device-state-pagina {
+  margin: 10px;
+}
+.device-state-line {
+  height: 1px;
+  width: 100%;
+  border: 1px dashed #a0a0a0;
+}
+.device-detail-flex{
+  display: flex;
+  flex-wrap: wrap;
+  div{
+    width: 300px;
+    margin: 10px;
+  }
 }

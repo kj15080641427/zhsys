@@ -140,6 +140,7 @@ const Lendapply = () => {
       title: "借出理由",
       dataIndex: "reason",
       ele: <Input style={{ width: "100%" }} />,
+      require: true,
       col: 16,
       labelCol: 2,
     },
