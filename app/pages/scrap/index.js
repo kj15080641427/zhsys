@@ -4,13 +4,8 @@ import {
   getDeviceScrap,
   addDeviceScrap,
   getLimsBasicDevice,
-  // updComplexfound,
-  // delComplexfound,
 } from "../../request/index";
 import { Input, DatePicker } from "antd";
-// import { columnsToFormFlow } from "../../utils/common";
-// import BaseTable from "../../components/home/baseTable";
-// import BaseForm from "../../components/home/baseForm";
 import FormSelect from "../../components/formItems/select";
 const DeviceScrap = (props) => {
   const columns = [

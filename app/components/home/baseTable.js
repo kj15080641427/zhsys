@@ -17,6 +17,11 @@ const BaseTable = (props) => {
     storeKey, //store中的值的key
     rowKey = "basicDictId",
     pageSize = "10",
+    showEdit = true,
+    showView = true,
+    showDelete = true,
+    deleteRow,
+    update,
   } = props;
   const { getBase } = props.actions;
   const [current, setCurrent] = useState(1);
@@ -102,37 +107,39 @@ const BaseTable = (props) => {
             fixed: "right",
             render: (_, row) => (
               <div className="new-base-columns">
-                <Popover content={"编辑"}>
-                  <img
-                    src={editImg}
-                    // onClick={() => update(row)}
-                  ></img>
-                </Popover>
-                <Popover content={"查看"}>
-                  <img
-                    style={{ cursor: "pointer" }}
-                    width="20px"
-                    height="20px"
-                    src={view}
-                    // onClick={() => update(row)}
-                  ></img>
-                </Popover>
-                {/* // )} */}
-                <Popconfirm
-                  title="确定永久删除该数据吗?"
-                  onConfirm={() => confirm(row)}
-                  okText="确定"
-                  cancelText="取消"
-                >
-                  <Popover content={"删除"}>
+                {showEdit && (
+                  <Popover content={"编辑"}>
+                    <img src={editImg} onClick={() => update(row)}></img>
+                  </Popover>
+                )}
+                {showView && (
+                  <Popover content={"查看"}>
                     <img
-                      src={deleteImg}
-                      width="16px"
-                      height="16px"
-                      style={{ marginLeft: "10px", cursor: "pointer" }}
+                      style={{ cursor: "pointer" }}
+                      width="20px"
+                      height="20px"
+                      src={view}
+                      onClick={() => update(row)}
                     ></img>
                   </Popover>
-                </Popconfirm>
+                )}
+                {showDelete && (
+                  <Popconfirm
+                    title="确定永久删除该数据吗?"
+                    onConfirm={() => deleteRow(row)}
+                    okText="确定"
+                    cancelText="取消"
+                  >
+                    <Popover content={"删除"}>
+                      <img
+                        src={deleteImg}
+                        width="16px"
+                        height="16px"
+                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                      ></img>
+                    </Popover>
+                  </Popconfirm>
+                )}
               </div>
             ),
           },

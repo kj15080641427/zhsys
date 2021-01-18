@@ -25,6 +25,9 @@ import Test from "../../pages/test";
 import DeviceScrap from "../../pages/scrap/index";
 import Despositstock from "../../pages/warehouse/depositstock";
 import DeviceStatus from "../../pages/complete/deviceStatus/index";
+import DeviceLendState from "../../pages/complete/deviceLendState/index";
+import In from "../../pages/warehouse/in/index";
+import Out from "../../pages/warehouse/out/index";
 
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
@@ -59,8 +62,10 @@ class ContentRouter extends React.PureComponent {
         <Route path={"/DeviceScrap"} component={DeviceScrap} />
         <Route path={"/Despositstock"} component={Despositstock} />
         <Route path={"/DeviceStatus"} component={DeviceStatus} />
-        {/* <Route path={"/Complexfund"} component={Complexfund} /> */}
+        <Route path={"/DeviceLendState"} component={DeviceLendState} />
 
+        <Route path={"/In"} component={In} />
+        <Route path={"/Out"} component={Out} />
         <Route path={"/Test"} component={Test} />
         <Route component={Nothing} />
       </Switch>

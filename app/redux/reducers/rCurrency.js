@@ -9,6 +9,7 @@ const initState = {
   imageList: [],
   attachmentList: [],
   returnBackList: [],
+  deposiDevice: {},
 };
 export default function currency(state = initState, action) {
   let newState = Object.assign({}, state);

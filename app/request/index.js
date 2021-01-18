@@ -503,3 +503,24 @@ export function updDepositstock(data) {
 export function delDepositstock(data) {
   return fetchJSONData("POST", "/api/base/LimsDepositstock/del", data);
 }
+
+/**入库管理 */
+export function getDepositstockIn(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositinstock/page", data);
+}
+//添加入库管理
+export function addDepositstockIn(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositinstock/save", data);
+}
+//更新入库管理
+export function updDepositstockIn(data) {
+  return fetchJSONData("POST", "api/base/LimsDepositinstock/update", data);
+}
+//删除入库管理
+export function delDepositstockIn(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositinstock/del", data);
+}
+//根据id查询入库清单
+export function getDepositstockInById(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositinstock/queryById", data);
+}
