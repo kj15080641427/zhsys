@@ -1,9 +1,8 @@
 import React from "react";
-import { Button, Form, Row, Col, Input } from "antd";
+import { Button, Form, Row, Col } from "antd";
 import "./index.scss";
 import moment from "moment";
 import ChildTable from "./childTable";
-import Flow from "../../../components/formItems/flow";
 
 //工作流表单
 const FlowForm = (props) => {
@@ -20,7 +19,6 @@ const FlowForm = (props) => {
     approvalClick0, //审批
     approvalClick1, //审批
     approvalClick2, //审批
-    taskInfo, //审批流程信息
     formatList,
   } = props;
   const renderItem = (item) => {
@@ -34,7 +32,7 @@ const FlowForm = (props) => {
     <Form name={name} onFinish={onFinish} ref={formRef} labelCol={{ span: 5 }}>
       <div className="form-info">
         <div className="line"></div>
-        购置信息:
+        入库信息:
       </div>
       <Row>
         {/* 渲染基础表单 */}
@@ -65,7 +63,7 @@ const FlowForm = (props) => {
       </Row>
       <div className="card-line"></div>
       <div className="form-info">
-        <div className="line"></div>购置清单:
+        <div className="line"></div>入库清单:
       </div>
       <Row>
         {/* 列表 */}
@@ -73,7 +71,7 @@ const FlowForm = (props) => {
           <Form.Item
             labelAlign="right"
             label={""}
-            name={"limsBasicdeviceDTOList"}
+            name={"limsDepositinstockitemSaveDTOS"}
             rules={[{ required: true, message: "请输入购置清单" }]}
           >
             <ChildTable records={records} />
@@ -81,67 +79,6 @@ const FlowForm = (props) => {
         </Col>
       </Row>
 
-      {records?.status && records?.status != 0 ? (
-        <>
-          {/* 审批流程 */}
-          <div className="form-info">
-            <div className="line"></div>
-            购置审批流程:
-          </div>
-          <br />
-          <Flow taskInfo={taskInfo}></Flow>
-          {/* <Timeline>
-            {taskInfo?.activitiDOList?.map((item) => {
-              return (
-                <Timeline.Item key={item.activityId} dot={""}>
-                  {item.activityName == "StartEvent"
-                    ? "开始"
-                    : item.activityName == "EndEvent"
-                    ? "结束"
-                    : item.activityName}
-                  <div className="flow-timeline">
-                    <div>
-                      {item.realName && (
-                        <div>
-                          {item.activityName}:{item.realName}
-                        </div>
-                      )}
-                      <div>
-                        {item.fullMessage && `审批意见:${item.fullMessage}`}
-                      </div>
-                    </div>
-                    <div className="flow-timeline-date">
-                      {item.activityName == "EndEvent"
-                        ? "结束时间"
-                        : item.activityName == "StartEvent"
-                        ? "开始时间"
-                        : "审核时间"}
-                      :{item.time}
-                    </div>
-                  </div>
-                </Timeline.Item>
-              );
-            })}
-          </Timeline> */}
-        </>
-      ) : (
-        ""
-      )}
-      {/* 审批意见 */}
-      {records?.status == "1" ? (
-        <Col span={24}>
-          <Form.Item
-            name={"msg"}
-            label="审批意见:"
-            labelCol={{ span: 2 }}
-            rules={[{ required: true }]}
-          >
-            <Input></Input>
-          </Form.Item>
-        </Col>
-      ) : (
-        ""
-      )}
       {/* 编辑时提交id */}
       <Form.Item name={id}></Form.Item>
       <Form.Item>

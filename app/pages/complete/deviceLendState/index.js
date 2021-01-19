@@ -136,9 +136,9 @@ const DeviceStatus = (props) => {
                 <br />
                 <br />
                 <div className="device-state-card-box">
-                  <div>
+                  <div style={{ width: "200px" }}>
                     <div id="text">编号:{item.deviceNo}</div>
-                    <div id="text">
+                    <div id="text" style={{ width: "200px" }}>
                       预计归还时间:{item.produceDate?.slice(0, 10)}
                     </div>
                   </div>

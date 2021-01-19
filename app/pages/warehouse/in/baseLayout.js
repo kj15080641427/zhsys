@@ -147,18 +147,17 @@ class BaseNewPageLayout extends React.Component {
     const update = (row) => {
       getDepositstockInById({ id: row.id }).then((res) => {
         if (res.code == 200) {
-          this.setState({
-            taskInfo: res.data,
-          });
           row = {
             ...row,
-            limsBasicdeviceDTOList: res.data.limsPurplanapplyitemDOList,
+            limsDepositinstockitemSaveDTOS:
+              res.data.limsDepositinstockitemDOList,
           };
           formatList.map((item) => {
             row = { ...row, [item]: moment(row[item]) };
           });
           this.setState({
             records: row,
+            taskInfo: res.data,
           });
           this.formRef.current.setFieldsValue(row);
           setShowForm(true);
@@ -176,38 +175,19 @@ class BaseNewPageLayout extends React.Component {
           [item]: moment(formData[item]).format("YYYY-MM-DD HH:mm:ss"),
         };
       });
-      stringList.forEach((item) => {
-        formData = {
-          ...formData,
-          [item]: String(formData[item]),
-        };
+
+      let submitValue = {
+        ...formData,
+        submitType: 1,
+        limsDepositinstockitemSaveDTOS: formData.limsDepositinstockitemSaveDTOS,
+      };
+
+      addOrUpdateBase({
+        request: formData[keyId] ? upd : add,
+        key: storeKey,
+        query: get,
+        param: submitValue,
       });
-
-      let updvalue = {
-        ...formData,
-        submitType: 1,
-        limsBasicdeviceUpdateDTOList: formData.limsBasicdeviceDTOList,
-      };
-      delete updvalue.limsBasicdeviceDTOList;
-      let addvalue = {
-        ...formData,
-        submitType: 1,
-      };
-      delete formData.limsBasicdeviceDTOList;
-
-      formData[keyId]
-        ? addOrUpdateBase({
-            request: upd,
-            key: storeKey,
-            query: get,
-            param: updvalue,
-          })
-        : addOrUpdateBase({
-            request: add,
-            key: storeKey,
-            query: get,
-            param: addvalue,
-          });
     };
     // 提交
     const onFinish = (values) => {
@@ -223,30 +203,17 @@ class BaseNewPageLayout extends React.Component {
           [item]: String(values[item]),
         };
       });
-      let updvalue = {
-        ...values,
-        submitType: 0,
-        limsBasicdeviceUpdateDTOList: values.limsBasicdeviceDTOList,
-      };
-      delete updvalue.limsBasicdeviceDTOList;
-      let addvalue = {
+      let submitValue = {
         ...values,
         submitType: 0,
       };
-      delete values.limsBasicdeviceDTOList;
-      values[keyId]
-        ? addOrUpdateBase({
-            request: upd,
-            key: storeKey,
-            query: get,
-            param: updvalue,
-          })
-        : addOrUpdateBase({
-            request: add,
-            key: storeKey,
-            query: get,
-            param: addvalue,
-          });
+
+      addOrUpdateBase({
+        request: values[keyId] ? upd : add,
+        key: storeKey,
+        query: get,
+        param: submitValue,
+      });
     };
     //审批
     const approvalClick = (e) => {
@@ -298,7 +265,7 @@ class BaseNewPageLayout extends React.Component {
                 />
                 <DownLoad
                   req={exportLimsUselanapply}
-                  fileName="购置申请"
+                  fileName="入库申请"
                 ></DownLoad>
               </div>
               <div className={"view-query-right"}>
@@ -316,7 +283,7 @@ class BaseNewPageLayout extends React.Component {
                   </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
-                <Button
+                {/* <Button
                   className="base-add-button"
                   onClick={() => {
                     this.setState({
@@ -327,7 +294,7 @@ class BaseNewPageLayout extends React.Component {
                   }}
                 >
                   新增
-                </Button>
+                </Button> */}
               </div>
             </div>
             <DYTable

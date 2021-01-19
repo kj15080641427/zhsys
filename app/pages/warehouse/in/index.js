@@ -24,20 +24,19 @@ export const columns = [
   },
   {
     title: "入库类型",
-    dataIndex: "applyDate",
-    render: (e) => e && e.slice(0, -9),
+    dataIndex: "inname",
   },
   {
     title: "入库时间",
-    dataIndex: "userRealName",
+    dataIndex: "modifyDate",
   },
   {
     title: "业务单号",
-    dataIndex: "compayName",
+    dataIndex: "bussineId",
   },
   {
     title: "备注",
-    dataIndex: "title",
+    dataIndex: "remark",
     width: "250px",
   },
   {
@@ -54,14 +53,13 @@ const Lendapply = (props) => {
   const baseFormItems = columnsToForm([
     {
       title: "入库类型",
-      dataIndex: "applyUser",
-      labelName: "userRealName",
+      dataIndex: "inname",
       ele: (
         <FormSelect
           style={{ width: "100%" }}
           request={getLimsBasicDict}
-          param={{ current: 1, size: -1, businessType: "2" }}
-          storeKey="sglx"
+          param={{ current: 1, size: -1, businessType: "9" }}
+          storeKey="rklx"
           labelString="name"
           valueString="basicDictId"
         ></FormSelect>
@@ -69,12 +67,12 @@ const Lendapply = (props) => {
     },
     {
       title: "入库时间",
-      dataIndex: "applyDate",
+      dataIndex: "modifyDate",
       ele: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"></DatePicker>,
     },
     {
       title: "业务单号",
-      dataIndex: "title",
+      dataIndex: "bussineId",
       ele: <Input style={{ width: "100%" }}></Input>,
     },
     {
@@ -86,15 +84,6 @@ const Lendapply = (props) => {
     },
   ]);
 
-  // const listFormItems = columnsToForm([
-  //   {
-  //     title: "",
-  //     dataIndex: "limsBasicdeviceDTOList",
-  //     ele: <ChildTable />,
-  //     rules: [{ required: true, message: "请输入购置清单" }],
-  //     labelCol: 1,
-  //   },
-  // ]);
 
   const breadcrumb = [
     {
@@ -121,7 +110,7 @@ const Lendapply = (props) => {
         // listFormItem={listFormItems}
         keyId={"id"} // 数据的唯一ID
         storeKey={"purpLanapply"} // store中的key值. 要与 mapStatetoProps 中的key相同
-        formatList={["applyDate", "expectedDate"]} //需要转换时间格式的表单字段
+        formatList={["modifyDate", "expectedDate"]} //需要转换时间格式的表单字段
         breadcrumb={breadcrumb} //面包屑
         formWidth={"1000px"} //宽度
       ></BaseNewPageLayout>

@@ -7,7 +7,7 @@ import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import "./index.scss";
 import FormSelect from "../../../components/formItems/select";
 import { getLimsBasiccategory } from "../../../request/index";
-import { getLimsBasicDevice } from "../../../request/index";
+import { getDeviceStatus } from "../../../request/index";
 
 const obj = {
   2: {
@@ -74,9 +74,9 @@ const DeviceStatus = (props) => {
   useEffect(() => {
     console.log(status, type);
     getBase({
-      request: getLimsBasicDevice,
+      request: getDeviceStatus,
       key: "deviceStatus",
-      param: { current: current, size: 24, status: status, type: type },
+      param: { current: current, size: 24, status: status, categoryId: type },
     });
   }, [current, type, status]);
 

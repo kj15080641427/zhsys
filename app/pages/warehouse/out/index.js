@@ -5,10 +5,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import {
-  getLimsUselanapply,
-  addLimsUselanapply,
-  updLimsUselanapply,
-  delLimsUselanapply,
+  getDepositstockOut,
+  // addLimsUselanapply,
+  updDepositstockOut,
+  delDepositstockOut,
   // getUser, //查询用户
   getLimsBasicDict, //查询字典
 } from "../../../request/index";
@@ -24,20 +24,20 @@ export const columns = [
   },
   {
     title: "出库类型",
-    dataIndex: "applyDate",
+    dataIndex: "outName",
     render: (e) => e && e.slice(0, -9),
   },
   {
     title: "业务单号",
-    dataIndex: "compayName",
+    dataIndex: "bussineId",
   },
   {
     title: "出库时间",
-    dataIndex: "userRealName",
+    dataIndex: "modifyDate",
   },
   {
-    title: "出库人",
-    dataIndex: "title",
+    title: "备注",
+    dataIndex: "remark",
     width: "250px",
   },
   {
@@ -53,15 +53,15 @@ const Lendapply = (props) => {
 
   const baseFormItems = columnsToForm([
     {
-      title: "入库类型",
-      dataIndex: "applyUser",
-      labelName: "userRealName",
+      title: "出库类型",
+      dataIndex: "outType",
+      labelName: "outName",
       ele: (
         <FormSelect
           style={{ width: "100%" }}
           request={getLimsBasicDict}
-          param={{ current: 1, size: -1, businessType: "2" }}
-          storeKey="sglx"
+          param={{ current: 1, size: -1, businessType: "10" }}
+          storeKey="cklx"
           labelString="name"
           valueString="basicDictId"
         ></FormSelect>
@@ -74,7 +74,7 @@ const Lendapply = (props) => {
     },
     {
       title: "业务单号",
-      dataIndex: "title",
+      dataIndex: "bussineId",
       ele: <Input style={{ width: "100%" }}></Input>,
     },
     {
@@ -112,10 +112,10 @@ const Lendapply = (props) => {
   return (
     <div className="purp">
       <BaseNewPageLayout
-        get={getLimsUselanapply} // 分页查询接口
-        add={addLimsUselanapply} // 添加数据接口
-        upd={updLimsUselanapply} // 更新数据接口
-        del={delLimsUselanapply} // 删除数据接口
+        get={getDepositstockOut} // 分页查询接口
+        // add={addLimsUselanapply} // 添加数据接口
+        upd={updDepositstockOut} // 更新数据接口
+        del={delDepositstockOut} // 删除数据接口
         columns={columns} // 表格配置项
         baseFormItem={baseFormItems} // 表单配置项
         // listFormItem={listFormItems}

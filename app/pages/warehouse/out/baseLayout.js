@@ -9,9 +9,8 @@ import { connect } from "react-redux";
 import moment from "moment";
 import SearchInput from "../../../components/formItems/searchInput";
 import {
-  getLimsUselanapplyById,
+  getDepositstockOutById,
   exportLimsUselanapply,
-  approvalLimsUselanapply,
 } from "../../../request/index";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import DownLoad from "../../../components/formItems/downLoad";
@@ -145,20 +144,18 @@ class BaseNewPageLayout extends React.Component {
     };
     // 修改
     const update = (row) => {
-      getLimsUselanapplyById({ id: row.id }).then((res) => {
+      getDepositstockOutById({ id: row.id }).then((res) => {
         if (res.code == 200) {
-          this.setState({
-            taskInfo: res.data,
-          });
           row = {
             ...row,
-            limsBasicdeviceDTOList: res.data.limsPurplanapplyitemDOList,
+            limsDepositinstockitemDOList: res.data.limsDepositinstockitemDOList,
           };
           formatList.map((item) => {
             row = { ...row, [item]: moment(row[item]) };
           });
           this.setState({
             records: row,
+            taskInfo: res.data,
           });
           this.formRef.current.setFieldsValue(row);
           setShowForm(true);
@@ -183,31 +180,18 @@ class BaseNewPageLayout extends React.Component {
         };
       });
 
-      let updvalue = {
+      let submitValue = {
         ...formData,
         submitType: 1,
-        limsBasicdeviceUpdateDTOList: formData.limsBasicdeviceDTOList,
+        limsDepositoutstockitemSaveDTOS: formData.limsBasicdeviceDTOList,
       };
-      delete updvalue.limsBasicdeviceDTOList;
-      let addvalue = {
-        ...formData,
-        submitType: 1,
-      };
-      delete formData.limsBasicdeviceDTOList;
 
-      formData[keyId]
-        ? addOrUpdateBase({
-            request: upd,
-            key: storeKey,
-            query: get,
-            param: updvalue,
-          })
-        : addOrUpdateBase({
-            request: add,
-            key: storeKey,
-            query: get,
-            param: addvalue,
-          });
+      addOrUpdateBase({
+        request: formData[keyId] ? upd : add,
+        key: storeKey,
+        query: get,
+        param: submitValue,
+      });
     };
     // 提交
     const onFinish = (values) => {
@@ -223,59 +207,19 @@ class BaseNewPageLayout extends React.Component {
           [item]: String(values[item]),
         };
       });
-      let updvalue = {
+      let submitValue = {
         ...values,
         submitType: 0,
-        limsBasicdeviceUpdateDTOList: values.limsBasicdeviceDTOList,
+        limsDepositoutstockitemSaveDTOS: values.limsBasicdeviceDTOList,
       };
-      delete updvalue.limsBasicdeviceDTOList;
-      let addvalue = {
-        ...values,
-        submitType: 0,
-      };
-      delete values.limsBasicdeviceDTOList;
-      values[keyId]
-        ? addOrUpdateBase({
-            request: upd,
-            key: storeKey,
-            query: get,
-            param: updvalue,
-          })
-        : addOrUpdateBase({
-            request: add,
-            key: storeKey,
-            query: get,
-            param: addvalue,
-          });
+
+      addOrUpdateBase({
+        request: values[keyId] ? upd : add,
+        key: storeKey,
+        query: get,
+        param: submitValue,
+      });
     };
-    //审批
-    const approvalClick = (e) => {
-      let formData = this.formRef?.current?.getFieldValue();
-      if (formData.msg) {
-        approvalLimsUselanapply({
-          limsPurplanapplyId: formData?.id,
-          msg: formData?.msg,
-          type: e,
-        }).then((res) => {
-          if (res.code == 200) {
-            message.success(res.msg);
-            getBase({
-              request: get,
-              key: storeKey,
-              param: { current: 1, size: 10 },
-            });
-            setShowForm(false);
-          } else {
-            message.error(res.msg);
-          }
-        });
-      } else {
-        message.error("请输入审批意见");
-      }
-    };
-    const approvalClick0 = () => approvalClick(0);
-    const approvalClick1 = () => approvalClick(1);
-    const approvalClick2 = () => approvalClick(2);
     // 查询
     const rowFinish = (values) => {
       this.setState({
@@ -316,7 +260,7 @@ class BaseNewPageLayout extends React.Component {
                   </Form.Item>
                 </Form>
                 <Button className="base-add-button">高级</Button>
-                <Button
+                {/* <Button
                   className="base-add-button"
                   onClick={() => {
                     this.setState({
@@ -327,7 +271,7 @@ class BaseNewPageLayout extends React.Component {
                   }}
                 >
                   新增
-                </Button>
+                </Button> */}
               </div>
             </div>
             <DYTable
@@ -368,9 +312,6 @@ class BaseNewPageLayout extends React.Component {
             <FlowForm
               formatList={formatList}
               taskInfo={this.state.taskInfo}
-              approvalClick0={approvalClick0}
-              approvalClick1={approvalClick1}
-              approvalClick2={approvalClick2}
               records={this.state.records}
               submitFlow={submitFlow}
               buttonText={buttonText}

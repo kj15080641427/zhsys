@@ -524,3 +524,30 @@ export function delDepositstockIn(data) {
 export function getDepositstockInById(data) {
   return fetchJSONData("POST", "/api/base/LimsDepositinstock/queryById", data);
 }
+
+/**出库管理 */
+export function getDepositstockOut(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositoutstock/page", data);
+}
+//添加出库管理
+export function addDepositstockOut(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositoutstock/save", data);
+}
+//更新出库管理
+export function updDepositstockOut(data) {
+  return fetchJSONData("POST", "api/base/LimsDepositoutstock/update", data);
+}
+//删除出库管理
+export function delDepositstockOut(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositoutstock/del", data);
+}
+//根据id查询出库清单
+export function getDepositstockOutById(data) {
+  return fetchJSONData("POST", "/api/base/LimsDepositoutstock/queryById", data);
+}
+
+
+/**查询设备状态 */
+export function getDeviceStatus(data) {
+  return fetchJSONData("POST", "/api/base/LimsBasicdevice/queryByDevice", data);
+}
