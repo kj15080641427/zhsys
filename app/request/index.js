@@ -131,6 +131,22 @@ export function delLimsBasiccategory(data) {
 export function getLimsBasicDevice(data) {
   return fetchJSONData("POST", "/api/base/LimsBasicdevice/page", data);
 }
+//查询设备出借状态
+export function getLendDeviceStatus(data) {
+  return fetchJSONData(
+    "POST",
+    "/api/base/LimsBasicdevice/queryUselenByDevice",
+    data
+  );
+}
+//根据id查询设备借出详情
+export function getLendDeviceStatusById(data) {
+  return fetchJSONData(
+    "POST",
+    "/api/base/LimsBasicdevice/queryUselenByDeviceInfo",
+    data
+  );
+}
 //新增设备基础数据
 export function addLimsBasicDevice(data) {
   return fetchJSONData("POST", "/api/base/LimsBasicdevice/save", data);
@@ -545,7 +561,6 @@ export function delDepositstockOut(data) {
 export function getDepositstockOutById(data) {
   return fetchJSONData("POST", "/api/base/LimsDepositoutstock/queryById", data);
 }
-
 
 /**查询设备状态 */
 export function getDeviceStatus(data) {

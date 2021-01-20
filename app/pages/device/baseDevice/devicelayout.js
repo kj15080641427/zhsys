@@ -1,7 +1,6 @@
 import React from "react";
-import { Button, Modal, Form, Input, Breadcrumb, Drawer } from "antd";
+import { Button, Form, Input, Breadcrumb, Drawer } from "antd";
 import DYTable from "@app/components/home/table";
-import DYForm from "@app/components/home/form";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import "../../../components/baseLayout/style.scss";
@@ -28,9 +27,6 @@ class BaseLayout extends React.Component {
   }
 
   componentDidMount() {
-    // if (!this.props.dict[1]) {
-    //   this.props.actions.getDict();
-    // }
     this.props.actions.getBase({
       request: this.props.get,
       key: this.props.storeKey,

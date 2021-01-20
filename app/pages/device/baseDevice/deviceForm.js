@@ -1,15 +1,17 @@
 import React from "react";
-import { Form, Input, Row, Col, DatePicker, Button, Upload } from "antd";
+import { Form, Input, Row, Col, DatePicker, Button } from "antd";
 // import DYForm from "./../home/form";
 import FormSelect from "../../../components/formItems/select";
 import { getLimsBasiccategory, getLimsBasicDict } from "../../../request/index";
 import { columnsToFormFlow, formatAttachment } from "../../../utils/common";
 // import DevicePart from "./devicePart";
 import AttachmentList from "../../../components/formItems/attachment";
-// import "./index.scss";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as actions from "../../../redux/actions/aCurrency";
 
-export default (props) => {
-  const { onFinish, formRef, id = "id", deviceInfo, devicePart } = props;
+const BaseDevice = (props) => {
+  const { onFinish, formRef, id = "id", imageList } = props;
   const columns = [
     {
       title: "设备编号",
@@ -29,7 +31,6 @@ export default (props) => {
     {
       title: "单位",
       dataIndex: "unit",
-      // require: true,
       ele: (
         <FormSelect
           style={{ width: "100%" }}
@@ -69,13 +70,7 @@ export default (props) => {
           valueString="id"
         ></FormSelect>
       ),
-      // rules: [{ require: false }],
     },
-
-    // {
-    //   title: "出厂编号",
-    //   dataIndex: "unit",
-    // },
     {
       title: "价值",
       dataIndex: "price",
@@ -113,13 +108,10 @@ export default (props) => {
       <Form
         name={"device"}
         onFinish={(values) => {
-          if (values.limsAttachmentSaveDTOS) {
-            let image = formatAttachment(
-              values.limsAttachmentSaveDTOS.fileList,
-              7
-            );
-            values = { ...values, limsAttachmentSaveDTOS: image };
-          }
+          values = {
+            ...values,
+            limsAttachmentSaveDTOS: formatAttachment(imageList, "1"),
+          };
           onFinish(values);
         }}
         ref={formRef}
@@ -189,3 +181,16 @@ export default (props) => {
     </div>
   );
 };
+const mapStateToProps = (state) => {
+  return {
+    imageList: state.currency.imageList,
+    fileList: state.currency.fileList,
+    attachmentList: state.currency.attachmentList,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(actions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BaseDevice);

@@ -69,11 +69,22 @@
   width: 100%;
   border: 1px dashed #a0a0a0;
 }
-.device-detail-flex{
+.device-detail-flex {
   display: flex;
   flex-wrap: wrap;
-  div{
+  div {
     width: 300px;
     margin: 10px;
+  }
+}
+.device-status-step {
+  width: 95%;
+}
+.device-status-card {
+  border: 1px solid #a0a0a0;
+  width: 150px;
+  #deviceTitle {
+    background: rgba(54, 128, 255, 1);
+    color: white;
   }
 }

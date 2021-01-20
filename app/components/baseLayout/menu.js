@@ -98,7 +98,8 @@ const Menus = (props) => {
             <Menu.Item key="/DeviceScrap">设备报废</Menu.Item>
           </SubMenu>
           <SubMenu key="6" icon={<img src={all}></img>} title="综合管理">
-            <Menu.Item key="/sitePump">设备报废预警</Menu.Item>
+            <Menu.Item key="/ScrapEarly">设备报废预警</Menu.Item>
+            <Menu.Item key="/PartScrapEarly">关键部件报废预警</Menu.Item>
             <Menu.Item key="/DeviceStatus">设备状态</Menu.Item>
             <Menu.Item key="/DeviceLendState">出借状态</Menu.Item>
             <Menu.Item key="/Complexfund">年度经费</Menu.Item>

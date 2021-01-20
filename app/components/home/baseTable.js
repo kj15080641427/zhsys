@@ -22,6 +22,7 @@ const BaseTable = (props) => {
     showDelete = true,
     deleteRow,
     update,
+    param,
   } = props;
   const { getBase } = props.actions;
   const [current, setCurrent] = useState(1);
@@ -32,6 +33,7 @@ const BaseTable = (props) => {
       param: {
         current: current,
         size: pageSize,
+        ...param,
       },
     });
   };
