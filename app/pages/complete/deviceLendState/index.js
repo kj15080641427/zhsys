@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Select, Pagination, Steps, Popover } from "antd";
+import { Card, Select, Pagination, Table } from "antd";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
@@ -11,7 +11,6 @@ import {
   getLimsBasiccategory,
   getLendDeviceStatusById, //借出详情
 } from "../../../request/index";
-const { Step } = Steps;
 
 const DeviceStatus = (props) => {
   const { getBase } = props.actions;
@@ -22,6 +21,7 @@ const DeviceStatus = (props) => {
   const [status, setStatus] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [records, setRecords] = useState({});
+  const [dataSource, setDataSource] = useState([]);
 
   const breadcrumb = [
     {
@@ -51,7 +51,39 @@ const DeviceStatus = (props) => {
       color: "#40A0EA",
     },
   ];
-
+  const columns = [
+    {
+      title: "设备编号",
+      dataIndex: "deviceNo",
+      require: true,
+    },
+    {
+      title: "设备名称",
+      dataIndex: "deviceName",
+      require: true,
+    },
+    {
+      title: "规格型号",
+      dataIndex: "model",
+      require: false,
+    },
+    {
+      title: "生产日期",
+      dataIndex: "produceDate",
+    },
+    {
+      title: "已使用年限",
+      dataIndex: "usedTime",
+    },
+    {
+      title: "价值",
+      dataIndex: "price",
+    },
+    {
+      title: "使用天数",
+      dataIndex: "usePeriod",
+    },
+  ];
   useEffect(() => {
     getBase({
       request: getLendDeviceStatus,
@@ -59,17 +91,6 @@ const DeviceStatus = (props) => {
       param: { current: current, size: 24, status: 4, type: type },
     });
   }, [current, type, status]);
-  const customDot = (dot, { status, index }) => (
-    <Popover
-      content={
-        <span>
-          step {index} status: {status}
-        </span>
-      }
-    >
-      {dot}
-    </Popover>
-  );
   return (
     <>
       <div className="device-state-body" hidden={showForm}>
@@ -116,7 +137,8 @@ const DeviceStatus = (props) => {
                   getLendDeviceStatusById({ id: item.id }).then((res) => {
                     console.log(res, "RRRR");
                     setShowForm(true);
-                    setRecords(item);
+                    setRecords(res.data.deviceInfoList[0]);
+                    setDataSource(res.data.itemlist);
                   });
                 }}
               >
@@ -166,91 +188,33 @@ const DeviceStatus = (props) => {
         <div className="device-detail-flex">
           <div>设备编号:{records.deviceNo}</div>
           <div>设备类别:{records.categoryName}</div>
+          <div>供应商:{records.supplierName}</div>
           <div>设备型号:{records.model}</div>
-          <div>单位:{records.unitName}</div>
-          <div>存放位置:{records.address}</div>
-          <div>资产编号:{records.no}</div>
+          <div>存放位置:{records.place}</div>
+
+          <div>资产编号:{records.depositstockId}</div>
           <div>设备名称:{records.deviceName}</div>
           <div>品牌:{records.brandName}</div>
-          <div>价值:{records.price}</div>
+          <div>单位:{records.unitName}</div>
         </div>
+        {/* 清单 */}
         <div className="device-state-line"></div>
-
+        <div className="form-info">
+          <div className="line"></div>
+          出借明细:
+        </div>
+        <Table
+          columns={columns}
+          dataSource={dataSource}
+          rowKey="deviceId"
+        ></Table>
+        {/* 设备图片 */}
         <div className="device-state-line"></div>
         <div className="form-info">
           <div className="line"></div>
           设备图片:
         </div>
         <img></img>
-
-        {/* <div className="form-info">
-          <div className="line"></div>
-          生命周期:
-        </div>
-        <div className="device-status-step">
-          <Steps current={2} progressDot={customDot}>
-            <Step
-              title={<div>购置</div>}
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近购置</div>
-                  <div>申请单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>购置类型:{}</div>
-                  <div>供货时间:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="使用"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近使用</div>
-                  <div>借出单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>借出类型:{}</div>
-                  <div>借出单位:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="归还"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近归还</div>
-                  <div>归还单号:S20200111</div>
-                  <div>归还时间:{}</div>
-                  <div>联系电话:{}</div>
-                  <div>归还人:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="维修"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近维修</div>
-                  <div>维修单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>维修类型:{}</div>
-                  <div>联系电话:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="保养"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近养护</div>
-                  <div>养护单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>养护类型:{}</div>
-                  <div>联系电话:{}</div>
-                </div>
-              }
-            />
-          </Steps>
-        </div> */}
       </div>
     </>
   );
