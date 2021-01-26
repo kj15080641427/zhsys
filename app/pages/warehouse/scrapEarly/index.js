@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Popover, Steps } from "antd";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import "./index.scss";
-import FormSelect from "../../../components/formItems/select";
 import {
   getLimsBasicDevice,
   getDepositstock,
   getLimsBasiccategory,
 } from "../../../request/index";
 import BaseTable from "../../../components/home/baseTable";
+import SearchTree from "../../../components/formItems/tree";
 
-const { Step } = Steps;
 const DeviceStatus = (props) => {
   const { getBase } = props.actions;
-  const { deposiDevice } = props;
+  const { deposiDevice, scrapType } = props;
 
-  const [type, setType] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [records, setRecords] = useState({});
+  const [treeData, setTreeData] = useState([]);
   const breadcrumb = [
     {
       name: "首页",
@@ -92,22 +90,38 @@ const DeviceStatus = (props) => {
       dataIndex: "actualUseLife",
     },
   ];
+
+  useEffect(() => {
+    getBase({
+      request: getLimsBasiccategory,
+      key: "scrapType",
+      param: {
+        size: -1,
+        current: 1,
+      },
+    });
+  }, []);
+  useEffect(() => {
+    let child = scrapType?.records?.map((item) => {
+      return {
+        title: item.name,
+        key: item.id,
+      };
+    });
+    setTreeData([
+      {
+        title: "所有类别",
+        key: "1",
+        children: child,
+      },
+    ]);
+  }, [scrapType]);
   useEffect(() => {
     deposiDevice?.records && setRecords(deposiDevice?.records[0]);
   }, [deposiDevice]);
-  const customDot = (dot, { status, index }) => (
-    <Popover
-      content={
-        <span>
-          step {index} status: {status}
-        </span>
-      }
-    >
-      {dot}
-    </Popover>
-  );
+
   return (
-    <>
+    <div>
       <div className="device-state-body" hidden={showForm}>
         <div className="view-query-left">
           <RenderBreadcrumb
@@ -115,39 +129,35 @@ const DeviceStatus = (props) => {
             breadcrumb={breadcrumb}
             editbreadcrumb={[]}
           />
-          <div className="device-statue-select">
-            <span id="label">设备类型:</span>
-            <FormSelect
-              onChange={(e) => setType(e)}
-              style={{ width: "100%" }}
-              request={getLimsBasiccategory}
-              param={{ current: 1, size: -1 }}
-              storeKey="sbfl"
-              labelString="name"
-              valueString="id"
-            ></FormSelect>
+        </div>
+        <div className="scrap-early-flex ">
+          <div className="scrap-early-tree">
+            <SearchTree treeData={treeData}></SearchTree>
+          </div>
+          <div className="device-state-body">
+            <BaseTable
+              searchName="name"
+              showSearch={true}
+              baseStoreKey="deposiDevice"
+              columns={columns}
+              get={getDepositstock}
+              showEdit={false}
+              rowKey="id"
+              update={(row) => {
+                setShowForm(true);
+                getBase({
+                  request: getLimsBasicDevice,
+                  key: "deposiDevice",
+                  param: {
+                    current: 1,
+                    size: -1,
+                    id: row.deviceId,
+                  },
+                });
+              }}
+            ></BaseTable>
           </div>
         </div>
-        <BaseTable
-          param={{ type: type }}
-          columns={columns}
-          get={getDepositstock}
-          showEdit={false}
-          rowKey="id"
-          update={(row) => {
-            setShowForm(true);
-            getBase({
-              request: getLimsBasicDevice,
-              key: "deposiDevice",
-              param: {
-                current: 1,
-                size: -1,
-                id: row.deviceId,
-              },
-            });
-            // getLimsBasicDevice;
-          }}
-        ></BaseTable>
       </div>
       <div hidden={!showForm}>
         <div className="view-query-left">
@@ -192,12 +202,13 @@ const DeviceStatus = (props) => {
         <img></img>
         {/* 使用情况 */}
       </div>
-    </>
+    </div>
   );
 };
 const mapStateToProps = (state) => {
   return {
     deposiDevice: state.currency.deposiDevice,
+    scrapType: state.currency.scrapType,
   };
 };
 

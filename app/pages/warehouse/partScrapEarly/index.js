@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Popover, Steps } from "antd";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../redux/actions/aCurrency";
 import { connect } from "react-redux";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import "./index.scss";
-import FormSelect from "../../../components/formItems/select";
 import {
   getLimsBasicDevice,
   getDepositstock,
   getLimsBasiccategory,
 } from "../../../request/index";
 import BaseTable from "../../../components/home/baseTable";
+import SearchTree from "../../../components/formItems/tree";
 
-const { Step } = Steps;
 const DeviceStatus = (props) => {
   const { getBase } = props.actions;
-  const { deposiDevice } = props;
+  const { deposiDevice, scrapType } = props;
 
-  const [type, setType] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [records, setRecords] = useState({});
+  const [treeData, setTreeData] = useState([]);
   const breadcrumb = [
     {
       name: "首页",
@@ -29,7 +27,7 @@ const DeviceStatus = (props) => {
       name: "综合管理",
     },
     {
-      name: "设备报废预警",
+      name: "关键部件报废预警",
       color: "#40A0EA",
     },
   ];
@@ -41,7 +39,7 @@ const DeviceStatus = (props) => {
       name: "综合管理",
     },
     {
-      name: "设备报废预警",
+      name: "关键部件报废预警",
       click: () => setShowForm(false),
     },
     {
@@ -63,48 +61,54 @@ const DeviceStatus = (props) => {
       dataIndex: "bussineId",
     },
     {
-      title: "型号",
+      title: "设备组件",
       dataIndex: "deviceNo",
     },
     {
-      title: "价值",
-      dataIndex: "deviceName",
-    },
-    {
-      title: "累计折旧金额",
-      dataIndex: "model",
-    },
-
-    {
-      title: "净值",
-      dataIndex: "produceDate",
-    },
-    {
-      title: "领用单位",
+      title: "预警状态",
       dataIndex: "useLife",
     },
-
     {
-      title: "领用人",
+      title: "报废状态",
+      dataIndex: "actualUseLife",
+    },
+    {
+      title: "入库日期",
       dataIndex: "actualUseLife",
     },
   ];
+
+  useEffect(() => {
+    getBase({
+      request: getLimsBasiccategory,
+      key: "scrapType",
+      param: {
+        size: -1,
+        current: 1,
+      },
+    });
+  }, []);
+  useEffect(() => {
+    let child = scrapType?.records?.map((item) => {
+      return {
+        title: item.name,
+        key: item.id,
+      };
+    });
+    setTreeData([
+      {
+        title: "所有类别",
+        key: "1",
+        children: child,
+      },
+    ]);
+  }, [scrapType]);
   useEffect(() => {
     deposiDevice?.records && setRecords(deposiDevice?.records[0]);
   }, [deposiDevice]);
-  const customDot = (dot, { status, index }) => (
-    <Popover
-      content={
-        <span>
-          step {index} status: {status}
-        </span>
-      }
-    >
-      {dot}
-    </Popover>
-  );
+
   return (
-    <>
+    <div>
       <div className="device-state-body" hidden={showForm}>
         <div className="view-query-left">
           <RenderBreadcrumb
@@ -112,39 +116,53 @@ const DeviceStatus = (props) => {
             breadcrumb={breadcrumb}
             editbreadcrumb={[]}
           />
-          <div className="device-statue-select">
-            <span id="label">设备类型:</span>
-            <FormSelect
-              onChange={(e) => setType(e)}
-              style={{ width: "100%" }}
-              request={getLimsBasiccategory}
-              param={{ current: 1, size: -1 }}
-              storeKey="sbfl"
-              labelString="name"
-              valueString="id"
-            ></FormSelect>
+          {/* <div className="scrap-search-layout">
+            <Input
+              placeholder="设备名称"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            ></Input>
+            <Button
+              type="primary"
+              onClick={() => {
+                setSearch(inputValue);
+              }}
+            >
+              搜索
+            </Button>
+            <Button>重置</Button>
+          </div> */}
+        </div>
+        <div className="scrap-early-flex ">
+          <div className="scrap-early-tree">
+            <SearchTree treeData={treeData}></SearchTree>
+          </div>
+          <div className="device-state-body">
+            <BaseTable
+              searchName="name"
+              showSearch={true}
+              // param={{ name: search }}
+              baseStoreKey="deposiDevice"
+              columns={columns}
+              get={getDepositstock}
+              showEdit={false}
+              rowKey="id"
+              update={(row) => {
+                setShowForm(true);
+                getBase({
+                  request: getLimsBasicDevice,
+                  key: "deposiDevice",
+                  param: {
+                    current: 1,
+                    size: -1,
+                    id: row.deviceId,
+                  },
+                });
+                // getLimsBasicDevice;
+              }}
+            ></BaseTable>
           </div>
         </div>
-        <BaseTable
-          param={{ type: type }}
-          columns={columns}
-          get={getDepositstock}
-          showEdit={false}
-          rowKey="id"
-          update={(row) => {
-            setShowForm(true);
-            getBase({
-              request: getLimsBasicDevice,
-              key: "deposiDevice",
-              param: {
-                current: 1,
-                size: -1,
-                id: row.deviceId,
-              },
-            });
-            // getLimsBasicDevice;
-          }}
-        ></BaseTable>
       </div>
       <div hidden={!showForm}>
         <div className="view-query-left">
@@ -188,87 +206,19 @@ const DeviceStatus = (props) => {
         </div>
         <img></img>
         {/* 使用情况 */}
-        <div className="device-state-line"></div>
-        <div className="form-info">
-          <div className="line"></div>
-          生命周期:
-        </div>
-        <div className="device-status-step">
-          <Steps current={2} progressDot={customDot}>
-            <Step
-              title={<div>购置</div>}
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近购置</div>
-                  <div>申请单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>购置类型:{}</div>
-                  <div>供货时间:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="使用"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近使用</div>
-                  <div>借出单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>借出类型:{}</div>
-                  <div>借出单位:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="归还"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近归还</div>
-                  <div>归还单号:S20200111</div>
-                  <div>归还时间:{}</div>
-                  <div>联系电话:{}</div>
-                  <div>归还人:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="维修"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近维修</div>
-                  <div>维修单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>维修类型:{}</div>
-                  <div>联系电话:{}</div>
-                </div>
-              }
-            />
-            <Step
-              title="保养"
-              description={
-                <div className="device-status-card">
-                  <div id="deviceTitle">最近养护</div>
-                  <div>养护单号:S20200111</div>
-                  <div>申请时间:{}</div>
-                  <div>养护类型:{}</div>
-                  <div>联系电话:{}</div>
-                </div>
-              }
-            />
-          </Steps>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 const mapStateToProps = (state) => {
   return {
     deposiDevice: state.currency.deposiDevice,
+    scrapType: state.currency.scrapType,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actions, dispatch),
 });
-
+// const fn = (data: () => void) => {};
 export default connect(mapStateToProps, mapDispatchToProps)(DeviceStatus);

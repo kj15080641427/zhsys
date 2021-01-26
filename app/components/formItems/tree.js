@@ -83,6 +83,7 @@ class SearchTree extends React.Component {
         return null;
       })
       .filter((item, i, self) => item && self.indexOf(item) === i);
+    console.log(expandedKeys, "KEY");
     this.setState({
       expandedKeys,
       searchValue: value,
@@ -91,7 +92,9 @@ class SearchTree extends React.Component {
   };
 
   render() {
-    const { searchValue, expandedKeys, autoExpandParent } = this.state;
+    const { treeData, seleceTreeNode } = this.props;
+
+    const { searchValue } = this.state;
     const loop = (data) =>
       data.map((item) => {
         const index = item.title.indexOf(searchValue);
@@ -101,7 +104,7 @@ class SearchTree extends React.Component {
           index > -1 ? (
             <span>
               {beforeStr}
-              <span className="site-tree-search-value">{searchValue}</span>
+              <span style={{ color: "red" }}>{searchValue}</span>
               {afterStr}
             </span>
           ) : (
@@ -119,15 +122,16 @@ class SearchTree extends React.Component {
     return (
       <div>
         <Search
-          style={{ marginBottom: 8 }}
-          placeholder="Search"
+          style={{ marginBottom: 8, width: "200PX" }}
+          placeholder="搜索节点"
           onChange={this.onChange}
         />
         <Tree
-          onExpand={this.onExpand}
-          expandedKeys={expandedKeys}
-          autoExpandParent={autoExpandParent}
-          treeData={loop(gData)}
+          treeData={loop(treeData)}
+          defaultExpandAll={true}
+          onSelect={(key, row) => {
+            seleceTreeNode;
+          }}
         />
       </div>
     );

@@ -15,7 +15,6 @@ class BaseLayout extends React.PureComponent {
       collapsed: false,
     };
     this.onCollapsClick = this.onCollapsClick.bind(this);
-    console.log("this.props.match", this.props.match, this.props.location);
   }
   toggle = () => {
     this.setState({
@@ -51,7 +50,8 @@ class BaseLayout extends React.PureComponent {
               className="site-layout-background"
               style={{
                 margin: "20px",
-                padding: "0px 20px",
+                padding:
+                  this.props.location.pathname == "/Chart" ? "0px" : "0px 20px",
                 minHeight: 280,
                 border: "1px solid #dddddd",
                 background: "#FFFFFF",

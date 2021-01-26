@@ -30,6 +30,7 @@ import In from "../../pages/warehouse/in/index";
 import Out from "../../pages/warehouse/out/index";
 import ScrapEarly from "../../pages/warehouse/scrapEarly";
 import PartScrapEarly from "../../pages/warehouse/partScrapEarly";
+import Chart from "../../pages/chart/index";
 
 class ContentRouter extends React.PureComponent {
   constructor(props, context) {
@@ -60,17 +61,16 @@ class ContentRouter extends React.PureComponent {
         <Route path={"/Maintian"} component={Maintian} />
         <Route path={"/MaintianManage"} component={MaintianManage} />
         <Route path={"/Complexfund"} component={Complexfund} />
-
         <Route path={"/DeviceScrap"} component={DeviceScrap} />
         <Route path={"/Despositstock"} component={Despositstock} />
         <Route path={"/DeviceStatus"} component={DeviceStatus} />
         <Route path={"/DeviceLendState"} component={DeviceLendState} />
         <Route path={"/In"} component={In} />
         <Route path={"/Out"} component={Out} />
-
         <Route path={"/ScrapEarly"} component={ScrapEarly} />
         <Route path={"/PartScrapEarly"} component={PartScrapEarly} />
         <Route path={"/Test"} component={Test} />
+        <Route path={"/Chart"} component={Chart} />
         <Route component={Nothing} />
       </Switch>
     );

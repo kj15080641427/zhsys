@@ -51,7 +51,7 @@
     "cesium": "^1.74.0",
     "cnpm": "^6.1.1",
     "core-js": "^3.6.5",
-    "echarts": "^4.7.0",
+    "echarts": "^5.0.1",
     "echarts-for-react": "^2.0.15-beta.1",
     "fbemitter": "^2.1.1",
     "global": "^4.4.0",

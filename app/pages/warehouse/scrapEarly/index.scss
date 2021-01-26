@@ -1,0 +1,17 @@
+.scrap-early-flex {
+  display: flex;
+  .device-state-body {
+    width: 100%;
+  }
+  .scrap-early-tree {
+    margin: 5px 20px 0 0;
+  }
+}
+.scrap-search-layout {
+  display: flex;
+  position: absolute;
+  right: 0px;
+  button{
+    margin-left: 10px;
+  }
+}

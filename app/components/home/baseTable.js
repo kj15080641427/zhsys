@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Table, Popover, Popconfirm } from "antd";
+import React, { useState, useEffect, useRef } from "react";
+import { Table, Popover, Popconfirm, Form } from "antd";
 import editImg from "./../../resource/编辑.svg";
 import deleteImg from "./../../resource/作废.svg";
 import view from "./../../resource/查看.svg";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../redux/actions/aCurrency";
+import SearchInput from "../../components/formItems/searchInput";
 import "./styles.scss";
 
 let baseStoreKey = "test";
@@ -23,9 +24,13 @@ const BaseTable = (props) => {
     deleteRow,
     update,
     param,
+    showSearch = false,
+    searchInput,
+    searchName,
   } = props;
   const { getBase } = props.actions;
   const [current, setCurrent] = useState(1);
+  const formRef = useRef();
   const getData = () => {
     return getBase({
       request: get,
@@ -44,6 +49,18 @@ const BaseTable = (props) => {
   useEffect(() => {
     getData();
   }, [current]);
+
+  useEffect(() => {
+    getBase({
+      request: get,
+      key: storeKey,
+      param: {
+        current: 1,
+        size: pageSize,
+        ...param,
+      },
+    });
+  }, [param]);
   const itemRender = (current, type, originalElement) => {
     if (type === "prev") {
       return (
@@ -93,7 +110,30 @@ const BaseTable = (props) => {
     ),
   };
   return (
-    <>
+    <div className="base-table-layout">
+      {showSearch && (
+        <div className="base-table-search">
+          <Form layout="inline" ref={formRef}>
+            <Form.Item label={""} name={"searchName"}>
+              <SearchInput
+                placeholder="支持模糊查找申请标题"
+                searchClick={() =>
+                  getBase({
+                    request: get,
+                    key: storeKey,
+                    param: {
+                      current: 1,
+                      size: pageSize,
+                      [searchName]: searchInput,
+                      ...param,
+                    },
+                  })
+                }
+              />
+            </Form.Item>
+          </Form>
+        </div>
+      )}
       <Table
         size="small"
         columns={[
@@ -153,11 +193,12 @@ const BaseTable = (props) => {
         // rowSelection={rowSelection}
         // {...props}
       />
-    </>
+    </div>
   );
 };
 const mapStateToProps = (state) => {
   return {
+    searchInput: state.formItems.searchInput,
     [baseStoreKey]: state.currency[baseStoreKey],
   };
 };

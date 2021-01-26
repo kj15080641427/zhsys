@@ -1,5 +1,5 @@
 import React from "react";
-import BaseTable from "../components/home/baseTable";
+// import BaseTable from "../components/home/baseTable";
 import SearchTree from "../components/formItems/tree";
 import { getLimsBasicDict } from "../request/index";
 

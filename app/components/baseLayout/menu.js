@@ -109,11 +109,9 @@ const Menus = (props) => {
             <Menu.Item key="/Out">出库管理</Menu.Item>
             <Menu.Item key="/Despositstock">在库资产</Menu.Item>
           </SubMenu>
-          <SubMenu
-            key="8"
-            icon={<img src={chart}></img>}
-            title="统计分析"
-          ></SubMenu>
+          <SubMenu key="8" icon={<img src={chart}></img>} title="统计分析">
+            <Menu.Item key="/Chart">统计分析</Menu.Item>
+          </SubMenu>
           <SubMenu key="9" icon={<img src={base}></img>} title="基础管理">
             <Menu.Item key="/DeviceType">设备类型</Menu.Item>
             <Menu.Item key="/BaseDevice">设备基础数据</Menu.Item>
