@@ -66,7 +66,7 @@ const Menus = (props) => {
             title="首页"
             inlineCollapsed={false}
           >
-            <Menu.Item key="/">首页</Menu.Item>
+            <Menu.Item key="/home">首页</Menu.Item>
           </SubMenu>
           <SubMenu
             key="2"
@@ -125,11 +125,11 @@ const Menus = (props) => {
             <Menu.Item key="/role">角色管理</Menu.Item>
             <Menu.Item key="/jurisdiction">权限管理</Menu.Item>
           </SubMenu>
-          <SubMenu
-            key="11"
-            icon={<img src={system}></img>}
-            title="系统设置"
-          ></SubMenu>
+          <SubMenu key="11" icon={<img src={system}></img>} title="系统设置">
+            <Menu.Item key="/u1">系统设置</Menu.Item>
+            <Menu.Item key="/u2">个人信息</Menu.Item>
+            <Menu.Item key="/u3">关于我们</Menu.Item>
+          </SubMenu>
         </Menu>
       </div>
     </div>

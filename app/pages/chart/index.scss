@@ -38,7 +38,8 @@
   align-items: center;
   // color: rgba(139, 13, 217, 1);
   color: #50fa6b;
-  line-height: 85px;
+  // line-height: 85px;
+  margin-bottom: 30px;
   background: linear-gradient(
     180deg,
     rgba(140, 17, 217, 1) 0%,
@@ -51,5 +52,29 @@
     height: 12px;
     width: 4px;
     background: rgba(139, 13, 217, 1);
+  }
+}
+.chart-line {
+  width: 1px;
+  height: 100px;
+  background: #a0a0a0;
+}
+.chart-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chart-card1{
+  color: black;
+  #text1{
+    font-size: 20px;
+  }
+  #text2{
+    font-size: 40px;
+    font-weight: bold;
+  }
+  #text3{
+      color: rgba(139, 13, 217, 1);
+      margin-top: 20px;
   }
 }

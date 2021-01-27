@@ -51,7 +51,10 @@ class BaseLayout extends React.PureComponent {
               style={{
                 margin: "20px",
                 padding:
-                  this.props.location.pathname == "/Chart" ? "0px" : "0px 20px",
+                  this.props.location.pathname == "/Chart" ||
+                  this.props.location.pathname == "/home"
+                    ? "0px"
+                    : "0px 20px",
                 minHeight: 280,
                 border: "1px solid #dddddd",
                 background: "#FFFFFF",
