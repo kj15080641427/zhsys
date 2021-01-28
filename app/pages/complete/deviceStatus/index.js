@@ -8,30 +8,10 @@ import "./index.scss";
 import FormSelect from "../../../components/formItems/select";
 import { getLimsBasiccategory } from "../../../request/index";
 import { getDeviceStatus } from "../../../request/index";
+import deviceImg from "../../../resource/login.jpg";
+import { statusObj } from "../../../utils/common";
 
 const { Step } = Steps;
-const obj = {
-  2: {
-    text: "闲置",
-    color: "#ffc001",
-  },
-  6: {
-    text: "维修",
-    color: "red",
-  },
-  4: {
-    text: "出借",
-    color: "#0176ff",
-  },
-  9: {
-    text: "报废",
-    color: "#df01ff",
-  },
-  8: {
-    text: "保养",
-    color: "#2d01ff",
-  },
-};
 
 const DeviceStatus = (props) => {
   const { getBase } = props.actions;
@@ -178,7 +158,7 @@ const DeviceStatus = (props) => {
                 }}
               >
                 <div className="device-state-card-box">
-                  <img></img>
+                  <img src={deviceImg}></img>
                   <div id="nameBox">
                     <div id="name">{item.deviceName}</div>
                     <div>品牌:{item.brandName}</div>
@@ -194,10 +174,10 @@ const DeviceStatus = (props) => {
                   <div>
                     <div
                       className="device-state-color"
-                      style={{ background: obj[item.status]?.color }}
+                      style={{ background: statusObj[item.status]?.color }}
                     ></div>
                     <div className="device-state-text">
-                      {obj[item.status]?.text}
+                      {statusObj[item.status]?.text}
                     </div>
                   </div>
                 </div>
@@ -243,13 +223,13 @@ const DeviceStatus = (props) => {
           <div className="line"></div>
           设备图片:
         </div>
-        <img></img>
+        <img src={deviceImg} className="device-status-img"></img>
         <div className="device-state-line"></div>
         <div className="form-info">
           <div className="line"></div>
           生命周期:
         </div>
-        <div className='device-status-step'>
+        <div className="device-status-step">
           <Steps current={2} progressDot={customDot}>
             <Step
               title={<div>购置</div>}

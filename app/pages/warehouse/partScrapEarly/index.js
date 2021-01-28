@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import "./index.scss";
 import {
-  getLimsBasicDevice,
-  getDepositstock,
+  getDevicePartScrapWarningDetail,
+  getDevicePartScrapWarning,
   getLimsBasiccategory,
 } from "../../../request/index";
 import BaseTable from "../../../components/home/baseTable";
@@ -14,7 +14,7 @@ import SearchTree from "../../../components/formItems/tree";
 
 const DeviceStatus = (props) => {
   const { getBase } = props.actions;
-  const { deposiDevice, scrapType } = props;
+  const { devicePartDetail, scrapType } = props;
 
   const [showForm, setShowForm] = useState(false);
   const [records, setRecords] = useState({});
@@ -58,7 +58,7 @@ const DeviceStatus = (props) => {
     },
     {
       title: "设备名称",
-      dataIndex: "bussineId",
+      dataIndex: "deviceName",
     },
     {
       title: "设备组件",
@@ -66,15 +66,16 @@ const DeviceStatus = (props) => {
     },
     {
       title: "预警状态",
-      dataIndex: "useLife",
+      dataIndex: "warningStatus",
     },
     {
       title: "报废状态",
-      dataIndex: "actualUseLife",
+      dataIndex: "status",
+      render: (i) => (i == "0" ? "已报废" : "未报废"),
     },
     {
       title: "入库日期",
-      dataIndex: "actualUseLife",
+      dataIndex: "createDate",
     },
   ];
 
@@ -104,8 +105,8 @@ const DeviceStatus = (props) => {
     ]);
   }, [scrapType]);
   useEffect(() => {
-    deposiDevice?.records && setRecords(deposiDevice?.records[0]);
-  }, [deposiDevice]);
+    devicePartDetail?.records && setRecords(devicePartDetail?.records[0]);
+  }, [devicePartDetail]);
 
   return (
     <div>
@@ -142,23 +143,21 @@ const DeviceStatus = (props) => {
               searchName="name"
               showSearch={true}
               // param={{ name: search }}
-              baseStoreKey="deposiDevice"
+              baseStoreKey="devicePartWarning"
               columns={columns}
-              get={getDepositstock}
+              get={getDevicePartScrapWarning}
               showEdit={false}
+              showDelete={false}
               rowKey="id"
               update={(row) => {
                 setShowForm(true);
                 getBase({
-                  request: getLimsBasicDevice,
-                  key: "deposiDevice",
+                  request: getDevicePartScrapWarningDetail,
+                  key: "devicePartDetail",
                   param: {
-                    current: 1,
-                    size: -1,
-                    id: row.deviceId,
+                    id: row.id,
                   },
                 });
-                // getLimsBasicDevice;
               }}
             ></BaseTable>
           </div>
@@ -212,7 +211,8 @@ const DeviceStatus = (props) => {
 };
 const mapStateToProps = (state) => {
   return {
-    deposiDevice: state.currency.deposiDevice,
+    devicePartDetail: state.currency.devicePartDetail,
+    devicePartWarning: state.currency.devicePartWarning,
     scrapType: state.currency.scrapType,
   };
 };

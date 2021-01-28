@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import RenderBreadcrumb from "../../../components/formItems/breadcrumb";
 import "./index.scss";
 import {
-  getLimsBasicDevice,
-  getDepositstock,
+  // getLimsBasicDevice,
+  getDeviceScrapWarning,
   getLimsBasiccategory,
 } from "../../../request/index";
 import BaseTable from "../../../components/home/baseTable";
@@ -50,44 +50,45 @@ const DeviceStatus = (props) => {
   const columns = [
     {
       title: "类别",
-      dataIndex: "code",
+      dataIndex: "categoryName",
     },
     {
       title: "设备编号",
-      dataIndex: "createDate",
-    },
-    {
-      title: "设备名称",
-      dataIndex: "bussineId",
-    },
-    {
-      title: "规格型号",
       dataIndex: "deviceNo",
     },
     {
-      title: "已使用年限",
+      title: "设备名称",
       dataIndex: "deviceName",
     },
     {
-      title: "预计报废时间",
+      title: "规格型号",
       dataIndex: "model",
+    },
+    {
+      title: "已使用年限",
+      dataIndex: "useLife",
+    },
+    {
+      title: "预计报废时间",
+      dataIndex: "produceDate",
     },
 
     {
       title: "维修次数",
-      dataIndex: "produceDate",
+      dataIndex: "repairNumber",
     },
     {
       title: "预警状态",
-      dataIndex: "useLife",
+      dataIndex: "warningStatus",
     },
     {
       title: "报废状态",
-      dataIndex: "actualUseLife",
+      dataIndex: "scrapStatus",
+      render: (i) => (i == "0" ? "已报废" : "未报废"),
     },
     {
       title: "入库日期",
-      dataIndex: "actualUseLife",
+      dataIndex: "createDate",
     },
   ];
 
@@ -116,9 +117,9 @@ const DeviceStatus = (props) => {
       },
     ]);
   }, [scrapType]);
-  useEffect(() => {
-    deposiDevice?.records && setRecords(deposiDevice?.records[0]);
-  }, [deposiDevice]);
+  // useEffect(() => {
+  //   deposiDevice?.records && setRecords(deposiDevice?.records[0]);
+  // }, [deposiDevice]);
 
   return (
     <div>
@@ -140,20 +141,20 @@ const DeviceStatus = (props) => {
               showSearch={true}
               baseStoreKey="deposiDevice"
               columns={columns}
-              get={getDepositstock}
+              get={getDeviceScrapWarning}
               showEdit={false}
               rowKey="id"
               update={(row) => {
                 setShowForm(true);
-                getBase({
-                  request: getLimsBasicDevice,
-                  key: "deposiDevice",
-                  param: {
-                    current: 1,
-                    size: -1,
-                    id: row.deviceId,
-                  },
-                });
+                setRecords(row);
+                // getBase({
+                //   request: getDeviceScrapWarning,
+                //   key: "deposiDevice",
+                //   param: {
+                //     current: 1,
+                //     size: 1,
+                //   },
+                // });
               }}
             ></BaseTable>
           </div>
@@ -170,29 +171,21 @@ const DeviceStatus = (props) => {
         <div className="device-state-line"></div>
         <div className="form-info">
           <div className="line"></div>
-          设备信息:
+          设备基础数据:
         </div>
         <div className="device-detail-flex">
+          <div>设备编号:{records?.deviceNo}</div>
           <div>设备类别:{records?.categoryName}</div>
           <div>设备名称:{records?.deviceName}</div>
-          <div>价值:{records?.price}</div>
-          <div>净值:{records?.price}</div>
-          <div>领用人:{records?.price}</div>
+          <div>预警状态:{records?.warningStatus}</div>
 
-          <div>设备编号:{records?.deviceNo}</div>
           <div>设备型号:{records?.model}</div>
-          <div>累计折旧金额:{records?.price}</div>
-          <div>领用单位:{records?.unitName}</div>
-          <div>存放地:{records?.address}</div>
-
-          <div>出场号:{records?.address}</div>
-          <div>现状:{records?.no}</div>
-          <div>已使用年限:{records?.no}</div>
-          <div>最低使用年限:{records?.no}</div>
-          <div>入库日期:{records?.no}</div>
-
-          <div>单位管理员:{records?.no}</div>
+          <div>供应商:{records?.supplierId}</div>
           <div>品牌:{records?.brandName}</div>
+          <div>存放位置:{records?.address}</div>
+
+          <div>入库日期:{records?.createDate}</div>
+          <div>维修次数:{records?.repairNumber}</div>
         </div>
         <div className="device-state-line"></div>
         <div className="form-info">

@@ -135,3 +135,26 @@ export const formatAttachment = (data, busiId) => {
     title: item.name.split(".")[0],
   }));
 };
+
+export const statusObj = {
+  2: {
+    text: "闲置",
+    color: "#ffc001",
+  },
+  6: {
+    text: "维修",
+    color: "red",
+  },
+  4: {
+    text: "出借",
+    color: "#0176ff",
+  },
+  9: {
+    text: "报废",
+    color: "#df01ff",
+  },
+  8: {
+    text: "保养",
+    color: "#2d01ff",
+  },
+};

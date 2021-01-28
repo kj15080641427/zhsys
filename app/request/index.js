@@ -501,7 +501,10 @@ export function getDeviceScrap(data) {
 export function addDeviceScrap(data) {
   return fetchJSONData("POST", "/api/base/LimsDispose/save", data);
 }
-
+/**删除 */
+export function delDeviceScrap(data) {
+  return fetchJSONData("POST", "/api/base/LimsDispose/del", data);
+}
 /**在库资产 */
 //查询在库资产
 export function getDepositstock(data) {
@@ -565,4 +568,17 @@ export function getDepositstockOutById(data) {
 /**查询设备状态 */
 export function getDeviceStatus(data) {
   return fetchJSONData("POST", "/api/base/LimsBasicdevice/queryByDevice", data);
+}
+
+/**设备报废预警 */
+export function getDeviceScrapWarning(data) {
+  return fetchJSONData("POST", "/api/base/Comprehensive/page", data);
+}
+/**设备部件报废预警 */
+export function getDevicePartScrapWarning(data) {
+  return fetchJSONData("POST", "/api/base/Comprehensive/pageDeviceparts", data);
+}
+/**设备部件报警详情 */
+export function getDevicePartScrapWarningDetail(data) {
+  return fetchJSONData("POST", "/api/base/Comprehensive/pageDevicepartsInfo", data);
 }

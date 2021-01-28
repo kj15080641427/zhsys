@@ -51,15 +51,16 @@ const BaseTable = (props) => {
   }, [current]);
 
   useEffect(() => {
-    getBase({
-      request: get,
-      key: storeKey,
-      param: {
-        current: 1,
-        size: pageSize,
-        ...param,
-      },
-    });
+    param &&
+      getBase({
+        request: get,
+        key: storeKey,
+        param: {
+          current: 1,
+          size: pageSize,
+          ...param,
+        },
+      });
   }, [param]);
   const itemRender = (current, type, originalElement) => {
     if (type === "prev") {

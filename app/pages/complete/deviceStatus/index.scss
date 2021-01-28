@@ -50,8 +50,8 @@
   width: 250px;
   height: 220px;
   margin: 10px;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px #000;
+  border-radius: 15px;
+  box-shadow: 1px 1px 5px #a0a0a0;
   cursor: pointer;
   img {
     width: 80px;
@@ -87,4 +87,9 @@
     background: rgba(54, 128, 255, 1);
     color: white;
   }
+}
+.device-status-img{
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
 }
