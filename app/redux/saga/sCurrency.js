@@ -17,7 +17,7 @@ function* login({ data }) {
     const result = yield call(req.loginIn, data);
     if (result.code == code) {
       localStorage.setItem("token", result.data.userToken);
-      hashHistory.push("/home/");
+      hashHistory.push("/home");
       yield put({
         type: types.SET_USER_INFO,
         data: result.data,

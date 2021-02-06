@@ -21,7 +21,6 @@ import ReparirApply from "../../pages/repair/repairapply/index";
 import Repair from "../../pages/repair/repairManage/index";
 import Maintian from "../../pages/repair/maintianApply";
 import MaintianManage from "../../pages/repair/maintianManage";
-import Test from "../../pages/test";
 import DeviceScrap from "../../pages/scrap/index";
 import Despositstock from "../../pages/warehouse/depositstock";
 import DeviceStatus from "../../pages/complete/deviceStatus/index";
@@ -70,7 +69,6 @@ class ContentRouter extends React.PureComponent {
         <Route path={"/Out"} component={Out} />
         <Route path={"/ScrapEarly"} component={ScrapEarly} />
         <Route path={"/PartScrapEarly"} component={PartScrapEarly} />
-        <Route path={"/Test"} component={Test} />
         <Route path={"/Chart"} component={Chart} />
         <Route path={"/Depreciatio"} component={Depreciatio} />
         <Route component={Nothing} />

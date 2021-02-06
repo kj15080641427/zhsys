@@ -9,6 +9,7 @@ import {
   getDevicePartScrapWarning,
   getLimsBasiccategory,
 } from "../../../request/index";
+import { Card } from "antd";
 import BaseTable from "../../../components/home/baseTable";
 import SearchTree from "../../../components/formItems/tree";
 
@@ -117,22 +118,6 @@ const DeviceStatus = (props) => {
             breadcrumb={breadcrumb}
             editbreadcrumb={[]}
           />
-          {/* <div className="scrap-search-layout">
-            <Input
-              placeholder="设备名称"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            ></Input>
-            <Button
-              type="primary"
-              onClick={() => {
-                setSearch(inputValue);
-              }}
-            >
-              搜索
-            </Button>
-            <Button>重置</Button>
-          </div> */}
         </div>
         <div className="scrap-early-flex ">
           <div className="scrap-early-tree">
@@ -142,7 +127,6 @@ const DeviceStatus = (props) => {
             <BaseTable
               searchName="name"
               showSearch={true}
-              // param={{ name: search }}
               baseStoreKey="devicePartWarning"
               columns={columns}
               get={getDevicePartScrapWarning}
@@ -171,39 +155,21 @@ const DeviceStatus = (props) => {
             editbreadcrumb={editbreadcrumb}
           />
         </div>
-        <div className="device-state-line"></div>
         <div className="form-info">
           <div className="line"></div>
           设备信息:
         </div>
-        <div className="device-detail-flex">
-          <div>设备类别:{records?.categoryName}</div>
-          <div>设备名称:{records?.deviceName}</div>
-          <div>价值:{records?.price}</div>
-          <div>净值:{records?.price}</div>
-          <div>领用人:{records?.price}</div>
-
-          <div>设备编号:{records?.deviceNo}</div>
-          <div>设备型号:{records?.model}</div>
-          <div>累计折旧金额:{records?.price}</div>
-          <div>领用单位:{records?.unitName}</div>
-          <div>存放地:{records?.address}</div>
-
-          <div>出场号:{records?.address}</div>
-          <div>现状:{records?.no}</div>
-          <div>已使用年限:{records?.no}</div>
-          <div>最低使用年限:{records?.no}</div>
-          <div>入库日期:{records?.no}</div>
-
-          <div>单位管理员:{records?.no}</div>
-          <div>品牌:{records?.brandName}</div>
-        </div>
-        <div className="device-state-line"></div>
+        <Card>
+          <div className="device-detail-flex">
+            <div>设备类别:{records?.categoryName}</div>
+            <div>设备名称:{records?.deviceName}</div>
+          </div>
+        </Card>
         <div className="form-info">
           <div className="line"></div>
-          设备图片:
+          设备组件:
         </div>
-        <img></img>
+        <Card></Card>
         {/* 使用情况 */}
       </div>
     </div>

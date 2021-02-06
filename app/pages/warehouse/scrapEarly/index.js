@@ -9,12 +9,13 @@ import {
   getDeviceScrapWarning,
   getLimsBasiccategory,
 } from "../../../request/index";
+import { Card } from "antd";
 import BaseTable from "../../../components/home/baseTable";
 import SearchTree from "../../../components/formItems/tree";
 
 const DeviceStatus = (props) => {
   const { getBase } = props.actions;
-  const { deposiDevice, scrapType } = props;
+  const { scrapType } = props;
 
   const [showForm, setShowForm] = useState(false);
   const [records, setRecords] = useState({});
@@ -117,9 +118,6 @@ const DeviceStatus = (props) => {
       },
     ]);
   }, [scrapType]);
-  // useEffect(() => {
-  //   deposiDevice?.records && setRecords(deposiDevice?.records[0]);
-  // }, [deposiDevice]);
 
   return (
     <div>
@@ -147,14 +145,6 @@ const DeviceStatus = (props) => {
               update={(row) => {
                 setShowForm(true);
                 setRecords(row);
-                // getBase({
-                //   request: getDeviceScrapWarning,
-                //   key: "deposiDevice",
-                //   param: {
-                //     current: 1,
-                //     size: 1,
-                //   },
-                // });
               }}
             ></BaseTable>
           </div>
@@ -168,26 +158,39 @@ const DeviceStatus = (props) => {
             editbreadcrumb={editbreadcrumb}
           />
         </div>
-        <div className="device-state-line"></div>
         <div className="form-info">
           <div className="line"></div>
           设备基础数据:
         </div>
-        <div className="device-detail-flex">
-          <div>设备编号:{records?.deviceNo}</div>
-          <div>设备类别:{records?.categoryName}</div>
-          <div>设备名称:{records?.deviceName}</div>
-          <div>预警状态:{records?.warningStatus}</div>
+        <Card>
+          <div className="device-detail-flex">
+            <div>设备编号:{records?.deviceNo}</div>
+            <div>设备类别:{records?.categoryName}</div>
+            <div>设备名称:{records?.deviceName}</div>
+            <div>预警状态:{records?.warningStatus}</div>
 
-          <div>设备型号:{records?.model}</div>
-          <div>供应商:{records?.supplierId}</div>
-          <div>品牌:{records?.brandName}</div>
-          <div>存放位置:{records?.address}</div>
+            <div>设备型号:{records?.model}</div>
+            <div>供应商:{records?.supplierId}</div>
+            <div>品牌:{records?.brandName}</div>
+            <div>存放位置:{records?.address}</div>
 
-          <div>入库日期:{records?.createDate}</div>
-          <div>维修次数:{records?.repairNumber}</div>
+            <div>入库日期:{records?.createDate}</div>
+            <div>维修次数:{records?.repairNumber}</div>
+          </div>
+        </Card>
+        <div className="form-info">
+          <div className="line"></div>
+          设备价值数据:
         </div>
-        <div className="device-state-line"></div>
+        <Card>
+          <div className="device-detail-flex">
+            <div>价值:{records?.price}</div>
+            <div>设备可使用年限:{records?.useLife}</div>
+            <div>预计报废时间:{records?.produceDate}</div>
+            <div>累计折旧金额:{records?.depreciationMoney}</div>
+            <div>净值:{records?.amountMoney}</div>
+          </div>
+        </Card>
         <div className="form-info">
           <div className="line"></div>
           设备图片:

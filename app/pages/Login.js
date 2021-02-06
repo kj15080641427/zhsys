@@ -95,63 +95,6 @@ class Login extends Component {
             <div className="base-login-singup">
               没有账号?<a>立即注册</a>
             </div>
-            {/* <Form
-              name="normal_login"
-              className="login-form"
-              initialValues={{
-                remember: true,
-              }}
-              onFinish={onFinish}
-            >
-              <Form.Item
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "请输入用户名!",
-                  },
-                ]}
-              >
-                <Input
-                  className="inputs"
-                  placeholder="请输入用户名"
-                  size="large"
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                />
-              </Form.Item>
-              <br />
-              <Form.Item
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "请输入密码!",
-                  },
-                ]}
-              >
-                <Input
-                  className="inputs"
-                  placeholder="请输入密码"
-                  size="large"
-                  prefix={<LockOutlined className="site-form-item-icon" />}
-                  type="password"
-                />
-              </Form.Item>
-              <br />
-              <br />
-              <br />
-              <br />
-              <Form.Item>
-                <Button
-                  size="large"
-                  type="primary"
-                  htmlType="submit"
-                  className="sbmbotton"
-                >
-                  登录
-                </Button>
-              </Form.Item>
-            </Form> */}
           </div>
         </div>
       </div>
